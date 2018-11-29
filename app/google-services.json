@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "915877117601",
+    "firebase_url": "https://metal-shift-223511.firebaseio.com",
+    "project_id": "metal-shift-223511",
+    "storage_bucket": "metal-shift-223511.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915877117601:android:6fea3c6daa228055",
+        "android_client_info": {
+          "package_name": "com.ma.se.hospitato"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915877117601-c7romu3v0im78rto3p11gvmrpb4fuoos.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ma.se.hospitato",
+            "certificate_hash": "14c36516e837403b06b8d6912559257a28758e63"
+          }
+        },
+        {
+          "client_id": "915877117601-r7di8gu05d0offma3sqmhhculoblmpft.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYnTK_mt6vG8ssZsqjRd7kAWdj49olGu4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "915877117601-r7di8gu05d0offma3sqmhhculoblmpft.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
