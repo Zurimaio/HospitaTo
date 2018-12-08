@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">HospitaTo</string>
     <string name="title_activity_map_view">Map</string>
+    <string name="direction_server_key" translatable="false">AIzaSyANzbEFTwOhnhHftnLx69rt2IlZeL-O5xs</string>
 </resources>
