@@ -99,27 +99,6 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
         this.log = log;
     }
 
-    public void getCoordinatesFromFB(){
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Hospitals");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot d: dataSnapshot.getChildren()) {
-                    Hospital h = d.getValue(Hospital.class);
-                    Log.d(h.getName(), h.getAddress());
-                    Log.d(h.getName(), h.getCoordinate().get("Latitude"));
-                    Log.d(h.getName(), h.getCoordinate().get("Longitude"));
 
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 
 }

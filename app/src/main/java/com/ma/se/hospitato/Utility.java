@@ -1,5 +1,6 @@
 package com.ma.se.hospitato;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,5 +105,8 @@ public class Utility {
         return destinations;
 
     }
+
+
+
 
 }

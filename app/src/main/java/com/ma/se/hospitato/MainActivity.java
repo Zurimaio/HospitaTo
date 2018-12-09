@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -63,9 +64,15 @@ public class MainActivity extends AppCompatActivity {
 
         //Used temporary to go directly to the map view
         Button mapView = findViewById(R.id.toMapView);
-        //toMapViewButton(mapView);
+        toMapViewButton(mapView);
 
-
+        if(startService()){
+            Toast.makeText(this,"AsyncTask started",
+                    Toast.LENGTH_LONG);
+        }else{
+            Toast.makeText(this,"AsyncTask NOT started",
+                    Toast.LENGTH_LONG);
+        }
 
 
 
@@ -74,9 +81,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * TODO
-     *
 
     public void toMapViewButton(Button mapView) {
 
@@ -84,14 +88,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent toMapView = new Intent(MainActivity.this, MapView.class);
-                toMapView.putExtra("Latitude", getCurrentPos().getLatitude());
-                toMapView.putExtra("Longitude", getCurrentPos().getLongitude());
                 startActivity(toMapView);
             }
         });
     }
 
-     */
 
 
 
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             new getDirectionTask().execute(getApplicationContext(), MainActivity.this);
             return true;
         } catch (Exception error) {
+            Log.e("Error", "AsyncTask");
             return false;
         }
     }

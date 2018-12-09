@@ -49,7 +49,7 @@ public class getDirectionTask extends AsyncTask<Object, Void, Void> {
     public Context context;
     public String origin = "";
     public String dest = "";
-
+    DirectionsFake directionsFake;
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -65,15 +65,18 @@ public class getDirectionTask extends AsyncTask<Object, Void, Void> {
         /**
          * Set up variables for location task
          */
-        Log.d("AsincTask", "doing in background");
 
+        Log.d("AsincTask", "doing in background");
         context = (Context) objects[0];
         activity = (Activity) objects[1];
+        directionsFake = new DirectionsFake(activity);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
+        createLocationRequest();
         while (origin.equals("") || dest.equals("")) {
             try {
                 setPosition();
                 getDestination();
-                //Thread.sleep(1000);
+                Thread.sleep(1000);
             } catch (Exception e) {
                 Log.e("Thread", "Error");
                 break;
@@ -88,13 +91,19 @@ public class getDirectionTask extends AsyncTask<Object, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        //Utility.requestDirection(origin, dest, context);
+        /**
+         * TODO the request is made in a fake way 'till now, therefore the returned obejct is local.
+         * Utility.requestDirection(origin, dest, context);
+         */
+        Log.d("Real Origin-Destination", origin);
+        Log.d("Real Origin-Destination", dest);
+
+        JSONObject dataDirection = directionsFake.toMauriziano;
+        Log.d("Mauriziano", dataDirection.toString());
 
     }
 
     public void setPosition() {
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
-        createLocationRequest();
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
