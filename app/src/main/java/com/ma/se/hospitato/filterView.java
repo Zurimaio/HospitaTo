@@ -13,7 +13,7 @@ public class filterView extends AppCompatActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_filter_view);
 
         b1=(ImageView) findViewById(R.id.dep1);
         b2=(ImageView) findViewById(R.id.dep2);
