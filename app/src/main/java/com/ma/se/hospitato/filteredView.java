@@ -2,6 +2,8 @@ package com.ma.se.hospitato;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -77,7 +79,7 @@ public class filteredView extends AppCompatActivity {
                 databaseReference
         ) {
             @Override
-            protected void populateViewHolder(RequestViewHolder viewHolder, Hospital model, int position) {
+            protected void populateViewHolder(RequestViewHolder viewHolder, final Hospital model, int position) {
                 final String filter= getIntent().getStringExtra("Department");
                 final boolean t=model.getDepartments().get(filter);
 
@@ -87,17 +89,34 @@ public class filteredView extends AppCompatActivity {
                 else{
                     viewHolder.noDetails();
                 }
+
+                viewHolder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        if(isLongClick){
+                            recyclerView.setVisibility(View.GONE);
+                            Fragment displayED = DisplayED.newInstance(model);
+                            FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
+                            tr.replace(R.id.fragment_container, displayED);
+                            tr.addToBackStack(null);
+                            tr.commit();
+                        }
+                    }
+                });
             }
 
         };
         recyclerView.setAdapter(firebaseRecyclerAdapter);
     }
 
-    public static class RequestViewHolder extends RecyclerView.ViewHolder {
+    public static class RequestViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
         public View mView;
+        private ItemClickListener itemClickListener;
         public RequestViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         public void setDetails(String Nameh, String Addressh ) {
@@ -123,6 +142,27 @@ public class filteredView extends AppCompatActivity {
             estimatedTravelTime.setVisibility(View.GONE);
             estimatedTravelTime_h.setVisibility(View.GONE);
         }
+
+        public void setItemClickListener(ItemClickListener itemClickListener){
+            this.itemClickListener=itemClickListener;
+        }
+
+        @Override
+        public void onClick(View v) {
+            itemClickListener.onClick(v,getAdapterPosition(),true);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            itemClickListener.onClick(v,getAdapterPosition(),true);
+            return true;
+        }
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
 
 }
