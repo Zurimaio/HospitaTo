@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.animation.AccelerateInterpolator;
 
@@ -24,6 +25,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -41,7 +46,7 @@ import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AsyncGetDirectionTask extends AsyncTask<Object, Void, String> {
+public class AsyncGetDirectionTask extends AsyncTask<Object, Void, Void> {
     private int REQUEST_CHECK_SETTINGS = 2;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
@@ -56,9 +61,16 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, String> {
     Double lng = null;
     private boolean fromMap = true;
     DirectionsFake directionsFake;
+    SupportMapFragment mapFragment;
 
 
 
+
+    public AsyncGetDirectionTask(FragmentActivity activity){
+        mapFragment = (SupportMapFragment) activity.getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+
+    }
 
     @Override
     protected void onPreExecute() {
@@ -66,7 +78,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Object... objects) {
+    protected Void doInBackground(Object... objects) {
         /**
          * Set up variables for location task
          */
@@ -92,13 +104,13 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, String> {
             }
         }
 
+        return null;
 
-        return origin;
     }
 
 
     @Override
-    protected void onPostExecute(String aVoid) {
+    protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
                 /**
          * TODO the request is made in a fake way 'till now, therefore the returned obejct is local.
@@ -107,7 +119,10 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, String> {
         Log.d("Real Origin-Destination", origin);
         Log.d("Real Origin-Destination", dest);
         //activity.setLog(lat);
-
+        mapFragment.getMapAsync(activity);
+        //LatLng pos = new LatLng(getLat(), getLog());
+        //mMap.addMarker(new MarkerOptions().position(pos).title("Your Position"));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
 
         /**
          * TODO whenever will be possible to draw on map
@@ -213,7 +228,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, String> {
     public void getDestination() {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Hospitals");
-        List<String> destinations = new ArrayList<>();
+        //List<String> destinations = new ArrayList<>();
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

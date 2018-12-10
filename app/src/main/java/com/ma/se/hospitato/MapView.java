@@ -54,16 +54,17 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_view);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        //mapFragment.getMapAsync(this);
 
+        new AsyncGetDirectionTask(this).execute(getApplicationContext(), MapView.this);
+
+        /*
         Thread thread = new Thread(){
             @Override
             public void run() {
                 Log.d("Starting Thread", "started");
                 try {
-                    res = new AsyncGetDirectionTask().execute(getApplicationContext(), MapView.this).get();
                     pos = Utility.fromStringToCoord(res);
                     setLat(pos.get("lat"));
                     setLog(pos.get("lng"));
@@ -74,7 +75,7 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
             }
         };
         thread.start();
-
+        */
     }
 
 
@@ -91,23 +92,7 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        Thread th = new Thread() {
-            @Override
-            public void run() {
-                while (res == null) {
-                    try {
-                        Thread.sleep(1000);
-                        System.out.println("Waiting");
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-                System.out.println("COORDINATESSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
 
-
-            }
-        };
-        th.start();
         /**
          * TODO get the last location know and then update the location
          *
