@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,6 +33,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MapView extends FragmentActivity implements OnMapReadyCallback {
 
     private int REQUEST_CHECK_SETTINGS = 2;
@@ -41,6 +45,8 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
     private Double lat;
     private Double log;
     private GoogleMap mMap;
+    private String res;
+    private HashMap<String, Double> pos;
 
 
     @Override
@@ -52,15 +58,22 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        /**
-         * Here the position is retrieved from the intent
-         */
-        Bundle LatLong = getIntent().getExtras();
-        if(LatLong != null){
-            setLat((Double)LatLong.get("Latitude"));
-            setLog((Double)LatLong.get("Longitude"));
-        }
-
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                Log.d("Starting Thread", "started");
+                try {
+                    res = new AsyncGetDirectionTask().execute(getApplicationContext(), MapView.this).get();
+                    pos = Utility.fromStringToCoord(res);
+                    setLat(pos.get("lat"));
+                    setLog(pos.get("lng"));
+                }catch (Exception e){
+                    Log.e("Thread Error", "No value");
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
 
     }
 
@@ -77,11 +90,35 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // Add a marker in Sydney and move the camera
+
+        Thread th = new Thread() {
+            @Override
+            public void run() {
+                while (res == null) {
+                    try {
+                        Thread.sleep(1000);
+                        System.out.println("Waiting");
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println("COORDINATESSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+
+
+            }
+        };
+        th.start();
+        /**
+         * TODO get the last location know and then update the location
+         *
         LatLng pos = new LatLng(getLat(), getLog());
         mMap.addMarker(new MarkerOptions().position(pos).title("Your Position"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+        */
     }
+
+
+
 
     public Double getLat() {
         return lat;
@@ -101,4 +138,14 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
 
 
 
+    public boolean startService() {
+        try {
+            //String res = new AsyncGetDirectionTask().execute(getApplicationContext(), MapView.this).get();
+            //Log.d("Map View", res);
+            return true;
+        } catch (Exception error) {
+            Log.e("Error", "AsyncTask");
+            return false;
+        }
+    }
 }

@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Utility {
@@ -69,6 +70,14 @@ public class Utility {
     static  public String fromDoubleToStringCoord(Double lat, Double log){
         String pos = Double.toString(lat) + ","+Double.toString(log);
         return pos;
+    }
+
+    static public HashMap<String, Double> fromStringToCoord(String coords){
+        HashMap<String, Double> c = new HashMap<>();
+        c.put("lat", Double.parseDouble(coords.split(",")[0]));
+        c.put("lng", Double.parseDouble(coords.split(",")[1]));
+        return c;
+
     }
 
 

@@ -1,0 +1,349 @@
+{
+  "geocoded_waypoints" : [
+    {
+      "geocoder_status" : "OK",
+      "place_id" : "ChIJH3tkhQ5tiEcRnbWJ_1J_-BY",
+      "types" : [ "book_store", "establishment", "point_of_interest", "store" ]
+    },
+    {
+      "geocoder_status" : "OK",
+      "place_id" : "ChIJ17oV6zBtiEcRuuVKIMHezD4",
+      "types" : [ "street_address" ]
+    }
+  ],
+  "routes" : [
+    {
+      "bounds" : {
+        "northeast" : {
+          "lat" : 45.0739276,
+          "lng" : 7.670663299999999
+        },
+        "southwest" : {
+          "lat" : 45.0501546,
+          "lng" : 7.661135000000001
+        }
+      },
+      "copyrights" : "Dati mappa ©2018 Google",
+      "legs" : [
+        {
+          "distance" : {
+            "text" : "3,9 km",
+            "value" : 3874
+          },
+          "duration" : {
+            "text" : "13 min",
+            "value" : 762
+          },
+          "end_address" : "Corso Enrico De Nicola, 8a, 10128 Torino TO, Italia",
+          "end_location" : {
+            "lat" : 45.0503106,
+            "lng" : 7.663576099999998
+          },
+          "start_address" : "Via Cernaia, 36/d, 10122 Torino TO, Italia",
+          "start_location" : {
+            "lat" : 45.0728544,
+            "lng" : 7.670663299999999
+          },
+          "steps" : [
+            {
+              "distance" : {
+                "text" : "0,2 km",
+                "value" : 222
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 53
+              },
+              "end_location" : {
+                "lat" : 45.0738423,
+                "lng" : 7.668287899999999
+              },
+              "html_instructions" : "Procedi in direzione \u003cb\u003enordovest\u003c/b\u003e da \u003cb\u003eVia Cernaia\u003c/b\u003e verso \u003cb\u003eVia Alessandro Manzoni\u003c/b\u003e",
+              "polyline" : {
+                "points" : "ihbrGsdym@IVQt@On@y@|Cq@`COn@C?C?A?C@C?C@ABEB"
+              },
+              "start_location" : {
+                "lat" : 45.0728544,
+                "lng" : 7.670663299999999
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "62 m",
+                "value" : 62
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 14
+              },
+              "end_location" : {
+                "lat" : 45.0736715,
+                "lng" : 7.667813900000001
+              },
+              "html_instructions" : "Svolta leggermente a \u003cb\u003esinistra\u003c/b\u003e in \u003cb\u003ePiazza XVIII Dicembre\u003c/b\u003e",
+              "maneuver" : "turn-slight-left",
+              "polyline" : {
+                "points" : "onbrGyuxm@CBA@ABABABADAB?@?BAD?D?D?D?DFJDHB@DDDBD@FAB?BA"
+              },
+              "start_location" : {
+                "lat" : 45.0738423,
+                "lng" : 7.668287899999999
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "45 m",
+                "value" : 45
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 12
+              },
+              "end_location" : {
+                "lat" : 45.0736052,
+                "lng" : 7.6682682
+              },
+              "html_instructions" : "Svolta a \u003cb\u003esinistra\u003c/b\u003e in \u003cb\u003eCorso Bolzano\u003c/b\u003e",
+              "maneuver" : "turn-left",
+              "polyline" : {
+                "points" : "mmbrGyrxm@DCDEDG@E@C@I@C?E?E?C?EAE?CAEACCCCC"
+              },
+              "start_location" : {
+                "lat" : 45.0736715,
+                "lng" : 7.667813900000001
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0,2 km",
+                "value" : 171
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 46
+              },
+              "end_location" : {
+                "lat" : 45.0729094,
+                "lng" : 7.670216699999999
+              },
+              "html_instructions" : "Svolta a \u003cb\u003edestra\u003c/b\u003e e prendi \u003cb\u003eVia Cernaia\u003c/b\u003e",
+              "maneuver" : "turn-right",
+              "polyline" : {
+                "points" : "ambrGuuxm@Rq@l@aCx@_DNq@"
+              },
+              "start_location" : {
+                "lat" : 45.0736052,
+                "lng" : 7.6682682
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0,7 km",
+                "value" : 681
+              },
+              "duration" : {
+                "text" : "2 min",
+                "value" : 127
+              },
+              "end_location" : {
+                "lat" : 45.0674343,
+                "lng" : 7.666327399999998
+              },
+              "html_instructions" : "Svolta a \u003cb\u003edestra\u003c/b\u003e e prendi \u003cb\u003eCorso Vinzaglio\u003c/b\u003e",
+              "maneuver" : "turn-right",
+              "polyline" : {
+                "points" : "uhbrG{aym@hC|A|CtBxD~B~B|AfDtBj@^fBjAzClBLF"
+              },
+              "start_location" : {
+                "lat" : 45.0729094,
+                "lng" : 7.670216699999999
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0,3 km",
+                "value" : 327
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 75
+              },
+              "end_location" : {
+                "lat" : 45.0650568,
+                "lng" : 7.6643546
+              },
+              "html_instructions" : "Mantieni la \u003cb\u003edestra\u003c/b\u003e per continuare su \u003cb\u003eCorso Duca degli Abruzzi\u003c/b\u003e",
+              "maneuver" : "keep-right",
+              "polyline" : {
+                "points" : "mfarGqixm@XTOl@ZRdCzA`CtA|B~AJH`@V"
+              },
+              "start_location" : {
+                "lat" : 45.0674343,
+                "lng" : 7.666327399999998
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0,4 km",
+                "value" : 418
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 62
+              },
+              "end_location" : {
+                "lat" : 45.063365,
+                "lng" : 7.6691075
+              },
+              "html_instructions" : "Svolta a \u003cb\u003esinistra\u003c/b\u003e e prendi \u003cb\u003eCorso Stati Uniti\u003c/b\u003e",
+              "maneuver" : "turn-left",
+              "polyline" : {
+                "points" : "sw`rGe}wm@Pk@Pu@bByGdB}Gh@wBz@eD"
+              },
+              "start_location" : {
+                "lat" : 45.0650568,
+                "lng" : 7.6643546
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0,6 km",
+                "value" : 592
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 76
+              },
+              "end_location" : {
+                "lat" : 45.0586504,
+                "lng" : 7.666110099999999
+              },
+              "html_instructions" : "Svolta a \u003cb\u003edestra\u003c/b\u003e e prendi \u003cb\u003eCorso Galileo Ferraris\u003c/b\u003e",
+              "maneuver" : "turn-right",
+              "polyline" : {
+                "points" : "_m`rG}zxm@Lg@ZP|ClBTNhC|A`DlB|DbCvD~Bl@^"
+              },
+              "start_location" : {
+                "lat" : 45.063365,
+                "lng" : 7.6691075
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0,5 km",
+                "value" : 502
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 77
+              },
+              "end_location" : {
+                "lat" : 45.0545899,
+                "lng" : 7.663323300000001
+              },
+              "html_instructions" : "Prosegui dritto per rimanere su \u003cb\u003eCorso Galileo Ferraris\u003c/b\u003e",
+              "maneuver" : "straight",
+              "polyline" : {
+                "points" : "qo_rGehxm@z@j@fAl@r@b@bGpDlDvB`EdC"
+              },
+              "start_location" : {
+                "lat" : 45.0586504,
+                "lng" : 7.666110099999999
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0,4 km",
+                "value" : 355
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 62
+              },
+              "end_location" : {
+                "lat" : 45.0519438,
+                "lng" : 7.6612182
+              },
+              "html_instructions" : "Mantieni la \u003cb\u003edestra\u003c/b\u003e per restare su \u003cb\u003eCorso Galileo Ferraris\u003c/b\u003e",
+              "maneuver" : "keep-right",
+              "polyline" : {
+                "points" : "ev~qGwvwm@Mj@~ExCHDjC`BhDtB"
+              },
+              "start_location" : {
+                "lat" : 45.0545899,
+                "lng" : 7.663323300000001
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0,4 km",
+                "value" : 373
+              },
+              "duration" : {
+                "text" : "2 min",
+                "value" : 98
+              },
+              "end_location" : {
+                "lat" : 45.0503154,
+                "lng" : 7.6650293
+              },
+              "html_instructions" : "Svolta a \u003cb\u003esinistra\u003c/b\u003e e prendi \u003cb\u003eCorso Carlo e Nello Rosselli\u003c/b\u003e",
+              "maneuver" : "turn-left",
+              "polyline" : {
+                "points" : "se~qGsiwm@ZNHi@Hi@z@gGJo@Lg@p@gCh@yA\\q@b@g@^Y"
+              },
+              "start_location" : {
+                "lat" : 45.0519438,
+                "lng" : 7.6612182
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0,1 km",
+                "value" : 126
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 60
+              },
+              "end_location" : {
+                "lat" : 45.0503106,
+                "lng" : 7.663576099999998
+              },
+              "html_instructions" : "Svolta a \u003cb\u003edestra\u003c/b\u003e e prendi \u003cb\u003eCorso Enrico De Nicola\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003eLa tua destinazione è sulla destra\u003c/div\u003e",
+              "maneuver" : "turn-right",
+              "polyline" : {
+                "points" : "o{}qGmaxm@JBBBB@B@@BFNEh@YvE"
+              },
+              "start_location" : {
+                "lat" : 45.0503154,
+                "lng" : 7.6650293
+              },
+              "travel_mode" : "DRIVING"
+            }
+          ],
+          "traffic_speed_entry" : [],
+          "via_waypoint" : []
+        }
+      ],
+      "overview_polyline" : {
+        "points" : "ihbrGsdym@eBzGaApDG?MBMLGPCN?VV\\JDJATSFW?UESGG`AsDhAqEfHrElOrJjHvEOl@ZRfGpDhChB`@VPk@tBoInCuKhAmExD~B~N~Ip_@lUMj@~ExCtCfBdEdCRsAfAwH~@oDh@yA\\q@b@g@^YNFFBHR_@`G"
+      },
+      "summary" : "Corso Galileo Ferraris",
+      "warnings" : [],
+      "waypoint_order" : []
+    }
+  ],
+  "status" : "OK"
+}

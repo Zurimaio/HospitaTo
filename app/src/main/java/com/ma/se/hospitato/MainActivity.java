@@ -2,48 +2,21 @@ package com.ma.se.hospitato;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity {
     private int REQUEST_CHECK_SETTINGS = 2;
@@ -66,17 +39,15 @@ public class MainActivity extends AppCompatActivity {
         Button mapView = findViewById(R.id.toMapView);
         toMapViewButton(mapView);
 
+        /*
         if(startService()){
             Toast.makeText(this,"AsyncTask started",
-                    Toast.LENGTH_LONG);
+                    Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(this,"AsyncTask NOT started",
                     Toast.LENGTH_LONG);
         }
-
-
-
-
+        */
 
     }
 
@@ -98,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean startService() {
         try {
-            new getDirectionTask().execute(getApplicationContext(), MainActivity.this);
+            //new AsyncGetDirectionTask().execute(getApplicationContext(), MainActivity.this);
             return true;
         } catch (Exception error) {
             Log.e("Error", "AsyncTask");

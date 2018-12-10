@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
+
+/**
+ * TODO to be eliminated whenever the DIRECTION_API will be purchased
+ */
 public class DirectionsFake {
 
     public JSONObject toMauriziano;
@@ -21,7 +25,7 @@ public class DirectionsFake {
     public DirectionsFake(Activity activity){
         this.activity = activity;
         Directions(); //get the direction fake
-        this.toMauriziano = toJSONObject(directions.get("Mauriziano"));
+        this.toMauriziano = toJSONObject(directions.get("Mauriziano")); //test
     }
 
 
@@ -43,7 +47,7 @@ public class DirectionsFake {
 
     public HashMap<String, String> Directions(){
 
-        String mauriziano = loadJSONFromAsset();
+        String mauriziano = loadJSONFromRes();
         directions = new HashMap<>();
         directions.put("Mauriziano", mauriziano);
 
@@ -53,10 +57,10 @@ public class DirectionsFake {
 
 
 
-    public String loadJSONFromAsset() {
+    public String loadJSONFromRes() {
         String json = null;
         try {
-            InputStream is = activity.getAssets().open("directions.json");
+            InputStream is = activity.getResources().openRawResource(R.raw.directions);
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
@@ -66,6 +70,8 @@ public class DirectionsFake {
             ex.printStackTrace();
             return null;
         }
+
+
         return json;
     }
 

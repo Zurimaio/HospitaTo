@@ -33,47 +33,56 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
+import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class getDirectionTask extends AsyncTask<Object, Void, Void> {
+public class AsyncGetDirectionTask extends AsyncTask<Object, Void, String> {
     private int REQUEST_CHECK_SETTINGS = 2;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
     protected List<String> destinations = new ArrayList<>();
     public Location currentPos;
-    public Activity activity;
+    public MapView activity;
     public Context context;
     public String origin = "";
     public String dest = "";
+    Double lat = null;
+    Double lng = null;
+    private boolean fromMap = true;
     DirectionsFake directionsFake;
+
+
+
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Log.d("AsincTask", "onPreExecute");
-
-
-
-
     }
 
     @Override
-    protected Void doInBackground(Object... objects) {
+    protected String doInBackground(Object... objects) {
         /**
          * Set up variables for location task
          */
 
         Log.d("AsincTask", "doing in background");
         context = (Context) objects[0];
-        activity = (Activity) objects[1];
+        activity = (MapView) objects[1];
+
         directionsFake = new DirectionsFake(activity);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
         createLocationRequest();
+
+
         while (origin.equals("") || dest.equals("")) {
             try {
+                System.out.println("Waiting");
                 setPosition();
                 getDestination();
                 Thread.sleep(1000);
@@ -84,22 +93,36 @@ public class getDirectionTask extends AsyncTask<Object, Void, Void> {
         }
 
 
-        return null;
+        return origin;
     }
 
 
     @Override
-    protected void onPostExecute(Void aVoid) {
+    protected void onPostExecute(String aVoid) {
         super.onPostExecute(aVoid);
-        /**
+                /**
          * TODO the request is made in a fake way 'till now, therefore the returned obejct is local.
          * Utility.requestDirection(origin, dest, context);
          */
         Log.d("Real Origin-Destination", origin);
         Log.d("Real Origin-Destination", dest);
+        //activity.setLog(lat);
 
-        JSONObject dataDirection = directionsFake.toMauriziano;
-        Log.d("Mauriziano", dataDirection.toString());
+
+        /**
+         * TODO whenever will be possible to draw on map
+         *
+        try {
+            JSONDirections data = new JSONDirections(directionsFake.toMauriziano);
+            Log.d("Mauriziano", "Distance " + data.getDistanceString());
+            Log.d("Mauriziano", "Duration " +  data.getDurationString());
+            Log.d("Mauriziano", "Start Address " + data.getStart_address());
+            Log.d("Mauriziano", "End Address " + data.getEnd_address());
+        }catch (Exception e){
+            Log.e("ERROR", "Not able to find the field");
+            e.printStackTrace();
+        }
+         */
 
     }
 
