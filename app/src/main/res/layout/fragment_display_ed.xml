@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/ED_name_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Ed_name" />
+
+    <TextView
+        android:id="@+id/ED_address_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ED_name_f"
+        android:layout_alignEnd="@+id/ED_name_f"
+        android:layout_marginTop="54dp"
+        android:layout_marginEnd="-9dp"
+        android:text="Ed_address" />
+
+    <ImageView
+        android:id="@+id/map_log_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ED_address_f"
+        android:layout_marginStart="41dp"
+        android:layout_marginBottom="2dp"
+        android:layout_toEndOf="@+id/ED_name_f"
+        app:srcCompat="@android:drawable/ic_dialog_map" />
+
+    <TextView
+        android:id="@+id/textView6_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ED_address_f"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp"
+        android:text="Estimated travel time:" />
+
+    <TextView
+        android:id="@+id/travel_time_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView6_f"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="hh:mm" />
+
+    <TextView
+        android:id="@+id/G_waitingTime_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ED_address_f"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="3dp"
+        android:layout_toStartOf="@+id/travel_time_f"
+        android:text="G_waitingTime" />
+
+    <TextView
+        android:id="@+id/W_waitingTime_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/G_waitingTime_f"
+        android:layout_alignStart="@+id/travel_time_f"
+        android:layout_alignBottom="@+id/G_waitingTime_f"
+        android:layout_marginStart="24dp"
+        android:text="W_waitingTime" />
+
+    <TextView
+        android:id="@+id/PhoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="51dp"
+        android:text="PhoneNumber" />
+
+    <TextView
+        android:id="@+id/Waitings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="23dp"
+        android:text="Number of Waiting People:" />
+
+    <TextView
+        android:id="@+id/RedTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="22dp"
+        android:layout_marginBottom="217dp"
+        android:text="RedTag" />
+
+    <TextView
+        android:id="@+id/YellowTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="-13dp"
+        android:layout_marginBottom="192dp"
+        android:layout_toStartOf="@+id/G_waitingTime_f"
+        android:text="YellowTag" />
+
+    <TextView
+        android:id="@+id/GreenTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="-7dp"
+        android:layout_marginBottom="170dp"
+        android:layout_toStartOf="@+id/G_waitingTime_f"
+        android:text="GreenTag" />
+
+    <TextView
+        android:id="@+id/WhiteTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/RedTag"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="144dp"
+        android:text="WhiteTag" />
+
+</RelativeLayout>

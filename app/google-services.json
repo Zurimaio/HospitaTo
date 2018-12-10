@@ -23,6 +23,30 @@
           }
         },
         {
+          "client_id": "915877117601-sb3snth9u5dh5n52dpqjgk1k1vnbp6f2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ma.se.hospitato",
+            "certificate_hash": "65913409a0cfad2475e40d0a361247eab2b09b68"
+          }
+        },
+        {
+          "client_id": "915877117601-e39ndsam65e2d5m43iu22r9fln5ndcjd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ma.se.hospitato",
+            "certificate_hash": "db0196ed2b5198c7f9f9b405a429ce8508970066"
+          }
+        },
+        {
+          "client_id": "915877117601-hb1l5trpt4ht560r44qv3e45b61ov64e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ma.se.hospitato",
+            "certificate_hash": "a0300632771af532cb8bc6e66434063234e7ccd3"
+          }
+        },
+        {
           "client_id": "915877117601-r7di8gu05d0offma3sqmhhculoblmpft.apps.googleusercontent.com",
           "client_type": 3
         }

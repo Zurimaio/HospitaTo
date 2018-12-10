@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+
+    <TextView
+        android:id="@+id/request_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BEST ED'S NAME"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="5dp"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:textAlignment="center"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Address"
+        android:id="@+id/request_address"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:textSize="18dp"
+        android:textAlignment="center"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/greenWaitingTime"
+            android:textStyle="bold"
+            android:layout_marginLeft="20dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="left"
+            android:textColor="#FFFFFF"
+            android:textAlignment="center"
+            android:text="GREEN WAITING TIME"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/WhiteWaitingTime"
+            android:textStyle="bold"
+            android:layout_marginLeft="32dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:background="#FFFFFF"
+            android:layout_gravity="left"
+            android:textColor="@color/colorPrimary"
+            android:textAlignment="center"
+            android:text="WHITE WAITING TIME"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ESTIMATED TRAVEL TIME"
+        android:layout_marginTop="25dp"
+        android:textAlignment="center"
+        android:id="@+id/estimatedTravelTime"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"/>
+
+</LinearLayout>
