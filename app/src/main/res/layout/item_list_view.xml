@@ -1,78 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/item_layout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/item_layout"
+    android:orientation="vertical"
+    android:weightSum="1">
 
 
     <TextView
         android:id="@+id/ED_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="Ed_name" />
+        android:text="BEST ED'S NAME"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="5dp"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:textAlignment="center"
+        />
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Address"
         android:id="@+id/ED_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ED_name"
-        android:layout_alignEnd="@+id/ED_name"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="-9dp"
-        android:text="Ed_address" />
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:textSize="18dp"
+        android:textAlignment="center"/>
 
-    <ImageView
-        android:id="@+id/map_log"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ED_address"
-        android:layout_marginStart="41dp"
-        android:layout_marginBottom="2dp"
-        android:layout_toEndOf="@+id/ED_name"
-        app:srcCompat="@android:drawable/ic_dialog_map" />
+        android:orientation="horizontal"
+        android:layout_marginTop="0dp">
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/G_waitingTime"
+            android:textStyle="bold"
+            android:layout_marginLeft="20dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="left"
+            android:textColor="#FFFFFF"
+            android:textAlignment="center"
+            android:text="GREEN WAITING TIME"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/W_waitingTime"
+            android:textStyle="bold"
+            android:layout_marginLeft="32dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:background="#FFFFFF"
+            android:layout_gravity="left"
+            android:textColor="@color/colorPrimary"
+            android:textAlignment="center"
+            android:text="WHITE WAITING TIME"/>
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ED_address"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp"
-        android:text="Estimated travel time:" />
+        android:text="ESTIMATED TRAVEL TIME"
+        android:layout_marginTop="25dp"
+        android:textAlignment="center"
+        android:id="@+id/travel_time_txt"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"/>
 
     <TextView
         android:id="@+id/travel_time"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView6"
+        android:layout_below="@+id/travel_time_txt"
+        android:textAlignment="center"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:text="hh:mm" />
 
-    <TextView
-        android:id="@+id/G_waitingTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ED_address"
-        android:layout_marginTop="15dp"
-        android:layout_toStartOf="@+id/travel_time"
-        android:text="G_waitingTime" />
-
-    <TextView
-        android:id="@+id/W_waitingTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/G_waitingTime"
-        android:layout_alignBottom="@+id/G_waitingTime"
-        android:layout_alignStart="@+id/travel_time"
-        android:layout_marginStart="24dp"
-        android:text="W_waitingTime" />
-
-
-
-</RelativeLayout>
+</LinearLayout>

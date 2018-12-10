@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -28,11 +29,14 @@ public class filteredView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_filtered_view);
+        setContentView(R.layout.activity_main);
+        Button hide_filter = findViewById(R.id.toFilter);
+        hide_filter.setVisibility(View.GONE);
+
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Hospitals");
 
-        recyclerView = (RecyclerView) findViewById(R.id.request_HospitalsList);
+        recyclerView = (RecyclerView) findViewById(R.id.myrecycler);
         //Avoid unnecessary layout passes by setting setHasFixedSize to true
         recyclerView.setHasFixedSize(true);
         //Select the type of layout manager you would use for your recyclerView
@@ -68,7 +72,7 @@ public class filteredView extends AppCompatActivity {
 
         FirebaseRecyclerAdapter<Hospital, RequestViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Hospital, RequestViewHolder>(
                 Hospital.class,
-                R.layout.first_element_filtered_list,
+                R.layout.item_list_view,
                 RequestViewHolder.class,
                 databaseReference
         ) {
@@ -97,24 +101,27 @@ public class filteredView extends AppCompatActivity {
         }
 
         public void setDetails(String Nameh, String Addressh ) {
-            TextView name = (TextView) mView.findViewById(R.id.request_name);
-            TextView address = (TextView) mView.findViewById(R.id.request_address);
+            TextView name = (TextView) mView.findViewById(R.id.ED_name);
+            TextView address = (TextView) mView.findViewById(R.id.ED_address);
             name.setText(Nameh);
             address.setText(Addressh);
         }
 
         public void noDetails() {
 
-            TextView name = (TextView) mView.findViewById(R.id.request_name);
-            TextView address = (TextView) mView.findViewById(R.id.request_address);
-            TextView greenWaitingTime = (TextView) mView.findViewById(R.id.greenWaitingTime);
-            TextView whiteWaitingTime = (TextView) mView.findViewById(R.id.WhiteWaitingTime);
-            TextView estimatedTravelTime = (TextView) mView.findViewById(R.id.estimatedTravelTime);
+            TextView name = (TextView) mView.findViewById(R.id.ED_name);
+            TextView address = (TextView) mView.findViewById(R.id.ED_address);
+            TextView greenWaitingTime = (TextView) mView.findViewById(R.id.G_waitingTime);
+            TextView whiteWaitingTime = (TextView) mView.findViewById(R.id.W_waitingTime);
+            TextView estimatedTravelTime = (TextView) mView.findViewById(R.id.travel_time_txt);
+            TextView estimatedTravelTime_h = (TextView) mView.findViewById(R.id.travel_time);
+
             name.setVisibility(View.GONE);
             address.setVisibility(View.GONE);
             greenWaitingTime.setVisibility(View.GONE);
             whiteWaitingTime.setVisibility(View.GONE);
             estimatedTravelTime.setVisibility(View.GONE);
+            estimatedTravelTime_h.setVisibility(View.GONE);
         }
     }
 

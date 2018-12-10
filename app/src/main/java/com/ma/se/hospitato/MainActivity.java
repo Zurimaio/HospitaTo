@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             holder.EDaddress.setText((data.getAddress()));
             if (position != 0) {
                 holder.EDaddress.setVisibility(View.GONE);
-                holder.map_log.setVisibility(View.GONE);
+               // holder.map_log.setVisibility(View.GONE);
                 holder.E_TT.setVisibility(View.GONE);
                 holder.W_waitingTime.setVisibility(View.GONE);
                 holder.G_waitingTime.setVisibility(View.GONE);
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             TextView W_waitingTime;
             TextView travTime;
             TextView E_TT;
-            ImageView map_log;
+            //ImageView map_log;
             private ItemClickListener itemClickListener;
 
 
@@ -164,8 +164,8 @@ public class MainActivity extends AppCompatActivity {
                 G_waitingTime = (TextView) itemView.findViewById(R.id.G_waitingTime);
                 W_waitingTime = (TextView) itemView.findViewById(R.id.W_waitingTime);
                 travTime = (TextView) itemView.findViewById(R.id.travel_time);
-                E_TT = (TextView) itemView.findViewById(R.id.textView6);
-                map_log = (ImageView) itemView.findViewById(R.id.map_log);
+                E_TT = (TextView) itemView.findViewById(R.id.travel_time_txt);
+               // map_log = (ImageView) itemView.findViewById(R.id.map_log);
                 itemView.setOnClickListener(this);
                 itemView.setOnLongClickListener(this);
 
