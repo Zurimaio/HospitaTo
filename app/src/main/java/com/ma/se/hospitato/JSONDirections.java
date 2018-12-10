@@ -1,7 +1,15 @@
 package com.ma.se.hospitato;
 
+import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.maps.android.PolyUtil;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class JSONDirections extends JSONObject {
 
@@ -10,6 +18,7 @@ public class JSONDirections extends JSONObject {
     private JSONObject legs;
     private JSONObject distance;
     private  JSONObject duration;
+    private JSONObject overview_polyline;
 
     private String distanceString;
     private Integer distanceValue;
@@ -19,7 +28,10 @@ public class JSONDirections extends JSONObject {
 
     private String start_address;
     private String end_address;
+    private String points;
 
+    private Polyline path;
+    private List<LatLng> coords;
 
 
     public JSONDirections() {
@@ -32,7 +44,9 @@ public class JSONDirections extends JSONObject {
         setLegs((JSONObject) getRoutes().getJSONArray("legs").get(0));
         setDistance((JSONObject)getLegs().get("distance"));
         setDuration((JSONObject) getLegs().get("duration"));
+        setOverview_polyline((JSONObject)getRoutes().get("overview_polyline"));
 
+        setPoints(getOverview_polyline().getString("points"));
         setDurationString(getDuration().getString("text"));
         setDurationValue(getDuration().getInt("value"));
 
@@ -135,6 +149,46 @@ public class JSONDirections extends JSONObject {
 
     public void setDuration(JSONObject duration) {
         this.duration = duration;
+    }
+
+
+    public Polyline getPath() {
+        return path;
+    }
+
+    public void setPath(Polyline path) {
+        this.path = path;
+    }
+
+
+    public List<LatLng> getPolyPath(){
+        List<LatLng> decoded = PolyUtil.decode(getPoints());
+        return decoded;
+    }
+
+    public String getPoints() {
+        return points;
+    }
+
+    public void setPoints(String points) {
+        this.points = points;
+    }
+
+    public List<LatLng> getCoords() {
+        return coords;
+    }
+
+    public void setCoords(List<LatLng> coords) {
+        this.coords = coords;
+    }
+
+    public JSONObject getOverview_polyline() {
+        return overview_polyline;
+    }
+
+    public void setOverview_polyline(JSONObject overview_polyline) {
+        this.overview_polyline = overview_polyline;
+
     }
 }
 

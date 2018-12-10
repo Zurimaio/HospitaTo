@@ -45,9 +45,10 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.nio.file.WatchEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class AsyncGetDirectionTask extends AsyncTask<Object, Void, LatLng> {
+public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<String,Object>> {
     private int REQUEST_CHECK_SETTINGS = 2;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
@@ -63,12 +64,14 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, LatLng> {
     private boolean fromMap = true;
     DirectionsFake directionsFake;
     SupportMapFragment mapFragment;
+    private HashMap<String, Object> res;
 
 
 
     public AsyncGetDirectionTask(FragmentActivity activity, GoogleMap mMap){
         mapFragment = (SupportMapFragment) activity.getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        res = new HashMap<>();
     }
 
     @Override
@@ -77,17 +80,17 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, LatLng> {
     }
 
     @Override
-    protected LatLng doInBackground(Object... objects) {
+    protected HashMap<String, Object> doInBackground(Object... objects) {
         /**
          * Set up variables for location task
          */
+
         Log.d("AsincTask", "doing in background");
         context = (Context) objects[0];
         activity = (MapView) objects[1];
         directionsFake = new DirectionsFake(activity);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
         createLocationRequest();
-
 
         while (origin.equals("") || dest.equals("")) {
             try {
@@ -102,23 +105,42 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, LatLng> {
         }
 
         setLat(Double.parseDouble(origin.split(",")[0]));
-        setLng(lng = Double.parseDouble(origin.split(",")[1]));
-        LatLng pos = new LatLng(getLat(), getLng());
-        return pos;
+        setLng(Double.parseDouble(origin.split(",")[1]));
+        LatLng origin = new LatLng(getLat(), getLng());
+        res.put("origin", origin);
+
+        setLat(Double.parseDouble(dest.split(",")[0]));
+        setLng(Double.parseDouble(dest.split(",")[1]));
+        LatLng dest = new LatLng(getLat(), getLng());
+        res.put("dest", dest);
+
+        try {
+           JSONDirections data = new JSONDirections(directionsFake.toMauriziano);
+           res.put("Route", data.getPolyPath());
+         }catch (Exception e){
+            Log.e("ERROR", "Not able to find the field");
+            e.printStackTrace();
+        }
+
+
+
+
+        return res;
 
     }
 
 
     @Override
-    protected void onPostExecute(LatLng aVoid) {
+    protected void onPostExecute(HashMap aVoid) {
         super.onPostExecute(aVoid);
                 /**
          * TODO the request is made in a fake way 'till now, therefore the returned object is local.
          * Utility.requestDirection(origin, dest, context);
          */
-        Log.d("Real Origin-Destination", origin);
-        Log.d("Real Origin-Destination", dest);
         mapFragment.getMapAsync(activity);
+
+
+
         /**
          * TODO whenever will be possible to draw on map
          *
@@ -146,7 +168,11 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, LatLng> {
                 } else {
                     Log.d("Location Result", "found");
                     setCurrentPos(locationResult.getLocations().get(0));
-                    origin = Utility.fromDoubleToStringCoord(getCurrentPos().getLatitude(), getCurrentPos().getLongitude());
+                    //origin = Utility.fromDoubleToStringCoord(getCurrentPos().getLatitude(), getCurrentPos().getLongitude());
+                    /**
+                     * TODO simulated position to eliminate
+                     */
+                    origin = "45.072899" + "," + "7.670697";
 
                 }
 
@@ -262,6 +288,19 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, LatLng> {
 
     public void setLng(Double lng) {
         this.lng = lng;
+    }
+
+    public void getOD(){
+        try {
+            JSONDirections data = new JSONDirections(directionsFake.toMauriziano);
+            Log.d("Mauriziano", "Distance " + data.getDistanceString());
+            Log.d("Mauriziano", "Duration " +  data.getDurationString());
+            Log.d("Mauriziano", "Start Address " + data.getStart_address());
+            Log.d("Mauriziano", "End Address " + data.getEnd_address());
+        }catch (Exception e){
+            Log.e("ERROR", "Not able to find the field");
+            e.printStackTrace();
+        }
     }
 }
 

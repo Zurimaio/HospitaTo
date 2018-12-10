@@ -24,6 +24,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -34,35 +35,33 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class MapView extends FragmentActivity implements OnMapReadyCallback {
 
-    private int REQUEST_CHECK_SETTINGS = 2;
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationCallback mLocationCallback;
-    private LocationRequest mLocationRequest;
     private Double lat;
     private Double log;
     private GoogleMap mMap;
-    private String res;
-    //private HashMap<String, Double> pos;
-    LatLng pos;
-
+    private HashMap<String, Object> result;
+    private LatLng origin;
+    private LatLng dest;
+    private List<LatLng> route;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_view);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        //mapFragment.getMapAsync(this);
         Thread th = new Thread(){
             @Override
             public void run() {
                 super.run();
                 try {
-                    pos = new AsyncGetDirectionTask(MapView.this, mMap).execute(getApplicationContext(), MapView.this).get();
+                    result = new AsyncGetDirectionTask(MapView.this, mMap).execute(getApplicationContext(), MapView.this).get();
+                    origin = (LatLng) result.get("origin");
+                    dest =  (LatLng) result.get("dest");
+                    route = (List<LatLng>) result.get("Route");
                 }catch (ExecutionException e){
                     e.printStackTrace();
                 }catch (InterruptedException e){
@@ -72,73 +71,18 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
         };
         th.start();
 
-
-
-
-
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        /**
-         * TODO get the last location know and then update the location
-         *
-        LatLng pos = new LatLng(getLat(), getLog());
-        */
-        mMap.addMarker(new MarkerOptions().position(pos).title("Your Position"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+        mMap.addMarker(new MarkerOptions().position(origin).title("Your Position"));
+        mMap.addMarker(new MarkerOptions().position(dest).title("Destination"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 10));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+        mMap.addPolyline(new PolylineOptions().addAll(route));
     }
 
 
 
-
-    public Double getLat() {
-        return lat;
-    }
-
-    public void setLat(Double lat) {
-        this.lat = lat;
-    }
-
-    public Double getLog() {
-        return log;
-    }
-
-    public void setLog(Double log) {
-        this.log = log;
-    }
-
-
-
-    public boolean startService() {
-        try {
-            //String res = new AsyncGetDirectionTask().execute(getApplicationContext(), MapView.this).get();
-            //Log.d("Map View", res);
-            return true;
-        } catch (Exception error) {
-            Log.e("Error", "AsyncTask");
-            return false;
-        }
-    }
-
-    public GoogleMap getmMap() {
-        return mMap;
-    }
-
-    public void setmMap(GoogleMap mMap) {
-        this.mMap = mMap;
-    }
 }
