@@ -1,5 +1,5 @@
 package com.ma.se.hospitato;
-import android.app.Activity;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,9 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class filteredView extends AppCompatActivity {
-    private DatabaseReference databaseReference;
-    private RecyclerView recyclerView;
-    private Query query;
+
+    DatabaseReference databaseReference;
+
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +48,29 @@ public class filteredView extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot adSnapshot: dataSnapshot.getChildren()) {
+                    Hospital h = adSnapshot.getValue(Hospital.class);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
+
     @Override
     protected void onStart(){
         super.onStart();
 
 
-       FirebaseRecyclerAdapter<Hospital, RequestViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Hospital, RequestViewHolder>(
-               Hospital.class,
-               R.layout.first_element_filtered_list,
-               RequestViewHolder.class,
-               databaseReference
+        FirebaseRecyclerAdapter<Hospital, RequestViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Hospital, RequestViewHolder>(
+                Hospital.class,
+                R.layout.first_element_filtered_list,
+                RequestViewHolder.class,
+                databaseReference
         ) {
             @Override
             protected void populateViewHolder(RequestViewHolder viewHolder, Hospital model, int position) {
@@ -75,33 +89,33 @@ public class filteredView extends AppCompatActivity {
         recyclerView.setAdapter(firebaseRecyclerAdapter);
     }
 
-        public static class RequestViewHolder extends RecyclerView.ViewHolder {
-            public View mView;
-            public RequestViewHolder(View itemView) {
-                super(itemView);
-                mView = itemView;
-            }
-
-            public void setDetails(String Nameh, String Addressh ) {
-                TextView name = (TextView) mView.findViewById(R.id.request_name);
-                TextView address = (TextView) mView.findViewById(R.id.request_address);
-                name.setText(Nameh);
-                address.setText(Addressh);
-            }
-
-            public void noDetails() {
-
-                TextView name = (TextView) mView.findViewById(R.id.request_name);
-                TextView address = (TextView) mView.findViewById(R.id.request_address);
-                TextView greenWaitingTime = (TextView) mView.findViewById(R.id.greenWaitingTime);
-                TextView whiteWaitingTime = (TextView) mView.findViewById(R.id.WhiteWaitingTime);
-                TextView estimatedTravelTime = (TextView) mView.findViewById(R.id.estimatedTravelTime);
-                name.setVisibility(View.GONE);
-                address.setVisibility(View.GONE);
-                greenWaitingTime.setVisibility(View.GONE);
-                whiteWaitingTime.setVisibility(View.GONE);
-                estimatedTravelTime.setVisibility(View.GONE);
-            }
+    public static class RequestViewHolder extends RecyclerView.ViewHolder {
+        public View mView;
+        public RequestViewHolder(View itemView) {
+            super(itemView);
+            mView = itemView;
         }
+
+        public void setDetails(String Nameh, String Addressh ) {
+            TextView name = (TextView) mView.findViewById(R.id.request_name);
+            TextView address = (TextView) mView.findViewById(R.id.request_address);
+            name.setText(Nameh);
+            address.setText(Addressh);
+        }
+
+        public void noDetails() {
+
+            TextView name = (TextView) mView.findViewById(R.id.request_name);
+            TextView address = (TextView) mView.findViewById(R.id.request_address);
+            TextView greenWaitingTime = (TextView) mView.findViewById(R.id.greenWaitingTime);
+            TextView whiteWaitingTime = (TextView) mView.findViewById(R.id.WhiteWaitingTime);
+            TextView estimatedTravelTime = (TextView) mView.findViewById(R.id.estimatedTravelTime);
+            name.setVisibility(View.GONE);
+            address.setVisibility(View.GONE);
+            greenWaitingTime.setVisibility(View.GONE);
+            whiteWaitingTime.setVisibility(View.GONE);
+            estimatedTravelTime.setVisibility(View.GONE);
+        }
+    }
 
 }

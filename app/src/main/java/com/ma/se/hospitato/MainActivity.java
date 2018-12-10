@@ -1,185 +1,198 @@
 package com.ma.se.hospitato;
 
-import android.Manifest;
+
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
-
-import java.util.concurrent.Executor;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private int MY_LOCATION_REQUEST_CODE = 1;
-    private int REQUEST_CHECK_SETTINGS = 2;
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationCallback mLocationCallback;
-    private LocationRequest mLocationRequest;
-    private String latitude;
-    private String longitude;
-    protected Location currentPos;
-    TextView lat;
-    TextView log;
+    RecyclerView myRecyclerview;
+    MyAdapter adapter;
+    List<Hospital> listData;
+    FirebaseDatabase FDB;
+    DatabaseReference DBR;
+    Button toFilter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                REQUEST_CHECK_SETTINGS);
         setContentView(R.layout.activity_main);
+        myRecyclerview = (RecyclerView) findViewById(R.id.myrecycler);
+        myRecyclerview.setHasFixedSize(true);
+        RecyclerView.LayoutManager LM = new LinearLayoutManager(getApplicationContext());
+        myRecyclerview.setLayoutManager(LM);
+        myRecyclerview.setItemAnimator(new DefaultItemAnimator());
+        myRecyclerview.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
 
-        //Used temporary to go directly to the map view
-        Button mapView = findViewById(R.id.toMapView);
-        toMapViewButton(mapView);
+        listData = new ArrayList<>();
+        adapter = new MyAdapter(listData);
 
-        //TODO temporary value for latitude and longitude
-        lat = findViewById(R.id.latitude);
-        log = findViewById(R.id.longitude);
-
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        createLocationRequest();
-
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    Log.d("Location", "No location result");
-                    return;
-                }else{
-                    Log.d("Location Result", "found");
-                    setCurrentPos(locationResult.getLocations().get(0));
-                    lat.setText(Double.toString(getCurrentPos().getLatitude()));
-                    log.setText(Double.toString(getCurrentPos().getLongitude()));
-
-                }
-
-            }
-        };
-
-        //getLastLocation();
-
-
-    }
-
-    //TODO Temporary to go to the map view
-    public void toMapViewButton(Button mapView) {
-        mapView.setOnClickListener(new View.OnClickListener() {
+        FDB = FirebaseDatabase.getInstance();
+        GetDataFirebase();
+        toFilter = findViewById(R.id.toFilter);
+        toFilter.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent toMapView = new Intent(MainActivity.this, MapView.class);
-                startActivity(toMapView);
+                Intent toFilter = new Intent(MainActivity.this, filterView.class);
+                startActivity(toFilter);
             }
         });
     }
 
+    void GetDataFirebase() {
+        DBR = FDB.getReference("Hospitals"); //"Hospitals"
+        DBR.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Hospital data = dataSnapshot.getValue(Hospital.class);
+                //ADD DATA TO ARRAY LIST
+                listData.add(data);
+                //ADD DATA INTO ADAPTER/RECYCLER VIEW
+                myRecyclerview.setAdapter(adapter);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+        List<Hospital> listarray;  //listdata
+
+        public MyAdapter(List<Hospital> list) {
+            this.listarray = list;
+        }
+
+        @Override
+        public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_view, parent, false);
+            return new MyViewHolder(view);
+        }
 
 
+        @Override
+        public void onBindViewHolder(MyAdapter.MyViewHolder holder, int position) {
+            final Hospital data = listarray.get(position);
+            holder.EDname.setText((data.getName()));
+            holder.EDaddress.setText((data.getAddress()));
+            if (position != 0) {
+                holder.EDaddress.setVisibility(View.GONE);
+                holder.map_log.setVisibility(View.GONE);
+                holder.E_TT.setVisibility(View.GONE);
+                holder.W_waitingTime.setVisibility(View.GONE);
+                holder.G_waitingTime.setVisibility(View.GONE);
+                holder.travTime.setVisibility(View.GONE);
+            }
+            holder.setItemClickListener(new ItemClickListener() {
+                @Override
+                public void onClick(View view, int position, boolean isLongClick) {
+                    if(isLongClick){
+                        myRecyclerview.setVisibility(View.GONE);
+                        Fragment displayED = DisplayED.newInstance(data);
+                        FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
+                        tr.replace(R.id.fragment_container, displayED);
+                        tr.addToBackStack(null);
+                        tr.commit();
+                    }
 
-    public void getLastLocation() {
-        //checking if the permissions are satisfied
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+                }
+            });
 
-            Log.d("Location", "Obtained");
-            mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener((Executor) this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                Log.d("Location", "Obtained");
-                                latitude = Double.toString(location.getLatitude());
-                                longitude = Double.toString(location.getLongitude());
-                            }
-                        }
-                    });
-        } else {
-            // Show rationale and request permission.
-            Log.d("Location", "No permession     ");
+        }
+
+        @Override
+        public int getItemCount() {
+            return listarray.size();
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
+            TextView EDname;
+            TextView EDaddress;
+            TextView G_waitingTime;
+            TextView W_waitingTime;
+            TextView travTime;
+            TextView E_TT;
+            ImageView map_log;
+            private ItemClickListener itemClickListener;
+
+
+            public MyViewHolder(View itemView) {
+                super(itemView);
+                EDname = (TextView) itemView.findViewById(R.id.ED_name);
+                EDaddress = (TextView) itemView.findViewById(R.id.ED_address);
+                G_waitingTime = (TextView) itemView.findViewById(R.id.G_waitingTime);
+                W_waitingTime = (TextView) itemView.findViewById(R.id.W_waitingTime);
+                travTime = (TextView) itemView.findViewById(R.id.travel_time);
+                E_TT = (TextView) itemView.findViewById(R.id.textView6);
+                map_log = (ImageView) itemView.findViewById(R.id.map_log);
+                itemView.setOnClickListener(this);
+                itemView.setOnLongClickListener(this);
+
+            }
+
+            public void setItemClickListener(ItemClickListener itemClickListener){
+                this.itemClickListener=itemClickListener;
+            }
+
+            @Override
+            public void onClick(View v) {
+                itemClickListener.onClick(v,getAdapterPosition(),true);
+            }
+
+            @Override
+            public boolean onLongClick(View v) {
+                itemClickListener.onClick(v,getAdapterPosition(),true);
+                return true;
+            }
         }
     }
 
-    protected void createLocationRequest() {
-        Log.d("Location request", "Making the location request");
-        mLocationRequest =  LocationRequest.create();
-        mLocationRequest.setInterval(30000);
-        //trmLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-        SettingsClient client = LocationServices.getSettingsClient(this);
-        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
-        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                // All location settings are satisfied. The client can initialize
-                // location requests here.
-
-                try{
-                    mFusedLocationClient.requestLocationUpdates(
-                            mLocationRequest,mLocationCallback,null);
-                    Log.d("Location Settings", "Satisfied");
-                }catch(SecurityException e){
-                    Log.e("SECURITY EXCEPTION", "Bad request");
-                }
-            }
-        });
-
-        task.addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e instanceof ResolvableApiException) {
-                    // Location settings are not satisfied, but this can be fixed
-                    // by showing the user a dialog.
-
-                    try {
-                        // Show the dialog by calling startResolutionForResult(),
-                        // and check the result in onActivityResult().
-                        ResolvableApiException resolvable = (ResolvableApiException) e;
-                        resolvable.startResolutionForResult(MainActivity.this,
-                                REQUEST_CHECK_SETTINGS);
-                    } catch (IntentSender.SendIntentException sendEx) {
-                        // Ignore the error.
-                        Log.e("ERROR", "Start Resolution For result has been ignored");
-                    }
-                }
-            }
-        });
-    }
-
-
-
-    public Location getCurrentPos() {
-        return currentPos;
-    }
-
-    public void setCurrentPos(Location currentPos) {
-        this.currentPos = currentPos;
-    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        myRecyclerview.setVisibility(View.VISIBLE);
+        }
 
 
 

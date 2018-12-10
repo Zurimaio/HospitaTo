@@ -8,6 +8,7 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -16,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,9 +39,11 @@
 
         <activity
             android:name=".MapView"
-            android:label="@string/title_activity_map_view" />
+            android:label="@string/title_activity_map_view"
+            />
         <activity android:name=".filterView" />
         <activity android:name=".filteredView"></activity>
+
     </application>
 
 </manifest>
