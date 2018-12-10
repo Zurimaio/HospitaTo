@@ -35,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class MapView extends FragmentActivity implements OnMapReadyCallback {
 
@@ -46,8 +47,8 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
     private Double log;
     private GoogleMap mMap;
     private String res;
-    private HashMap<String, Double> pos;
-
+    //private HashMap<String, Double> pos;
+    LatLng pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,26 +57,25 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         //mapFragment.getMapAsync(this);
-
-        new AsyncGetDirectionTask(this).execute(getApplicationContext(), MapView.this);
-
-        /*
-        Thread thread = new Thread(){
+        Thread th = new Thread(){
             @Override
             public void run() {
-                Log.d("Starting Thread", "started");
+                super.run();
                 try {
-                    pos = Utility.fromStringToCoord(res);
-                    setLat(pos.get("lat"));
-                    setLog(pos.get("lng"));
-                }catch (Exception e){
-                    Log.e("Thread Error", "No value");
+                    pos = new AsyncGetDirectionTask(MapView.this, mMap).execute(getApplicationContext(), MapView.this).get();
+                }catch (ExecutionException e){
+                    e.printStackTrace();
+                }catch (InterruptedException e){
                     e.printStackTrace();
                 }
             }
         };
-        thread.start();
-        */
+        th.start();
+
+
+
+
+
     }
 
 
@@ -92,14 +92,14 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-
         /**
          * TODO get the last location know and then update the location
          *
         LatLng pos = new LatLng(getLat(), getLog());
-        mMap.addMarker(new MarkerOptions().position(pos).title("Your Position"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
         */
+        mMap.addMarker(new MarkerOptions().position(pos).title("Your Position"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
     }
 
 
@@ -132,5 +132,13 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
             Log.e("Error", "AsyncTask");
             return false;
         }
+    }
+
+    public GoogleMap getmMap() {
+        return mMap;
+    }
+
+    public void setmMap(GoogleMap mMap) {
+        this.mMap = mMap;
     }
 }

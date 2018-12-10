@@ -26,6 +26,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -46,7 +47,7 @@ import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AsyncGetDirectionTask extends AsyncTask<Object, Void, Void> {
+public class AsyncGetDirectionTask extends AsyncTask<Object, Void, LatLng> {
     private int REQUEST_CHECK_SETTINGS = 2;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
@@ -65,11 +66,9 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, Void> {
 
 
 
-
-    public AsyncGetDirectionTask(FragmentActivity activity){
+    public AsyncGetDirectionTask(FragmentActivity activity, GoogleMap mMap){
         mapFragment = (SupportMapFragment) activity.getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-
     }
 
     @Override
@@ -78,15 +77,13 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Object... objects) {
+    protected LatLng doInBackground(Object... objects) {
         /**
          * Set up variables for location task
          */
-
         Log.d("AsincTask", "doing in background");
         context = (Context) objects[0];
         activity = (MapView) objects[1];
-
         directionsFake = new DirectionsFake(activity);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
         createLocationRequest();
@@ -104,26 +101,24 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, Void> {
             }
         }
 
-        return null;
+        setLat(Double.parseDouble(origin.split(",")[0]));
+        setLng(lng = Double.parseDouble(origin.split(",")[1]));
+        LatLng pos = new LatLng(getLat(), getLng());
+        return pos;
 
     }
 
 
     @Override
-    protected void onPostExecute(Void aVoid) {
+    protected void onPostExecute(LatLng aVoid) {
         super.onPostExecute(aVoid);
                 /**
-         * TODO the request is made in a fake way 'till now, therefore the returned obejct is local.
+         * TODO the request is made in a fake way 'till now, therefore the returned object is local.
          * Utility.requestDirection(origin, dest, context);
          */
         Log.d("Real Origin-Destination", origin);
         Log.d("Real Origin-Destination", dest);
-        //activity.setLog(lat);
         mapFragment.getMapAsync(activity);
-        //LatLng pos = new LatLng(getLat(), getLog());
-        //mMap.addMarker(new MarkerOptions().position(pos).title("Your Position"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
-
         /**
          * TODO whenever will be possible to draw on map
          *
@@ -253,8 +248,20 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, Void> {
     }
 
 
+    public Double getLat() {
+        return lat;
+    }
 
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
 
+    public Double getLng() {
+        return lng;
+    }
 
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
 }
 
