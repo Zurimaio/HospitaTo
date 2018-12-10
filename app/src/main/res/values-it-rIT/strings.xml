@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">HospitaTo</string>
     <string name="title_activity_map_view">Mappa</string>
+    <string name="title_activity_login_view">Sign In</string>
 </resources>

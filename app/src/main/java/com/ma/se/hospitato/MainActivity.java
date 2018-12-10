@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         mapView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent toMapView = new Intent(MainActivity.this, MapView.class);
+                Intent toMapView = new Intent(MainActivity.this, LogInView.class);
                 startActivity(toMapView);
             }
         });
