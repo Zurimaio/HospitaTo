@@ -76,6 +76,7 @@
                     android:layout_height="wrap_content"
                     />
             </LinearLayout>
+
         </android.support.v7.widget.CardView>
         <!-- Column 2 -->
         <android.support.v7.widget.CardView
@@ -119,7 +120,7 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <!-- Row 1 -->
+        <!-- Row 2 -->
         <!-- Column 1 -->
         <android.support.v7.widget.CardView
             android:layout_width="0dp"
@@ -161,33 +162,9 @@
                     />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_margin="16dp"
-                android:orientation="vertical"
-                android:layout_height="wrap_content"
-                >
 
-                <ImageView
-                    android:src="@mipmap/ic_launcher_round"
-                    android:clickable="true"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@color/colorPrimaryDark"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:text="Dep1"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-            </LinearLayout>
         </android.support.v7.widget.CardView>
+
         <!-- Column 2 -->
         <android.support.v7.widget.CardView
             android:layout_width="0dp"
@@ -219,7 +196,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Dep1"
+                    android:text="Dep4"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp"
@@ -230,7 +207,7 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <!-- Row 1 -->
+        <!-- Row 3 -->
         <!-- Column 1 -->
         <android.support.v7.widget.CardView
             android:layout_width="0dp"
@@ -262,7 +239,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Dep1"
+                    android:text="Dep5"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp"
@@ -303,7 +280,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Dep1"
+                    android:text="Dep6"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp"

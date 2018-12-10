@@ -1,6 +1,7 @@
 package com.ma.se.hospitato;
 
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     List<Hospital> listData;
     FirebaseDatabase FDB;
     DatabaseReference DBR;
+    Button toFilter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +52,14 @@ public class MainActivity extends AppCompatActivity {
 
         FDB = FirebaseDatabase.getInstance();
         GetDataFirebase();
-
-
-
+        toFilter = findViewById(R.id.toFilter);
+        toFilter.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent toFilter = new Intent(MainActivity.this, filterView.class);
+                startActivity(toFilter);
+            }
+        });
     }
 
     void GetDataFirebase() {
@@ -183,5 +193,8 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
         myRecyclerview.setVisibility(View.VISIBLE);
         }
+
+
+
 }
 
