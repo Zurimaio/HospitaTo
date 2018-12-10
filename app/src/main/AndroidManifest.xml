@@ -39,7 +39,10 @@
 
         <activity
             android:name=".MapView"
-            android:label="@string/title_activity_map_view" />
+            android:label="@string/title_activity_map_view"
+            />
+        <activity android:name=".filterView" />
+        <activity android:name=".filteredView"></activity>
 
     </application>
 
