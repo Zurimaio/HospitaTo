@@ -196,7 +196,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Dep1"
+                    android:text="Dep4"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp"
@@ -239,7 +239,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Dep1"
+                    android:text="Dep5"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp"
@@ -280,7 +280,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Dep1"
+                    android:text="Dep6"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp"
