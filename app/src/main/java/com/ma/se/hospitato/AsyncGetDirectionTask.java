@@ -40,39 +40,43 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
-import java.lang.ref.WeakReference;
-import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<String,Object>> {
     private int REQUEST_CHECK_SETTINGS = 2;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
-    protected List<String> destinations = new ArrayList<>();
+    private List<String> destinations = new ArrayList<>();
     public Location currentPos;
-    public MapView activity;
+    private MapView activity;
     public Context context;
     public String origin = "";
     public String dest = "";
     Double lat = null;
     Double lng = null;
     private boolean fromMap = true;
-    DirectionsFake directionsFake;
-    SupportMapFragment mapFragment;
+    private DirectionsFake directionsFake;
+    private SupportMapFragment mapFragment;
     private HashMap<String, Object> res;
+    private HashMap<String, String> hospitalDestination;
+    private HashMap<String, JSONDirections> jsonDestination;
 
 
 
-    public AsyncGetDirectionTask(FragmentActivity activity, GoogleMap mMap){
+    public AsyncGetDirectionTask(FragmentActivity activity){
         mapFragment = (SupportMapFragment) activity.getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         res = new HashMap<>();
+        hospitalDestination = new HashMap<>();
     }
+
+    public AsyncGetDirectionTask(){}
 
     @Override
     protected void onPreExecute() {
@@ -81,11 +85,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
 
     @Override
     protected HashMap<String, Object> doInBackground(Object... objects) {
-        /**
-         * Set up variables for location task
-         */
 
-        Log.d("AsincTask", "doing in background");
         context = (Context) objects[0];
         activity = (MapView) objects[1];
         directionsFake = new DirectionsFake(activity);
@@ -114,48 +114,44 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
         LatLng dest = new LatLng(getLat(), getLng());
         res.put("dest", dest);
 
+
+
         try {
-           JSONDirections data = new JSONDirections(directionsFake.toMauriziano);
-           res.put("Route", data.getPolyPath());
+            /**
+             * TODO the request is made in a fake way till now, therefore the returned object is local.
+             * getResponseFromRequest(origin, destination, context);
+             * res.put("Directions", jsonDirections);
+             */
+
+
+
+            /**
+             * TODO the following for will be iterated in order to perform several "request Direction"
+             * obtaining an array of request
+             */
+            JSONArray directions = Utility.loadJSONFromRes(activity);
+            int i;
+            for (i =0; i<=directions.length(); i++){
+                JSONDirections data = new JSONDirections(directions.getJSONObject(i));
+                jsonDestination.put(Utility.MAURIZIANO, data);
+                jsonDestination.put(Utility.MOLINETTE, data);
+                //res.put(data.get)
+            }
+            res.put("Directions", jsonDestination);
+           //res.put("Route", data.getPolyPath());
+
          }catch (Exception e){
             Log.e("ERROR", "Not able to find the field");
             e.printStackTrace();
         }
-
-
-
-
         return res;
-
     }
 
 
     @Override
     protected void onPostExecute(HashMap aVoid) {
         super.onPostExecute(aVoid);
-                /**
-         * TODO the request is made in a fake way 'till now, therefore the returned object is local.
-         * Utility.requestDirection(origin, dest, context);
-         */
         mapFragment.getMapAsync(activity);
-
-
-
-        /**
-         * TODO whenever will be possible to draw on map
-         *
-        try {
-            JSONDirections data = new JSONDirections(directionsFake.toMauriziano);
-            Log.d("Mauriziano", "Distance " + data.getDistanceString());
-            Log.d("Mauriziano", "Duration " +  data.getDurationString());
-            Log.d("Mauriziano", "Start Address " + data.getStart_address());
-            Log.d("Mauriziano", "End Address " + data.getEnd_address());
-        }catch (Exception e){
-            Log.e("ERROR", "Not able to find the field");
-            e.printStackTrace();
-        }
-         */
-
     }
 
     public void setPosition() {
@@ -188,9 +184,6 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
         this.destinations = destinations;
     }
 
-    public Location getCurrentPos() {
-        return currentPos;
-    }
 
     public void setCurrentPos(Location currentPos) {
         this.currentPos = currentPos;
@@ -249,7 +242,6 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
     public void getDestination() {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Hospitals");
-        //List<String> destinations = new ArrayList<>();
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -257,7 +249,16 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                     Hospital h = d.getValue(Hospital.class);
                     String dest = h.getCoordinate().get("Latitude") + "," + h.getCoordinate().get("Longitude");
                     destinations.add(dest);
+
+                    /**
+                     * In this way when I peform the request for direction i will know the name of destination
+                     *
+                     */
+                    hospitalDestination.put(h.getName(), dest);
                 }
+                /**
+                 * TODO understand how choose the right destination
+                 */
                 setDestinations(destinations);
                 dest = getDestinations().get(0);
                 //Log.d("Dest", dest);
@@ -269,6 +270,27 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                 return;
             }
         });
+
+
+    }
+
+    /**
+     * TODO to be used when the request will be done by means DIRECTION_API
+     * @param origin
+     * @param data
+     * @param context
+     */
+    public void getResponseFromRequest(String origin, HashMap<String, String> data, Context context){
+
+        Iterator i = data.entrySet().iterator();
+        while(i.hasNext()){
+            //get the OD response for each destination
+            Map.Entry pair = (Map.Entry) i.next();
+            String hospitalName = (String) pair.getKey();
+            String dest = (String) pair.getValue();
+            Utility.requestDirection(origin,dest,context);
+            jsonDestination.put(hospitalName, Utility.getRes());
+        }
 
 
     }
@@ -290,17 +312,5 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
         this.lng = lng;
     }
 
-    public void getOD(){
-        try {
-            JSONDirections data = new JSONDirections(directionsFake.toMauriziano);
-            Log.d("Mauriziano", "Distance " + data.getDistanceString());
-            Log.d("Mauriziano", "Duration " +  data.getDurationString());
-            Log.d("Mauriziano", "Start Address " + data.getStart_address());
-            Log.d("Mauriziano", "End Address " + data.getEnd_address());
-        }catch (Exception e){
-            Log.e("ERROR", "Not able to find the field");
-            e.printStackTrace();
-        }
-    }
 }
 

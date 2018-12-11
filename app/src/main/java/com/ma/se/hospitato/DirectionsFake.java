@@ -1,8 +1,11 @@
 package com.ma.se.hospitato;
 
 import android.app.Activity;
+import android.util.JsonReader;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -24,8 +27,8 @@ public class DirectionsFake {
 
     public DirectionsFake(Activity activity){
         this.activity = activity;
-        Directions(); //get the direction fake
-        this.toMauriziano = toJSONObject(directions.get("Mauriziano")); //test
+        //Directions(); //get the direction fake
+        //this.toMauriziano = toJSONObject(directions.get("Mauriziano")); //test
     }
 
 
@@ -47,9 +50,9 @@ public class DirectionsFake {
 
     public HashMap<String, String> Directions(){
 
-        String mauriziano = loadJSONFromRes();
+        //String mauriziano = loadJSONFromRes();
         directions = new HashMap<>();
-        directions.put("Mauriziano", mauriziano);
+        //directions.put("Mauriziano", mauriziano);
 
 
         return directions;
@@ -57,8 +60,10 @@ public class DirectionsFake {
 
 
 
-    public String loadJSONFromRes() {
+    public JSONArray loadJSONFromRes() {
         String json = null;
+        JSONArray jsonArray = null;
+
         try {
             InputStream is = activity.getResources().openRawResource(R.raw.directions);
             int size = is.available();
@@ -66,13 +71,17 @@ public class DirectionsFake {
             is.read(buffer);
             is.close();
             json = new String(buffer, "UTF-8");
+            jsonArray = new JSONArray(json);
         } catch (IOException ex) {
             ex.printStackTrace();
+            return null;
+        }catch (JSONException jx){
+            jx.printStackTrace();
             return null;
         }
 
 
-        return json;
+        return jsonArray;
     }
 
 }

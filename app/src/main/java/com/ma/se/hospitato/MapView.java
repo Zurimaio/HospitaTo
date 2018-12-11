@@ -2,6 +2,7 @@ package com.ma.se.hospitato;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -58,7 +59,7 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
             public void run() {
                 super.run();
                 try {
-                    result = new AsyncGetDirectionTask(MapView.this, mMap).execute(getApplicationContext(), MapView.this).get();
+                    result = new AsyncGetDirectionTask(MapView.this).execute(getApplicationContext(), MapView.this).get();
                     origin = (LatLng) result.get("origin");
                     dest =  (LatLng) result.get("dest");
                     route = (List<LatLng>) result.get("Route");
@@ -80,7 +81,7 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
         mMap.addMarker(new MarkerOptions().position(dest).title("Destination"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 10));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
-        mMap.addPolyline(new PolylineOptions().addAll(route));
+        mMap.addPolyline(new PolylineOptions().addAll(route).color(Color.BLUE).width(10));
     }
 
 

@@ -17,19 +17,32 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Utility {
+    public static final String MAURIZIANO = "Mauriziano";
+    public static final String MOLINETTE = "Molinette";
+    public static final String MARIA_VITTORIA = "Maria Vittoria";
+    public static final String SAN_GIOVANNI_BOSCO= "San Giovanni Bosco";
+    public static final String CTO = "CTO";
+    public static final String SANT_ANNA = "Sant'Anna";
+    public static final String REGINA_MARGHERITA = "Regina Margherita";
+    public static final String MARTINI = "Martini";
+    public static JSONDirections res;
+
+
 
     static public void requestDirection(String origin, String destination, Context context){
         RequestQueue queue = Volley.newRequestQueue(context);
-        final JSONObject res = new JSONObject();
+        JSONDirections data;
 
         /**
          * Sample request
@@ -49,10 +62,16 @@ public class Utility {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, request, null, new Response.Listener<JSONObject>() {
 
+
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("Request", response.toString());
+                        try {
+                            res = new JSONDirections(response);
 
+                        }catch (JSONException jx){
+                            jx.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
 
@@ -62,9 +81,8 @@ public class Utility {
                         Log.d("Request Error", error.toString());
                     }
                 });
-
-
         queue.add(jsonObjectRequest);
+
     }
 
     static  public String fromDoubleToStringCoord(Double lat, Double log){
@@ -79,12 +97,6 @@ public class Utility {
         return c;
 
     }
-
-
-
-
-
-
 
 
     static  public List<String> getCoordinatesFromFB(){
@@ -116,6 +128,35 @@ public class Utility {
     }
 
 
+    static public JSONArray loadJSONFromRes(Activity activity) {
+        String json = null;
+        JSONArray jsonArray = null;
+
+        try {
+            InputStream is = activity.getResources().openRawResource(R.raw.directions);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+            jsonArray = new JSONArray(json);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }catch (JSONException jx){
+            jx.printStackTrace();
+            return null;
+        }
 
 
+        return jsonArray;
+    }
+
+    public static JSONDirections getRes() {
+        return res;
+    }
+
+    public static void setRes(JSONDirections res) {
+        Utility.res = res;
+    }
 }
