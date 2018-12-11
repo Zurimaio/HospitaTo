@@ -38,6 +38,9 @@
 
         <!-- Row 1 -->
         <!-- Column 1 -->
+
+
+
         <android.support.v7.widget.CardView
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -68,10 +71,10 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Dep1"
+                    android:text="Oculistica"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -109,10 +112,10 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Dep2"
+                    android:text="Urologia"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -152,10 +155,10 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Dep3"
+                    android:text="Ginecologia e Ostetricia"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -196,10 +199,10 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Dep4"
+                    android:text="Otorinolaringoiatria"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -239,10 +242,10 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Dep5"
+                    android:text="Medicina"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -280,10 +283,10 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Dep6"
+                    android:text="Ortopedia"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -36,32 +36,32 @@ public class filterView extends AppCompatActivity implements View.OnClickListene
 
         switch(view.getId()){
             case R.id.dep1:
-                String dep1 = "Department1";
+                String dep1 = "Department2";
                 i.putExtra("Department", dep1);
                 break;
 
             case R.id.dep2:
-                String dep2 = "Department2";
+                String dep2 = "Department3";
                 i.putExtra("Department", dep2);
                 break;
 
             case R.id.dep3:
-                String dep3 = "Department3";
+                String dep3 = "Department4";
                 i.putExtra("Department", dep3);
                 break;
 
             case R.id.dep4:
-                String dep4 = "Department4";
+                String dep4 = "Department5";
                 i.putExtra("Department", dep4);
                 break;
 
             case R.id.dep5:
-                String dep5 = "Department5";
+                String dep5 = "Department6";
                 i.putExtra("Department", dep5);
                 break;
 
             case R.id.dep6:
-                String dep6 = "Department6";
+                String dep6 = "Department7";
                 i.putExtra("Department", dep6);
                 break;
 
