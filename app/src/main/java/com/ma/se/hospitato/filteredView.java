@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,6 +36,9 @@ public class filteredView extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button hide_filter = findViewById(R.id.toFilter);
         hide_filter.setVisibility(View.GONE);
+        Button hide_map = findViewById(R.id.toMap);
+        hide_map.setVisibility(View.GONE);
+
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Hospitals");
@@ -42,7 +47,10 @@ public class filteredView extends AppCompatActivity {
         //Avoid unnecessary layout passes by setting setHasFixedSize to true
         recyclerView.setHasFixedSize(true);
         //Select the type of layout manager you would use for your recyclerView
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView.LayoutManager LM = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(LM);
+
+
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -128,19 +136,9 @@ public class filteredView extends AppCompatActivity {
 
         public void noDetails() {
 
-            TextView name = (TextView) mView.findViewById(R.id.ED_name);
-            TextView address = (TextView) mView.findViewById(R.id.ED_address);
-            TextView greenWaitingTime = (TextView) mView.findViewById(R.id.G_waitingTime);
-            TextView whiteWaitingTime = (TextView) mView.findViewById(R.id.W_waitingTime);
-            TextView estimatedTravelTime = (TextView) mView.findViewById(R.id.travel_time_txt);
-            TextView estimatedTravelTime_h = (TextView) mView.findViewById(R.id.travel_time);
+            itemView.setVisibility(View.GONE);
+            itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
 
-            name.setVisibility(View.GONE);
-            address.setVisibility(View.GONE);
-            greenWaitingTime.setVisibility(View.GONE);
-            whiteWaitingTime.setVisibility(View.GONE);
-            estimatedTravelTime.setVisibility(View.GONE);
-            estimatedTravelTime_h.setVisibility(View.GONE);
         }
 
         public void setItemClickListener(ItemClickListener itemClickListener){

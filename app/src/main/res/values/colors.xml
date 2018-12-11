@@ -3,4 +3,13 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="BlackP">#000000</color>
+    <color name="RedTag">#E42217</color>
+    <color name="YellowTag">#FFFF00</color>
+    <color name="GreenTag">#4CC417</color>
+    <color name="WhiteTag">#F0FFFF</color>
+    <color name="White">#FFFFFF</color>
+    <color name="List_background">#EBF4FA</color>
+
+
 </resources>

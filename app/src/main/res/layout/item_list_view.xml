@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/item_layout"
+    android:background="@drawable/corner"
     android:orientation="vertical"
     android:weightSum="1">
-
 
     <TextView
         android:id="@+id/ED_name"
@@ -17,6 +17,7 @@
         android:paddingLeft="5dp"
         android:textStyle="bold"
         android:textSize="25dp"
+        android:textColor="@color/colorPrimary"
         android:textAlignment="center"
         />
 
@@ -47,7 +48,7 @@
             android:paddingRight="5dp"
             android:background="@color/colorPrimary"
             android:layout_gravity="left"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/White"
             android:textAlignment="center"
             android:text="GREEN WAITING TIME"/>
 
@@ -59,7 +60,7 @@
             android:layout_marginLeft="32dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:background="#FFFFFF"
+            android:background="@color/White"
             android:layout_gravity="left"
             android:textColor="@color/colorPrimary"
             android:textAlignment="center"
@@ -69,8 +70,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:text="ESTIMATED TRAVEL TIME"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:textAlignment="center"
         android:id="@+id/travel_time_txt"
         android:paddingBottom="5dp"
@@ -80,10 +82,9 @@
         android:id="@+id/travel_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/travel_time_txt"
         android:textAlignment="center"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:text="hh:mm" />
+        android:text="hh:mm"
+        android:layout_marginBottom="10dp"/>
 
 </LinearLayout>

@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase FDB;
     DatabaseReference DBR;
     Button toFilter;
+    Button toMap;
+
 
 
 
@@ -44,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
         myRecyclerview.setHasFixedSize(true);
         RecyclerView.LayoutManager LM = new LinearLayoutManager(getApplicationContext());
         myRecyclerview.setLayoutManager(LM);
-        myRecyclerview.setItemAnimator(new DefaultItemAnimator());
-        myRecyclerview.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
 
         listData = new ArrayList<>();
         adapter = new MyAdapter(listData);
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         FDB = FirebaseDatabase.getInstance();
         GetDataFirebase();
         toFilter = findViewById(R.id.toFilter);
+        toMap = findViewById(R.id.toMap);
         toFilter.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -129,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View view, int position, boolean isLongClick) {
                     if(isLongClick){
                         myRecyclerview.setVisibility(View.GONE);
+                        toFilter.setVisibility(View.GONE);
+                        toMap.setVisibility(View.GONE);
                         Fragment displayED = DisplayED.newInstance(data);
                         FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
                         tr.replace(R.id.fragment_container, displayED);
@@ -192,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         myRecyclerview.setVisibility(View.VISIBLE);
+        toFilter.setVisibility(View.VISIBLE);
+        toMap.setVisibility(View.VISIBLE);
         }
 
 
