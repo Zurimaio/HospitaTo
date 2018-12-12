@@ -81,7 +81,7 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
         mMap.addMarker(new MarkerOptions().position(dest).title("Destination"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 10));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
-        mMap.addPolyline(new PolylineOptions().addAll(route).color(Color.BLUE).width(10));
+        //mMap.addPolyline(new PolylineOptions().addAll(route).color(Color.BLUE).width(10));
     }
 
 
