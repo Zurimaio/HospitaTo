@@ -1,10 +1,11 @@
 package com.ma.se.hospitato;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Hospital {
+import java.util.HashMap;
+
+public class Hospital implements Parcelable {
 
 
     private String Name;
@@ -16,12 +17,30 @@ public class Hospital {
 
     public Hospital(){}
 
+
+    protected Hospital(Parcel in) {
+        Name = in.readString();
+        Address = in.readString();
+        PhoneNumber = in.readString();
+    }
+
+    public static final Creator<Hospital> CREATOR = new Creator<Hospital>() {
+        @Override
+        public Hospital createFromParcel(Parcel in) {
+            return new Hospital(in);
+        }
+
+        @Override
+        public Hospital[] newArray(int size) {
+            return new Hospital[size];
+        }
+    };
+
     public String getName() {
         return Name;
     }
-
     public void setName(String name) {
-        Name = name;
+        this.Name = name;
     }
 
     public String getAddress() {
@@ -55,5 +74,17 @@ public class Hospital {
     public void setCoordinate(HashMap<String, String> coordinate) {
         Coordinate = coordinate;
     }
-}
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(Name);
+        dest.writeString(Address);
+        dest.writeString(PhoneNumber);
+
+    }
+}

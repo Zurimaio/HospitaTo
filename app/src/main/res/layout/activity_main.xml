@@ -1,36 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear_layout"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Temporary View"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-    <Button
-        android:id="@+id/toMapView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="256dp"
-        android:layout_marginTop="425dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="38dp"
-        android:text="Map View"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/myrecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:weightSum="1"
+       >
+
+        <Button
+            android:id="@+id/toFilter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="0.5"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorPrimary"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="FILTER"
+            android:textAlignment="center"
+            android:textColor="@color/White"
+            android:textStyle="bold"
+            />
+
+        <Button
+            android:id="@+id/toMap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_weight="0.5"
+            android:background="@color/colorPrimary"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="MAP"
+            android:textAlignment="center"
+            android:textColor="@color/WhiteTag"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</RelativeLayout>
 
 
 
 
-</android.support.constraint.ConstraintLayout>
+

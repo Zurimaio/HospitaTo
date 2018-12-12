@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <item
+        android:id="@+id/mapButton"
+        android:enabled="true"
+        android:icon="@drawable/ic_favorite_white_24dp"
+        android:title="@string/mapButton"
+         />
+    <item
+        android:id="@+id/filterButton"
+        android:enabled="true"
+        android:icon="@drawable/ic_favorite_white_24dp"
+        android:title="@string/filterButton"
+        />
+    <item
+        android:id="@+id/profileButton"
+        android:enabled="true"
+        android:icon="@drawable/ic_favorite_white_24dp"
+        android:title="@string/profileButton"
+        />
+
+</menu>
