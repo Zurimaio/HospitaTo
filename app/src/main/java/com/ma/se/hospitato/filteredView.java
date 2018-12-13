@@ -27,15 +27,15 @@ import java.util.List;
 public class filteredView extends AppCompatActivity {
 
     DatabaseReference databaseReference;
-
     RecyclerView recyclerView;
 
+    private FirebaseRecyclerAdapter<Hospital, RequestViewHolder> myRecyclerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("problem: ","amico: "+"entrato in filteredView");
+        Log.d("problem: ", "amico: " + "entrato in filteredView");
         /*
         Button hide_filter = findViewById(R.id.toFilter);
         hide_filter.setVisibility(View.GONE);
@@ -45,7 +45,7 @@ public class filteredView extends AppCompatActivity {
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Hospitals");
-        recyclerView = (RecyclerView) findViewById(R.id.myrecycler);
+        recyclerView = findViewById(R.id.myrecycler);
         //Avoid unnecessary layout passes by setting setHasFixedSize to true
         recyclerView.setHasFixedSize(true);
         //Select the type of layout manager you would use for your recyclerView
@@ -53,34 +53,41 @@ public class filteredView extends AppCompatActivity {
         recyclerView.setLayoutManager(LM);
 
 
-
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot adSnapshot: dataSnapshot.getChildren()) {
-                    Hospital h = adSnapshot.getValue(Hospital.class);
-                    }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
-
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot adSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot adSnapshot : dataSnapshot.getChildren()) {
                     Hospital h = adSnapshot.getValue(Hospital.class);
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot adSnapshot : dataSnapshot.getChildren()) {
+                    Hospital h = adSnapshot.getValue(Hospital.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
     }
 
     @Override
     protected void onStart(){
         super.onStart();
         Log.d("problem: ","on_start");
+
+
 
         FirebaseRecyclerAdapter<Hospital, RequestViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Hospital, RequestViewHolder>(
                 Hospital.class,
@@ -91,7 +98,7 @@ public class filteredView extends AppCompatActivity {
             @Override
             protected void populateViewHolder(RequestViewHolder viewHolder, final Hospital model, int position) {
                 final String filter= getIntent().getStringExtra("Department");
-                final boolean t=model.getDepartments().get(filter);
+                final boolean t= model.getDepartments().get(filter);
                 Log.d("problem: ",t+" "+model.getName());
 
                 if(t) {
@@ -121,6 +128,7 @@ public class filteredView extends AppCompatActivity {
 
         };
         recyclerView.setAdapter(firebaseRecyclerAdapter);
+
     }
 
     public static class RequestViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {

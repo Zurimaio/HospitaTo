@@ -246,6 +246,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                     String dest = h.getCoordinate().get("Latitude") + "," + h.getCoordinate().get("Longitude");
                     destinations.add(dest);
                     hospitalDestination.put(h.getName(), dest);
+
                 }
                 /**
                  * TODO understand how choose the right destination

@@ -31,7 +31,7 @@ public class filterView extends AppCompatActivity implements View.OnClickListene
     }
 
     public void onClick(View view){
-        Toast.makeText(this, "Button Selected!",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Button Selected!",Toast.LENGTH_SHORT).show();
         Intent i=new  Intent(getApplicationContext(),filteredView.class);
 
         switch(view.getId()){

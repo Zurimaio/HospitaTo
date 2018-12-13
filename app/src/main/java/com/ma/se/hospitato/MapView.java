@@ -75,10 +75,6 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
 
         //mMap.addMarker(new MarkerOptions().position(dest).title("Destination"));
         //mMap.addPolyline(new PolylineOptions().addAll(route).color(Color.BLUE).width(10));
-
-
-
-
     }
 
     public void startAsyncTask(int act){
