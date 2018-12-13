@@ -5,4 +5,5 @@
     <string name="mapButton">Mappa</string>
     <string name="profileButton">Profilo</string>
     <string name="filterButton">Filtra</string>
+    <string name="title_activity_login_view">Sign In</string>
 </resources>
