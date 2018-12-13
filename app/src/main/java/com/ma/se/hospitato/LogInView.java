@@ -53,11 +53,10 @@ public class LogInView extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser currentUser) {
-        // TODO: se l'utente è già loggato vai a profile view
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // Name, email address, and profile photo Url
-            //String name = user.getDisplayName();
+            String UID = user.getUid();
             String email = user.getEmail();
             //Uri photoUrl = user.getPhotoUrl();
 
@@ -70,7 +69,8 @@ public class LogInView extends AppCompatActivity {
             //String uid = user.getUid();
 
             Intent intent = new Intent(this,ProfileView.class);
-            intent.putExtra("msg",email);
+            intent.putExtra("email",email);
+            intent.putExtra("UID",UID);
 
             startActivity(intent);
         }

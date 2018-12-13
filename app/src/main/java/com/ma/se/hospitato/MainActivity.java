@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     protected void createLocationRequest() {
         Log.d("Location request", "Making the location request");
         mLocationRequest =  LocationRequest.create();
-        mLocationRequest.setInterval(30000);
+        //mLocationRequest.setInterval(30000);
         //trmLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
