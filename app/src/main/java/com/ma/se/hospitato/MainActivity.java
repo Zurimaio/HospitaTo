@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
             final Hospital data = listarray.get(position);
             holder.EDname.setText((data.getName()));
             holder.EDaddress.setText((data.getAddress()));
-            holder.travTime.setText(getTravelTimeAsync());
+            //holder.travTime.setText(getTravelTimeAsync());
 
             if (position != 0) {
                 holder.EDaddress.setVisibility(View.GONE);

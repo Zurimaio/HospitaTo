@@ -32,8 +32,10 @@ public class filteredView extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("problem: ","amico: "+"entrato in filteredView");
         /*
         Button hide_filter = findViewById(R.id.toFilter);
         hide_filter.setVisibility(View.GONE);
@@ -43,7 +45,6 @@ public class filteredView extends AppCompatActivity {
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Hospitals");
-
         recyclerView = (RecyclerView) findViewById(R.id.myrecycler);
         //Avoid unnecessary layout passes by setting setHasFixedSize to true
         recyclerView.setHasFixedSize(true);
@@ -79,7 +80,7 @@ public class filteredView extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-
+        Log.d("problem: ","on_start");
 
         FirebaseRecyclerAdapter<Hospital, RequestViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Hospital, RequestViewHolder>(
                 Hospital.class,
@@ -91,8 +92,10 @@ public class filteredView extends AppCompatActivity {
             protected void populateViewHolder(RequestViewHolder viewHolder, final Hospital model, int position) {
                 final String filter= getIntent().getStringExtra("Department");
                 final boolean t=model.getDepartments().get(filter);
+                Log.d("problem: ",t+" "+model.getName());
 
                 if(t) {
+                    Log.d("Entrata setDetails per:",model.getName());
                     viewHolder.setDetails(model.getName(), model.getAddress());
 
                 }
@@ -104,6 +107,7 @@ public class filteredView extends AppCompatActivity {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
                         if(isLongClick){
+                            Log.d("Entrata noDetails per:",model.getName());
                             recyclerView.setVisibility(View.GONE);
                             Fragment displayED = DisplayED.newInstance(model);
                             FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
