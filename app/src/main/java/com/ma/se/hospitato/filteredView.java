@@ -34,11 +34,12 @@ public class filteredView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /*
         Button hide_filter = findViewById(R.id.toFilter);
         hide_filter.setVisibility(View.GONE);
         Button hide_map = findViewById(R.id.toMap);
         hide_map.setVisibility(View.GONE);
-
+        */
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Hospitals");
@@ -91,8 +92,9 @@ public class filteredView extends AppCompatActivity {
                 final String filter= getIntent().getStringExtra("Department");
                 final boolean t=model.getDepartments().get(filter);
 
-                if(model.getDepartments().get(filter)) {
+                if(t) {
                     viewHolder.setDetails(model.getName(), model.getAddress());
+
                 }
                 else{
                     viewHolder.noDetails();

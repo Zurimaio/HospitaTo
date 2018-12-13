@@ -99,33 +99,6 @@ public class Utility {
     }
 
 
-    static  public List<String> getCoordinatesFromFB(){
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Hospitals");
-        List<String> destinations = new ArrayList<>();
-
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot d: dataSnapshot.getChildren()) {
-                    Hospital h = d.getValue(Hospital.class);
-                    String dest = h.getCoordinate().get("Latitude") + "," + h.getCoordinate().get("Longitude");
-                    destinations.add(dest);
-
-                }
-
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                return;
-            }
-        });
-        return destinations;
-
-    }
 
 
     static public JSONArray loadJSONFromRes(Activity activity) {

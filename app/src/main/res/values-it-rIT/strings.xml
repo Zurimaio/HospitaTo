@@ -2,4 +2,7 @@
 <resources>
     <string name="app_name">HospitaTo</string>
     <string name="title_activity_map_view">Mappa</string>
+    <string name="mapButton">Mappa</string>
+    <string name="profileButton">Profilo</string>
+    <string name="filterButton">Filtra</string>
 </resources>

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">HospitaTo</string>
     <string name="title_activity_map_view">Map</string>
-
+    <string name="mapButton">Map</string>
+    <string name="homeButton" translatable="false">Home</string>
+    <string name="profileButton">Profile</string>
+    <string name="filterButton">Filter</string>
     <string name="direction_server_key" translatable="false">AIzaSyANzbEFTwOhnhHftnLx69rt2IlZeL-O5xs</string>
 </resources>

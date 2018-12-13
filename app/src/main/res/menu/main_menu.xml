@@ -6,19 +6,18 @@
     <item
         android:id="@+id/mapButton"
         android:enabled="true"
-        android:icon="@drawable/ic_favorite_white_24dp"
-        android:title="@string/mapButton"
-         />
+        android:icon="@drawable/ic_main_map_icon"
+        android:title="@string/mapButton" />
     <item
-        android:id="@+id/filterButton"
+        android:id="@+id/homeButton"
+        android:icon="@drawable/ic_main_home_icon"
         android:enabled="true"
-        android:icon="@drawable/ic_favorite_white_24dp"
-        android:title="@string/filterButton"
+        android:title="@string/homeButton"
         />
     <item
         android:id="@+id/profileButton"
         android:enabled="true"
-        android:icon="@drawable/ic_favorite_white_24dp"
+        android:icon="@drawable/ic_main_profile_icon"
         android:title="@string/profileButton"
         />
 
