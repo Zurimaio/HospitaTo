@@ -5,4 +5,13 @@
     <string name="mapButton">Mappa</string>
     <string name="profileButton">Profilo</string>
     <string name="filterButton">Filtra</string>
+    <string name="green_waiting_time">Tempo di Attesa Verde</string>
+    <string name="white_waiting_time">Tempo di Attesa Bianco</string>
+    <string name="estimated_travel_time">Tempo di percorrenza stimato</string>
+    <string name="filter_results">FILTRA I RISULTATI</string>
+    <string name="number_of_waiting_people">NUMERO DI PERSONE IN ATTESA</string>
+    <string name="red_tag">CODICE ROSSO</string>
+    <string name="yellow_tag">CODICE GIALLO</string>
+    <string name="green_tag">CODICE VERDE</string>
+    <string name="white_tag">CODICE BIANCO</string>
 </resources>
