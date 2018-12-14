@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +32,7 @@ public class ProfileView extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference myRef;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +46,16 @@ public class ProfileView extends AppCompatActivity {
         weight = findViewById(R.id.weightprofile);
         height = findViewById(R.id.heightprofile);
         blood = findViewById(R.id.bloodprofile);
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (getIntent() != null) {
-
-            Bundle b = getIntent().getExtras();
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
             email.setText(b.getString("email"));
             UID = b.getString("UID");
-
+        }
             database = FirebaseDatabase.getInstance();
 
-            myRef = database.getReference("Users/"+UID);
+            myRef = database.getReference("Users/"+user.getUid());
             Log.d("Reference", myRef.toString());
 
             myRef.addValueEventListener(new ValueEventListener() {
@@ -64,6 +67,7 @@ public class ProfileView extends AppCompatActivity {
                     // whenever data at this location is updated.
                     value = dataSnapshot.getValue(Profile.class);
                     name.setText(value.getName());
+                    email.setText(value.getEmail());
                     surname.setText(value.getSurname());
                     nascita.setText(value.getNascita());
                     try {
@@ -90,7 +94,7 @@ public class ProfileView extends AppCompatActivity {
                     Log.w("Profile view", "Failed to read value.", error.toException());
                 }
             });
-        }
+
 
     }
 

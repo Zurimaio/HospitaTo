@@ -20,4 +20,16 @@
     <string name="permission_rationale" translatable="false">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="green_waiting_time">Green Waiting Time</string>
+    <string name="white_waiting_time">White Waiting Time</string>
+    <string name="estimated_travel_time">Estimated Travel Time</string>
+    <string name="filter_results">FILTER RESULTS</string>
+    <string name="number_of_waiting_people">NUMBER OF WAITING PEOPLE</string>
+    <string name="red_tag">RED TAG</string>
+    <string name="yellow_tag">YELLOW TAG</string>
+    <string name="green_tag">GREEN TAG</string>
+    <string name="white_tag">WHITE TAG</string>
+
+
 </resources>

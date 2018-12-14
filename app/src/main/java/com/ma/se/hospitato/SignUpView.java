@@ -1,5 +1,6 @@
 package com.ma.se.hospitato;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class SignInView extends AppCompatActivity {
+public class SignUpView extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     EditText mEmail;
@@ -121,28 +122,10 @@ public class SignInView extends AppCompatActivity {
 
             createFirebaseUser();
 
-            /*
+            Intent intent = new Intent(this,MainActivity.class);
+            startActivity(intent);
+            finish();
 
-            //String UID = user.getUid();
-            String path = userpath.concat(getUID());
-
-            DatabaseReference myRefnode = mDatabase.getReference(path);
-            myRefnode.setValue(email);
-            DatabaseReference myRefName = mDatabase.getReference(path.concat("/name"));
-            myRefName.setValue(name);
-            DatabaseReference myRefmail = mDatabase.getReference(path.concat("/email"));
-            myRefmail.setValue(email);
-            DatabaseReference myRefSurname = mDatabase.getReference(path.concat("/surname"));
-            myRefSurname.setValue(surname);
-            DatabaseReference myRefnascita = mDatabase.getReference(path.concat("/nascita"));
-            myRefnascita.setValue("gg/mm/aaaa");
-            DatabaseReference myRefWeight = mDatabase.getReference(path.concat("/weight"));
-            myRefWeight.setValue("none");
-            DatabaseReference myRefHeight = mDatabase.getReference(path.concat("/height"));
-            myRefHeight.setValue("none");
-            DatabaseReference myRefBlood = mDatabase.getReference(path.concat("/blood"));
-            myRefBlood.setValue("none");
-            */
         }
 
     }

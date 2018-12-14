@@ -1,169 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:weightSum="1">
 
-    <TextView
-        android:id="@+id/ED_name_f"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ED'S NAME"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:textStyle="bold"
-        android:textSize="25dp"
-        android:textAlignment="center"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Address"
-        android:id="@+id/ED_address_f"
-        android:paddingBottom="5dp"
-        android:paddingLeft="5dp"
-        android:textSize="18dp"
-        android:textAlignment="center"/>
-
-    <TextView
-        android:id="@+id/PhoneNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
-        android:text="PhoneNumber" />
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="0dp">
+        android:weightSum="1">
 
-
-        <Button
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/ED_name_f"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/G_waitingTime_f"
+            android:text="ED'S NAME"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             android:textStyle="bold"
-            android:layout_weight="0.5"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="16dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:background="@color/colorPrimary"
-            android:layout_gravity="left"
-            android:textColor="@color/White"
+            android:textSize="25dp"
             android:textAlignment="center"
-            android:text="GREEN WAITING TIME"/>
+            />
 
-        <Button
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Address"
+            android:id="@+id/ED_address_f"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:textSize="18dp"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:id="@+id/PhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="PhoneNumber" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="0dp">
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/G_waitingTime_f"
+                android:textStyle="bold"
+                android:layout_weight="0.5"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="16dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingHorizontal="5dp"
+                android:background="@color/colorPrimary"
+                android:layout_gravity="left"
+                android:textColor="@color/White"
+                android:textAlignment="center"
+                android:text="@string/green_waiting_time"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/W_waitingTime_f"
+                android:textStyle="bold"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="0.5"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@color/White"
+                android:layout_gravity="left"
+                android:textColor="@color/colorPrimary"
+                android:textAlignment="center"
+                android:text="@string/white_waiting_time"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/estimated_travel_time"
+            android:layout_marginTop="15dp"
+            android:textAlignment="center"
+            android:id="@+id/travel_time_txt_f"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/travel_time_f"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"
+            android:text="hh:mm" />
+
+        <TextView
+            android:id="@+id/Waitings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:text="@string/number_of_waiting_people"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/RedTag"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textColor="@color/BlackP"
+            android:layout_centerHorizontal="true"
+            android:paddingHorizontal="5dp"
+            android:background="@color/RedTag"
+            android:text="@string/red_tag" />
+
+        <TextView
+            android:id="@+id/YellowTag"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:background="@color/YellowTag"
+            android:textColor="@color/BlackP"
+            android:layout_centerHorizontal="true"
+            android:paddingHorizontal="5dp"
+            android:text="@string/yellow_tag" />
+
+        <TextView
+            android:id="@+id/GreenTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/W_waitingTime_f"
-            android:textStyle="bold"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:background="@color/GreenTag"
+            android:textColor="@color/BlackP"
+            android:layout_centerHorizontal="true"
+            android:text="@string/green_tag" />
+
+        <TextView
+            android:id="@+id/WhiteTag"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:background="@color/WhiteTag"
+            android:textColor="@color/BlackP"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:paddingHorizontal="5dp"
+            android:text="@string/white_tag" />
+
+        <ImageView
+            android:id="@+id/toMap"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
             android:layout_marginRight="16dp"
-            android:layout_marginLeft="8dp"
-            android:layout_weight="0.5"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:background="@color/White"
-            android:layout_gravity="left"
-            android:textColor="@color/colorPrimary"
-            android:textAlignment="center"
-            android:text="WHITE WAITING TIME"/>
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="32dp"
+            android:background="@color/colorPrimary"
+            />
+
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="ESTIMATED TRAVEL TIME"
-        android:layout_marginTop="15dp"
-        android:textAlignment="center"
-        android:id="@+id/travel_time_txt_f"
-        android:paddingBottom="5dp"
-        android:paddingLeft="5dp"/>
-
-    <TextView
-        android:id="@+id/travel_time_f"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:layout_centerHorizontal="true"
-        android:text="hh:mm" />
-
-    <TextView
-        android:id="@+id/Waitings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:text="NUMBER OF WAITING PEOPLE:"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/RedTag"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:textColor="@color/BlackP"
-        android:layout_centerHorizontal="true"
-        android:background="@color/RedTag"
-        android:text="  RED TAG  " />
-
-    <TextView
-        android:id="@+id/YellowTag"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:background="@color/YellowTag"
-        android:textColor="@color/BlackP"
-        android:layout_centerHorizontal="true"
-        android:text="  YELLOW TAG  " />
-
-    <TextView
-        android:id="@+id/GreenTag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:background="@color/GreenTag"
-        android:textColor="@color/BlackP"
-        android:layout_centerHorizontal="true"
-        android:text="  GREEN TAG  " />
-
-    <TextView
-        android:id="@+id/WhiteTag"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:background="@color/WhiteTag"
-        android:textColor="@color/BlackP"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:text="  WHITE TAG  " />
-
-    <ImageView
-        android:id="@+id/toMap"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:background="@color/colorPrimary"
-        />
-
-</LinearLayout>
+</ScrollView>

@@ -68,11 +68,11 @@ public class LogInView extends AppCompatActivity {
             // FirebaseUser.getIdToken() instead.
             //String uid = user.getUid();
 
-            Intent intent = new Intent(this,ProfileView.class);
+            Intent intent = new Intent(this,MainActivity.class);
             intent.putExtra("email",email);
             intent.putExtra("UID",UID);
-
             startActivity(intent);
+            finish();
         }
 
     }

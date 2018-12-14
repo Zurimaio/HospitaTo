@@ -266,6 +266,9 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         return true;
                     case R.id.profileButton:
+                        intent = new Intent(MainActivity.this, ProfileView.class);
+                        startActivity(intent);
+
                         return true;
                     case R.id.mapButton:
                         intent = new Intent(MainActivity.this, MapView.class);

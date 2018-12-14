@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#0083d8</color>
+    <color name="colorPrimaryLight">#cbeaff</color>
     <color name="colorPrimaryDark">#004f83</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="BlackP">#000000</color>
-    <color name="RedTag">#E42217</color>
+    <color name="RedTag">#e42217</color>
+    <color name="RedPencilTag">#7385e2</color>
     <color name="YellowTag">#FFFF00</color>
     <color name="GreenTag">#4CC417</color>
     <color name="WhiteTag">#F0FFFF</color>
