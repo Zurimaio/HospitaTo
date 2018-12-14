@@ -15,4 +15,7 @@
     <string name="yellow_tag">CODICE GIALLO</string>
     <string name="green_tag">CODICE VERDE</string>
     <string name="white_tag">CODICE BIANCO</string>
+    <string name="signIn">Log In</string>
+    <string name="signUp">Registrati</string>
+    <string name="skitIt">"Salta "</string>
 </resources>

@@ -12,39 +12,53 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="139dp"
+        android:layout_marginTop="179dp"
         android:layout_marginEnd="100dp"
-        android:text="Sign In"
+        android:layout_marginBottom="21dp"
+        android:onClick="signIn"
+        android:text="@string/signIn"
+        android:textColor="@color/BlackP"
+        app:layout_constraintBottom_toTopOf="@+id/button6"
+        android:background="@color/colorPrimaryLight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:onClick="signIn"/>
+        app:layout_constraintVertical_chainStyle="spread_inside"
+
+        />
 
     <Button
         android:id="@+id/button5"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
+        android:layout_marginTop="21dp"
         android:layout_marginEnd="150dp"
         android:layout_marginBottom="179dp"
-        android:text="Skip it"
+        android:onClick="skipIt"
+        android:textColor="@color/RedTag"
+        android:text="@string/skitIt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:onClick="skipIt"/>
+        app:layout_constraintTop_toBottomOf="@+id/button6" />
 
     <Button
+        android:id="@+id/button6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="21dp"
         android:layout_marginEnd="150dp"
         android:layout_marginBottom="21dp"
-        android:text="Register"
+        android:backgroundTintMode="add"
         android:onClick="signUp"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/White"
+        android:text="@string/signUp"
         app:layout_constraintBottom_toTopOf="@+id/button5"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button4" />
 </android.support.constraint.ConstraintLayout>
