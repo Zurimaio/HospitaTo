@@ -46,7 +46,6 @@
         android:label="@string/title_activity_map_view"
         />
         <activity android:name=".filterView" />
-        <activity android:name=".filteredView" />
         <activity android:name=".FirstView">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

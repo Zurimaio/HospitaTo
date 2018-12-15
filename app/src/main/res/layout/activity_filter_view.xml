@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="10"
-    tools:context=".filterView">
+    tools:context=".MainActivity"> <!-- before was .filterView-->
 
 
     <RelativeLayout
@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/textGrid"
-            android:text="FILTRA I RISULTATI"
+            android:text="@string/filter_results"
             android:textSize="34sp"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"

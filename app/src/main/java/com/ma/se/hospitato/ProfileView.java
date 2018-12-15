@@ -1,6 +1,7 @@
 package com.ma.se.hospitato;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class ProfileView extends AppCompatActivity {
+public class ProfileView extends FragmentActivity {
 
     TextView email;
     TextView name;
@@ -53,47 +54,15 @@ public class ProfileView extends AppCompatActivity {
             email.setText(b.getString("email"));
             UID = b.getString("UID");
         }
-            database = FirebaseDatabase.getInstance();
 
-            myRef = database.getReference("Users/"+user.getUid());
-            Log.d("Reference", myRef.toString());
+        database = FirebaseDatabase.getInstance();
 
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+        if(user != null){
+            displayProfile();
+        }else{
+            //TODO create the popup for create a profile
+        }
 
-
-                    // This method is called once with the initial value and again
-                    // whenever data at this location is updated.
-                    value = dataSnapshot.getValue(Profile.class);
-                    name.setText(value.getName());
-                    email.setText(value.getEmail());
-                    surname.setText(value.getSurname());
-                    nascita.setText(value.getNascita());
-                    try {
-                        weight.setText(value.getWeight());
-                    } catch (NullPointerException n){
-                        n.printStackTrace();
-                    }
-                    try{
-                        height.setText(value.getHeight());
-                    } catch (NullPointerException n){
-                        n.printStackTrace();
-                    }
-                    try {
-                        blood.setText(value.getBlood());
-                    } catch (NullPointerException n){
-                        n.printStackTrace();
-                    }
-                    Log.d("Profile view", "Value is: " + value.getName());
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    // Failed to read value
-                    Log.w("Profile view", "Failed to read value.", error.toException());
-                }
-            });
 
 
     }
@@ -126,5 +95,48 @@ public class ProfileView extends AppCompatActivity {
         }
         startActivity(toEdit);
 
+    }
+
+
+    public void displayProfile(){
+        myRef = database.getReference("Users/"+user.getUid());
+        Log.d("Reference", myRef.toString());
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                value = dataSnapshot.getValue(Profile.class);
+                name.setText(value.getName());
+                email.setText(value.getEmail());
+                surname.setText(value.getSurname());
+                nascita.setText(value.getNascita());
+                try {
+                    weight.setText(value.getWeight());
+                } catch (NullPointerException n){
+                    n.printStackTrace();
+                }
+                try{
+                    height.setText(value.getHeight());
+                } catch (NullPointerException n){
+                    n.printStackTrace();
+                }
+                try {
+                    blood.setText(value.getBlood());
+                } catch (NullPointerException n){
+                    n.printStackTrace();
+                }
+                Log.d("Profile view", "Value is: " + value.getName());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("Profile view", "Failed to read value.", error.toException());
+            }
+        });
     }
 }

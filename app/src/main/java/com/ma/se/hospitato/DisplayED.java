@@ -3,6 +3,7 @@ package com.ma.se.hospitato;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ public class DisplayED extends Fragment {
     public DisplayED(){}
 
     public static DisplayED newInstance(Hospital Hospitals){
-        //Log.d("mostra",Hospitals.getName());
+        Log.d("mostra",Hospitals.getName());
         DisplayED fragment=new DisplayED();
         Bundle args=new Bundle();
         args.putParcelable("Hospitals",Hospitals);

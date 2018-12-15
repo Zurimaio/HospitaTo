@@ -2,10 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/filterButton"
-        android:icon="@drawable/ic_main_filter_icon"
-        android:title="@string/filterButton"
+        android:id="@+id/profileButton"
+        android:icon="@drawable/ic_main_profile_icon"
+        android:title="@string/profileButton"
         app:showAsAction="always"
-
         />
 </menu>

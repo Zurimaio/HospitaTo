@@ -54,7 +54,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
     private HashMap<String, Object> res= new HashMap<>();;
     private HashMap<String, String> hospitalDestination;
     private HashMap<String, JSONDirections> jsonDestination = new HashMap<>();
-    private MainActivity.MyAdapter myAdapter;
+    private MainList.MyAdapter myAdapter;
     private List<Hospital> listHospital;
     private int act; //0 - Map View, 1 - MainActivity, 2 - Map View for displaying hospital
     JSONArray directions;
@@ -69,7 +69,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
         this.act = act; // 0 - MAPView for drawing, 2 - MapView for displaying hospital
     }
 
-    public AsyncGetDirectionTask(MainActivity.MyAdapter myAdapter, List<Hospital> listHospital){
+    public AsyncGetDirectionTask(MainList.MyAdapter myAdapter, List<Hospital> listHospital){
         this.myAdapter= myAdapter;
         this.listHospital = listHospital;
         this.act = 1; //MainActivity
