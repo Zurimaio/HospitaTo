@@ -1,6 +1,45 @@
 <resources>
     <string name="app_name">HospitaTo</string>
     <string name="title_activity_map_view">Map</string>
+    <string name="mapButton">Map</string>
+    <string name="homeButton" translatable="false">Home</string>
+    <string name="profileButton">Profile</string>
+    <string name="filterButton">Filter</string>
+    <string name="direction_server_key" translatable="false">AIzaSyANzbEFTwOhnhHftnLx69rt2IlZeL-O5xs</string>
+    <string name="textview" translatable="false">TextView</string>
+    <string name="title_activity_login_view">Sign_in</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email" translatable="false">Email</string>
+    <string name="prompt_password" translatable="false">Password (optional)</string>
+    <string name="action_sign_in" translatable="false">Sign in or register</string>
+    <string name="action_sign_in_short" translatable="false">Sign in</string>
+    <string name="error_invalid_email" translatable="false">This email address is invalid</string>
+    <string name="error_invalid_password" translatable="false">This password is too short</string>
+    <string name="error_incorrect_password" translatable="false">This password is incorrect</string>
+    <string name="error_field_required" translatable="false">This field is required</string>
+    <string name="permission_rationale" translatable="false">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="green_waiting_time">Green Waiting Time</string>
+    <string name="white_waiting_time">White Waiting Time</string>
+    <string name="estimated_travel_time">Estimated Travel Time</string>
+    <string name="filter_results">FILTER RESULTS</string>
+    <string name="number_of_waiting_people">NUMBER OF WAITING PEOPLE</string>
+    <string name="red_tag">RED TAG</string>
+    <string name="yellow_tag">YELLOW TAG</string>
+    <string name="green_tag">GREEN TAG</string>
+    <string name="white_tag">WHITE TAG</string>
+    <string name="signIn">Sign In</string>
+    <string name="signUp">Sign Up</string>
+    <string name="skitIt">Skip It</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="tab_text_1">Best Choice</string>
+    <string name="tab_text_2">Filter</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="estimated_time">Estimated Time*: </string>
+    <string name="starIndication">*Includes waiting time and travel time</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
