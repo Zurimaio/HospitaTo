@@ -1,6 +1,5 @@
 package com.ma.se.hospitato;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,7 +35,9 @@ public class SignUpView extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Toast.makeText(this, "User already logged", Toast.LENGTH_SHORT).show();
+        if(currentUser != null)
+            Toast.makeText(this, "User already logged" + currentUser.getUid(), Toast.LENGTH_SHORT).show();
+
 
     }
 
@@ -80,11 +81,12 @@ public class SignUpView extends AppCompatActivity {
                             System.out.println(user_reg.getUid());
                             System.out.println(user_reg.getEmail());
                             updateUI(user_reg);
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("SIGNUP", "createUserWithEmail:failure", task.getException());
                             //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-                                    //Toast.LENGTH_SHORT).show();
+                            //Toast.LENGTH_SHORT).show();
                             //updateUI(null);
                         }
 
@@ -115,6 +117,7 @@ public class SignUpView extends AppCompatActivity {
             u.setName(name);
             u.setSurname(surname);
             u.setNascita("gg/mm/aaaa");
+
             u.setWeight(null);
             u.setHeight(null);
             u.setBlood(null);
@@ -122,10 +125,28 @@ public class SignUpView extends AppCompatActivity {
 
             createFirebaseUser();
 
-            Intent intent = new Intent(this,MainActivity.class);
-            startActivity(intent);
-            finish();
+            /*
 
+            //String UID = user.getUid();
+            String path = userpath.concat(getUID());
+
+            DatabaseReference myRefnode = mDatabase.getReference(path);
+            myRefnode.setValue(email);
+            DatabaseReference myRefName = mDatabase.getReference(path.concat("/name"));
+            myRefName.setValue(name);
+            DatabaseReference myRefmail = mDatabase.getReference(path.concat("/email"));
+            myRefmail.setValue(email);
+            DatabaseReference myRefSurname = mDatabase.getReference(path.concat("/surname"));
+            myRefSurname.setValue(surname);
+            DatabaseReference myRefnascita = mDatabase.getReference(path.concat("/nascita"));
+            myRefnascita.setValue("gg/mm/aaaa");
+            DatabaseReference myRefWeight = mDatabase.getReference(path.concat("/weight"));
+            myRefWeight.setValue("none");
+            DatabaseReference myRefHeight = mDatabase.getReference(path.concat("/height"));
+            myRefHeight.setValue("none");
+            DatabaseReference myRefBlood = mDatabase.getReference(path.concat("/blood"));
+            myRefBlood.setValue("none");
+            */
         }
 
     }

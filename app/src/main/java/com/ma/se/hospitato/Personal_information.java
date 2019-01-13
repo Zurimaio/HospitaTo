@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,42 +40,42 @@ public class Personal_information extends Fragment {
     TextView nascita;
     Profile value;
     FirebaseUser user;
-
     String UID;
-
     FirebaseDatabase database;
     DatabaseReference myRef;
-
 
     public Personal_information() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle b = getActivity().getIntent().getExtras();
+        if (b!= null) {
+            email.setText(b.getString("email"));
+            UID = b.getString("UID");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.personal_information, container, false);
-
         email = view.findViewById(R.id.emailprofile);
         name = view.findViewById(R.id.nameprofile);
         surname = view.findViewById(R.id.surnameprofile);
         nascita = view.findViewById(R.id.nascitaprofile);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        // Inflate the layout for this fragment
-
-        Bundle b = getIntent().getExtras();
-        if (b != null) {
-            email.setText(b.getString("email"));
-            UID = b.getString("UID");
-        }
-
         database = FirebaseDatabase.getInstance();
-        displayProfile();
-        return inflater.inflate(R.layout.personal_information, container, false);
-    }
 
+        if (user!=null) {
+            displayProfile();
+        }
+        return view;
+    }
 
     public void displayProfile(){
         myRef = database.getReference("Users/"+user.getUid());
@@ -82,10 +84,6 @@ public class Personal_information extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
                 value = dataSnapshot.getValue(Profile.class);
                 name.setText(value.getName());
                 email.setText(value.getEmail());
@@ -101,7 +99,6 @@ public class Personal_information extends Fragment {
             }
         });
     }
-
 }
 
 

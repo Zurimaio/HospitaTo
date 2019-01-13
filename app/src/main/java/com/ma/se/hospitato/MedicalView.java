@@ -3,9 +3,7 @@ package com.ma.se.hospitato;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,16 +11,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class Anna_fa_cose extends AppCompatActivity {
+public class MedicalView extends AppCompatActivity {
 
     Personal_information personal_info;
     medical_information med_info;
@@ -47,7 +41,7 @@ public class Anna_fa_cose extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.Anna_fa_cose);
+        setContentView(R.layout.activity_medical_view);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -67,7 +61,7 @@ public class Anna_fa_cose extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Anna_fa_cose.this, EditView.class);
+                Intent intent = new Intent(MedicalView.this, EditView.class);
                 intent.putExtra("FromMain", 2); //2 - For obtaining hospital positions
                 startActivity(intent);
             }
@@ -130,7 +124,7 @@ public class Anna_fa_cose extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(),"It will be redirect to the Edit View", Toast.LENGTH_SHORT);
             toast.show();
 
-            Intent toEdit = new Intent(this,EditView.class);
+            Intent toEdit = new Intent(MedicalView.this,EditView.class);
             toEdit.putExtra("Name",value.getName());
             toEdit.putExtra("Surname",value.getSurname());
             toEdit.putExtra("Nascita",value.getNascita());

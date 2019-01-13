@@ -21,14 +21,16 @@ public class FirstView extends AppCompatActivity {
         if(mAuth.getCurrentUser() != null){
             intent = new Intent(this, Main2Activity.class);
             startActivity(intent);
-            finish();
+            //finish();
         }
+
+
     }
 
 
 
     public void signIn(View view){
-        intent = new Intent(this, SignUpView.class);
+        intent = new Intent(this, LogInView.class);
         startActivity(intent);
         //finish();
     }
