@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,17 +36,14 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
-    RecyclerView myRecyclerview;
-    List<Hospital> listData;
-    FirebaseDatabase FDB;
-    DatabaseReference DBR;
-    Button toFilter;
-    Button toMap;
-    String travelTime;
-    HashMap<String, Object> res;
-    BottomNavigationView bnv;
     private BottomNavigationView.OnNavigationItemSelectedListener nav;
     private ActionBar toolbar;
+
+    final MainList mainList = new MainList();
+    final filterView filterView = new filterView();
+    final FragmentManager fm = getSupportFragmentManager();
+    Fragment active = mainList;
+
 
 
 
@@ -64,22 +62,25 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bnv =  findViewById(R.id.bottomNavigation);
         selectorBottomNavigation();
         bnv.setOnNavigationItemSelectedListener(nav);
-        toolbar.setTitle("HospitaTo");
+        toolbar.setTitle(R.string.homeButton);
         //
 
-        loadFragment(new MainList());
+        //fm.beginTransaction().add(R.id.container, filterView, "filter").hide(filterView).commit();
+        fm.beginTransaction().add(R.id.container,mainList, "mainlist").commit();
 
 
     }
 
 
-    /*
+
     @Override
     public void onBackPressed() {
+        System.out.println("BackstackEntryCount: " + getFragmentManager().getBackStackEntryCount());
+        Log.d("Back button", "pressed, the active fragment is " + active.getTag());
+
         super.onBackPressed();
-        myRecyclerview.setVisibility(View.VISIBLE);
-        }
-    */
+    }
+
 
 
     @Override
@@ -107,24 +108,22 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.homeButton:
-                        //intent = new Intent(MainActivity.this, MainActivity.class);
-                        //startActivity(intent);
-                        toolbar.setTitle("HospitaTo");
-                        loadFragment(new MainList());
-
+                        toolbar.setTitle(R.string.app_name);
+                        //fm.beginTransaction().hide(active).show(mainList).addToBackStack(null).commit();
+                        //active = mainList;
+                        loadFragment(mainList, "Main");
                         return true;
 
                     case R.id.filterButton:
-                        //intent = new Intent(MainActivity.this, ProfileView.class);
-                        //startActivity(intent);
                         toolbar.setTitle(R.string.filterButton);
-                        loadFragment(new filterView());
+                        //fm.beginTransaction().hide(active).show(filterView).addToBackStack(null).commit();
+                        //active = filterView;
+                        loadFragment(filterView, "Filter");
                         return true;
                     case R.id.mapButton:
-                        //intent = new Intent(MainActivity.this, MapView.class);
-                        //intent.putExtra("FromMain", 2); //2 - For obtaining hospital positions
-                        //startActivity(intent);
-                        toolbar.setTitle(R.string.mapButton);
+                        Intent intent = new Intent(MainActivity.this, MapView.class);
+                        intent.putExtra("FromMain", 2); //2 - For obtaining hospital positions
+                        startActivity(intent);
                         return true;
 
                     default:
@@ -136,13 +135,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void loadFragment(Fragment fragment) {
-
+    private void loadFragment(Fragment fragment, String TAG) {
         // load fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        transaction.addToBackStack(TAG).commit();
     }
+
+
+
+
 }
 

@@ -1,13 +1,21 @@
 package com.ma.se.hospitato;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -21,6 +29,7 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -52,10 +61,11 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
     private LatLng dest;
     private List<LatLng> route;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_view);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
 
         Bundle b = getIntent().getExtras();
         if(b!= null){
@@ -66,7 +76,10 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
         }
 
 
+
     }
+
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -100,6 +113,9 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
 
 
 
+
+
+
     public void addMarkerForHospitals() {
         mMap.addMarker(new MarkerOptions().position(origin).title("Your Position"));
         Iterator h = hospitals.entrySet().iterator();
@@ -116,4 +132,5 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
         mMap.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
 
     }
+
 }

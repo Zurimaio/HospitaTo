@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ public class filterView extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_filter_view);
+        Log.d("Created", "FilterView");
     }
 
 
@@ -86,9 +88,8 @@ public class filterView extends Fragment implements View.OnClickListener{
     private void loadFragment(Fragment fragment) {
         // load fragment
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
+        transaction.replace(R.id.filtered_container, fragment);
         transaction.addToBackStack(null);
-        transaction.remove(this);
         transaction.commit();
 
     }

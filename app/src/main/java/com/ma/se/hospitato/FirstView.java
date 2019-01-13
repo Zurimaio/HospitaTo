@@ -40,7 +40,7 @@ public class FirstView extends AppCompatActivity {
     }
 
     public void skipIt(View view){
-        intent = new Intent(this, MainActivity.class);
+        intent = new Intent(this, Main2Activity.class);
         startActivity(intent);
         finish();
     }

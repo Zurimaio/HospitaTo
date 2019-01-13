@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -28,6 +30,8 @@ public class FilterChoice extends Fragment {
 
     DatabaseReference databaseReference;
     RecyclerView recyclerView;
+    GridLayout gridLayout;
+    RelativeLayout relativeLayout;
     String filter;
     private FirebaseRecyclerAdapter<Hospital, RequestViewHolder> adapter;
     public FilterChoice() {
@@ -37,6 +41,7 @@ public class FilterChoice extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("Created", "FilterChoice");
     }
 
     @Override
@@ -54,14 +59,19 @@ public class FilterChoice extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_filter_choice, container, false);
         databaseReference = FirebaseDatabase.getInstance().getReference("Hospitals");
-
         recyclerView = view.findViewById(R.id.myrecycler);
-
+        gridLayout = view.findViewById(R.id.gridFilter);
+        relativeLayout = view.findViewById(R.id.relativeLayoutFilter);
         //Avoid unnecessary layout passes by setting setHasFixedSize to true
         //recyclerView.setHasFixedSize(true);
 

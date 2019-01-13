@@ -44,7 +44,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
     private List<String> destinations = new ArrayList<>();
     public Location currentPos;
     private MapView mapView;
-    private MainActivity mainActivity;
+    private Activity activity;
     public Context context;
     public String origin = "";
     public String dest = "";
@@ -95,10 +95,10 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
             getDrawPathValues();
         }else if(this.act == 1){
             Log.d("Action", "Get Travel Time");
-            mainActivity = (MainActivity) objects[1];
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mainActivity);
-            directions = Utility.loadJSONFromRes(mainActivity);
-            createLocationRequest(mainActivity);
+            activity = (Activity) objects[1];
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
+            directions = Utility.loadJSONFromRes(activity);
+            createLocationRequest(activity);
             getOnlyTravelTime();
         }
 
@@ -157,32 +157,15 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                 } else {
                     Log.d("Location Result", "found");
                     setCurrentPos(locationResult.getLocations().get(0));
-                    origin = Utility.fromDoubleToStringCoord(getCurrentPos().getLatitude(), getCurrentPos().getLongitude());
+                    //origin = Utility.fromDoubleToStringCoord(getCurrentPos().getLatitude(), getCurrentPos().getLongitude());
                     /**
                      * TODO simulated position to eliminate
                      */
-                    //origin = "45.072899" + "," + "7.670697";
+                    origin = "45.072899" + "," + "7.670697";
                     found = true;
                 }
             }
         };
-    }
-
-    public List<String> getDestinations() {
-        return destinations;
-    }
-
-    public void setDestinations(List<String> destinations) {
-        this.destinations = destinations;
-    }
-
-
-    public void setCurrentPos(Location currentPos) {
-        this.currentPos = currentPos;
-    }
-
-    public Location getCurrentPos() {
-        return currentPos;
     }
 
     protected void createLocationRequest(final Activity activity) {
@@ -328,6 +311,11 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
     }
 
 
+    /**
+     * Getter and Setter
+     * @return
+     */
+
     public Double getLat() {
         return lat;
     }
@@ -343,5 +331,24 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
     public void setLng(Double lng) {
         this.lng = lng;
     }
+
+
+    public List<String> getDestinations() {
+        return destinations;
+    }
+
+    public void setDestinations(List<String> destinations) {
+        this.destinations = destinations;
+    }
+
+
+    public void setCurrentPos(Location currentPos) {
+        this.currentPos = currentPos;
+    }
+
+    public Location getCurrentPos() {
+        return currentPos;
+    }
+
 }
 

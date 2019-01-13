@@ -2,6 +2,7 @@ package com.ma.se.hospitato;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -36,12 +37,24 @@ public class MainList extends Fragment {
     private List<Hospital> listData;
     private FirebaseDatabase FDB;
     private DatabaseReference DBR;
-    private Button toMap;String travelTime;
+    private Button toMap;
+    public String travelTime;
     private HashMap<String, Object> res;
     private BottomNavigationView bnv;
+    private static MainList fragment;
 
     public MainList() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        FDB = FirebaseDatabase.getInstance();
+        listData = new ArrayList<>();
+        adapter = new MyAdapter(listData);
+        GetDataFirebase();
+        Log.d("onCreate", "Mainlist");
     }
 
 
@@ -49,21 +62,27 @@ public class MainList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_list, container, false);
-
         myRecyclerview = view.findViewById(R.id.myrecycler);
         myRecyclerview.setHasFixedSize(true);
-        RecyclerView.LayoutManager LM = new LinearLayoutManager(getActivity());
-        myRecyclerview.setLayoutManager(LM);
-        listData = new ArrayList<>();
-        adapter = new MyAdapter(listData);
-        FDB = FirebaseDatabase.getInstance();
-        GetDataFirebase();
-        // Inflate the layout for this fragment
-        return view;
+        myRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        // Inflate the layout for this fragment
+
+        Log.d("MainLIst", "Created View");
+        return view;
 
     }
 
+
+
+    public static MainList newInstance() {
+
+        if(fragment == null) {
+            Log.d("Fragment", "New Instance");
+            fragment = new MainList();
+        }
+        return fragment;
+    }
 
 
     void GetDataFirebase() {
@@ -121,7 +140,7 @@ public class MainList extends Fragment {
             final Hospital data = listarray.get(position);
             holder.EDname.setText((data.getName()));
             holder.EDaddress.setText((data.getAddress()));
-            //holder.travTime.setText(getTravelTimeAsync());
+            holder.travTime.setText(getTravelTimeAsync());
 
             if (position != 0) {
                 holder.EDaddress.setVisibility(View.GONE);
@@ -135,12 +154,13 @@ public class MainList extends Fragment {
                 @Override
                 public void onClick(View view, int position, boolean isLongClick) {
                     if(isLongClick){
-                        myRecyclerview.setVisibility(View.GONE);
                         Fragment displayED = DisplayED.newInstance(data);
                         FragmentTransaction tr = getFragmentManager().beginTransaction();
-                        tr.replace(R.id.fragment_container, displayED);
+                        tr.add(R.id.fragment_container, displayED);
                         tr.addToBackStack(null);
                         tr.commit();
+
+
                     }
 
                 }
@@ -153,7 +173,7 @@ public class MainList extends Fragment {
             return listarray.size();
         }
 
-        /*
+
         public String getTravelTimeAsync(){
 
             Thread service = new Thread(){
@@ -161,7 +181,7 @@ public class MainList extends Fragment {
                 public void run() {
                     super.run();
                     try {
-                        res = new AsyncGetDirectionTask(adapter, listData).execute(getApplicationContext(), MainActivity.this).get();
+                        res = new AsyncGetDirectionTask(adapter, listData).execute(getActivity().getApplicationContext(), getActivity()).get();
                         while(res == null){
                             System.out.println("Waiting travel time");
                             Thread.sleep(1000);
@@ -179,7 +199,7 @@ public class MainList extends Fragment {
             service.start();
             return travelTime;
         }
-        */
+
 
         public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
             TextView EDname;
@@ -224,4 +244,11 @@ public class MainList extends Fragment {
     }
 
 
+    public RecyclerView getMyRecyclerview() {
+        return myRecyclerview;
+    }
+
+    public void setMyRecyclerview(RecyclerView myRecyclerview) {
+        this.myRecyclerview = myRecyclerview;
+    }
 }

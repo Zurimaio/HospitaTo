@@ -18,4 +18,6 @@
     <string name="signIn">Log In</string>
     <string name="signUp">Registrati</string>
     <string name="skitIt">"Salta "</string>
+    <string name="tab_text_1">La scelta Migliore</string>
+    <string name="tab_text_2">Filtra</string>
 </resources>
