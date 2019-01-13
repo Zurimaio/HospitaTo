@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 
@@ -210,6 +212,7 @@ public class MainList extends Fragment {
             TextView W_waitingTime;
             TextView travTime;
             TextView E_TT;
+            MapView mapView;
             //ImageView map_log;
             private ItemClickListener itemClickListener;
 
@@ -222,10 +225,10 @@ public class MainList extends Fragment {
                 //W_waitingTime = (TextView) itemView.findViewById(R.id.W_waitingTime);
                 travTime = (TextView) itemView.findViewById(R.id.travel_time);
                 E_TT = (TextView) itemView.findViewById(R.id.travel_time_txt);
+                mapView = new MapView();
                 // map_log = (ImageView) itemView.findViewById(R.id.map_log);
                 itemView.setOnClickListener(this);
                 itemView.setOnLongClickListener(this);
-
             }
 
             public void setItemClickListener(ItemClickListener itemClickListener){
