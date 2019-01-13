@@ -19,7 +19,7 @@ public class FirstView extends AppCompatActivity {
         setContentView(R.layout.activity_first_view);
         mAuth = FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser() != null){
-            intent = new Intent(this, MainActivity.class);
+            intent = new Intent(this, Main2Activity.class);
             startActivity(intent);
             finish();
         }
@@ -30,19 +30,19 @@ public class FirstView extends AppCompatActivity {
     public void signIn(View view){
         intent = new Intent(this, SignUpView.class);
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     public void signUp(View view){
         intent = new Intent(this, SignUpView.class);
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     public void skipIt(View view){
         intent = new Intent(this, Main2Activity.class);
         startActivity(intent);
-        finish();
+        //finish();
     }
 
 

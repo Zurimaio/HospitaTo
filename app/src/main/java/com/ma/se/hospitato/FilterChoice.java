@@ -70,8 +70,6 @@ public class FilterChoice extends Fragment {
         View view = inflater.inflate(R.layout.fragment_filter_choice, container, false);
         databaseReference = FirebaseDatabase.getInstance().getReference("Hospitals");
         recyclerView = view.findViewById(R.id.myrecycler);
-        gridLayout = view.findViewById(R.id.gridFilter);
-        relativeLayout = view.findViewById(R.id.relativeLayoutFilter);
         //Avoid unnecessary layout passes by setting setHasFixedSize to true
         //recyclerView.setHasFixedSize(true);
 
@@ -117,7 +115,7 @@ public class FilterChoice extends Fragment {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
                         if(isLongClick){
-                            recyclerView.setVisibility(View.GONE);
+                            //recyclerView.setVisibility(View.GONE);
                             tr.replace(R.id.fragment_filter_choice, displayED);
                             tr.addToBackStack(null);
                             tr.commit();

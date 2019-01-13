@@ -1,9 +1,12 @@
 package com.ma.se.hospitato;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -19,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class Main2Activity extends AppCompatActivity {
@@ -26,6 +30,8 @@ public class Main2Activity extends AppCompatActivity {
     MainList mainList;
     filterView filterView;
     FloatingActionButton fab;
+
+    NestedScrollView scrollView;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -49,6 +55,7 @@ public class Main2Activity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -57,8 +64,8 @@ public class Main2Activity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewPagercontainer);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
@@ -67,12 +74,12 @@ public class Main2Activity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(Main2Activity.this, MapView.class);
                 intent.putExtra("FromMain", 2); //2 - For obtaining hospital positions
                 startActivity(intent);
             }
         });
+
 
     }
 
@@ -95,6 +102,11 @@ public class Main2Activity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+            }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -133,7 +145,6 @@ public class Main2Activity extends AppCompatActivity {
                     return "MainList";
                 case 1:
                     return "FilterView";
-
             }
             return null;
         }
@@ -147,4 +158,12 @@ public class Main2Activity extends AppCompatActivity {
        else
            super.onBackPressed();
     }
+
+
+
+
+
+
+
+
 }

@@ -20,4 +20,6 @@
     <string name="skitIt">"Salta "</string>
     <string name="tab_text_1">La scelta Migliore</string>
     <string name="tab_text_2">Filtra</string>
+    <string name="estimated_time">Tempo Stimato*: </string>
+    <string name="starIndication">*Include il tempo di attesa e di arrivo</string>
 </resources>

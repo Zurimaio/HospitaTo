@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -42,7 +43,8 @@ public class MainList extends Fragment {
     private HashMap<String, Object> res;
     private BottomNavigationView bnv;
     private static MainList fragment;
-
+    ProgressBar progressBar;
+    MapView mapView;
     public MainList() {
         // Required empty public constructor
     }
@@ -53,6 +55,7 @@ public class MainList extends Fragment {
         FDB = FirebaseDatabase.getInstance();
         listData = new ArrayList<>();
         adapter = new MyAdapter(listData);
+        mapView = new MapView();
         GetDataFirebase();
         Log.d("onCreate", "Mainlist");
     }
@@ -65,9 +68,9 @@ public class MainList extends Fragment {
         myRecyclerview = view.findViewById(R.id.myrecycler);
         myRecyclerview.setHasFixedSize(true);
         myRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        progressBar = view.findViewById(R.id.progress_circular);
+        progressBar.setVisibility(View.VISIBLE);
         // Inflate the layout for this fragment
-
         Log.d("MainLIst", "Created View");
         return view;
 
@@ -137,17 +140,18 @@ public class MainList extends Fragment {
 
         @Override
         public void onBindViewHolder(MyAdapter.MyViewHolder holder, int position) {
+            progressBar.setVisibility(View.GONE);
             final Hospital data = listarray.get(position);
             holder.EDname.setText((data.getName()));
             holder.EDaddress.setText((data.getAddress()));
-            holder.travTime.setText(getTravelTimeAsync());
+            //holder.travTime.setText(getTravelTimeAsync());
 
             if (position != 0) {
                 holder.EDaddress.setVisibility(View.GONE);
                 // holder.map_log.setVisibility(View.GONE);
                 holder.E_TT.setVisibility(View.GONE);
-                holder.W_waitingTime.setVisibility(View.GONE);
-                holder.G_waitingTime.setVisibility(View.GONE);
+                //holder.W_waitingTime.setVisibility(View.GONE);
+                //holder.G_waitingTime.setVisibility(View.GONE);
                 holder.travTime.setVisibility(View.GONE);
             }
             holder.setItemClickListener(new ItemClickListener() {
@@ -159,8 +163,6 @@ public class MainList extends Fragment {
                         tr.add(R.id.fragment_container, displayED);
                         tr.addToBackStack(null);
                         tr.commit();
-
-
                     }
 
                 }
@@ -216,8 +218,8 @@ public class MainList extends Fragment {
                 super(itemView);
                 EDname = (TextView) itemView.findViewById(R.id.ED_name);
                 EDaddress = (TextView) itemView.findViewById(R.id.ED_address);
-                G_waitingTime = (TextView) itemView.findViewById(R.id.G_waitingTime);
-                W_waitingTime = (TextView) itemView.findViewById(R.id.W_waitingTime);
+                //G_waitingTime = (TextView) itemView.findViewById(R.id.G_waitingTime);
+                //W_waitingTime = (TextView) itemView.findViewById(R.id.W_waitingTime);
                 travTime = (TextView) itemView.findViewById(R.id.travel_time);
                 E_TT = (TextView) itemView.findViewById(R.id.travel_time_txt);
                 // map_log = (ImageView) itemView.findViewById(R.id.map_log);

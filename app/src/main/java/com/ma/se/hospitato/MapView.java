@@ -60,6 +60,7 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
     private LatLng origin;
     private LatLng dest;
     private List<LatLng> route;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +85,8 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        addMarkerForHospitals();
+        Log.d("Map", "Ready");
+        //addMarkerForHospitals();
 
         //mMap.addMarker(new MarkerOptions().position(dest).title("Destination"));
         //mMap.addPolyline(new PolylineOptions().addAll(route).color(Color.BLUE).width(10));
