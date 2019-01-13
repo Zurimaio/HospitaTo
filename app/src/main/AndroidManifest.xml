@@ -38,6 +38,7 @@
         <activity
             android:name=".MapView"
             android:label="@string/title_activity_map_view" />
+
         <activity android:name=".ProfileView" />
         <activity android:name=".LogInView" />
         <activity android:name=".SignUpView" />
@@ -56,6 +57,7 @@
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar"/>
+
     </application>
 
 </manifest>
