@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".medical_information">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/heightprofile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="0dp"
+            android:paddingTop="20dp"
+            android:text="Height : 176"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/weightprofile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="0dp"
+            android:paddingTop="20dp"
+            android:text="Weigth: 76"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/bloodprofile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="0dp"
+            android:paddingTop="20dp"
+            android:text="Blood Group: 0+"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+</FrameLayout>
