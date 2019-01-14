@@ -38,9 +38,9 @@
     <string name="tab_text_1">Best Choice</string>
     <string name="tab_text_2">Filter</string>
     <string name="tab_text_3">Tab 3</string>
-    <string name="estimated_time">Estimated Time*: </string>
+    <string name="estimated_time">Estimated Time: </string>
     <string name="starIndication">*Includes waiting time and travel time</string>
-
+    <string name="logout" translatable="false">Logout</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

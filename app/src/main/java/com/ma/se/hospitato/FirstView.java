@@ -21,7 +21,7 @@ public class FirstView extends AppCompatActivity {
         if(mAuth.getCurrentUser() != null){
             intent = new Intent(this, Main2Activity.class);
             startActivity(intent);
-            //finish();
+            finish();
         }
 
 
@@ -43,6 +43,7 @@ public class FirstView extends AppCompatActivity {
 
     public void skipIt(View view){
         intent = new Intent(this, Main2Activity.class);
+        intent.putExtra("firstAction", "skipped");
         startActivity(intent);
         //finish();
     }

@@ -17,13 +17,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 public class Main2Activity extends AppCompatActivity {
 
     MainList mainList;
     filterView filterView;
     FloatingActionButton fab;
-
     NestedScrollView scrollView;
+    boolean skipped = false;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -46,7 +51,14 @@ public class Main2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        Bundle b = getIntent().getExtras();
+        try {
+            if (b.getString("firstAction").equals("skipped"))
+                skipped = true;
+        }catch (Exception e) {
+            e.printStackTrace();
+            skipped = false;
+       }
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -76,17 +88,24 @@ public class Main2Activity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int profile = item.getItemId();
 
-        if (profile == R.id.profileButton){
+        int i = item.getItemId();
+        if (i== R.id.profileButton){
             Log.d("Profile Button", "Clicked");
             Intent toProfile = new Intent(Main2Activity.this, MedicalView.class);
             startActivity(toProfile);
+        }
+        if(i==R.id.registerButton){
+            Intent toSignUp = new Intent(Main2Activity.this, SignUpView.class);
+            startActivity(toSignUp);
+        }
+        if(i==R.id.loginButton){
+            startActivity(new Intent(Main2Activity.this, LogInView.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -94,7 +113,15 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-            }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -145,6 +172,28 @@ public class Main2Activity extends AppCompatActivity {
            getSupportFragmentManager().popBackStackImmediate();
        else
            super.onBackPressed();
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Log.d("PrepareMenu", "preparing");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        MenuItem register = menu.findItem(R.id.registerButton);
+        MenuItem profile = menu.findItem(R.id.profileButton);
+        MenuItem login = menu.findItem(R.id.loginButton);
+        if(skipped || user == null) {
+            //not registered or logged
+            register.setVisible(true);
+            profile.setVisible(false);
+            login.setVisible(true);
+        }else if(user!= null){
+            //registered
+            register.setVisible(false);
+            profile.setVisible(true);
+        }
+        return true;
+
     }
 
 

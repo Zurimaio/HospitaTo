@@ -7,4 +7,22 @@
         android:title="@string/profileButton"
         app:showAsAction="always"
         />
+
+    <item
+        android:id="@+id/registerButton"
+        android:title="@string/signUp"
+        android:visible="false"
+        />
+
+    <item
+        android:id="@+id/logoutButton"
+        android:title="@string/logout"
+        android:visible="false"
+        />
+    <item
+        android:id="@+id/loginButton"
+        android:title="@string/signIn"
+        android:visible="false"
+        >
+    </item>
 </menu>

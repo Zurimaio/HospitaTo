@@ -10,11 +10,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MedicalView extends AppCompatActivity {
 
@@ -22,6 +27,8 @@ public class MedicalView extends AppCompatActivity {
     medical_information med_info;
     FloatingActionButton fab;
     Profile value;
+    Toolbar toolbar;
+
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -43,6 +50,7 @@ public class MedicalView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medical_view);
 
+        //toolbar = (Toolbar) findViewById(R.id.toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -73,6 +81,17 @@ public class MedicalView extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.logoutButton){
+            startActivity(new Intent(this, Main2Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            );
+            FirebaseAuth.getInstance().signOut();
+            finish();
+        }
         return true;
     }
 
@@ -133,5 +152,34 @@ public class MedicalView extends AppCompatActivity {
             startActivity(toEdit);
 
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem logout = menu.findItem(R.id.logoutButton);
+        MenuItem profile = menu.findItem(R.id.profileButton);
+        MenuItem register = menu.findItem(R.id.registerButton);
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            logout.setVisible(true);
+            profile.setVisible(false);
+            register.setVisible(false);
+        }
+
+        return  true;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        /*
+        Menu menu = toolbar.getMenu();
+        MenuItem register = menu.findItem(R.id.registerButton);
+        MenuItem login =  menu.findItem(R.id.loginButton);
+        MenuItem profile = menu.findItem(R.id.profileButton);
+        register.setVisible(true);
+        login.setVisible(true);
+        profile.setVisible(false);
+        */
     }
 }

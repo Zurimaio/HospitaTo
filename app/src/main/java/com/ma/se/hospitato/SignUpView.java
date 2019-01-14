@@ -1,5 +1,6 @@
 package com.ma.se.hospitato;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -81,6 +82,7 @@ public class SignUpView extends AppCompatActivity {
                             System.out.println(user_reg.getUid());
                             System.out.println(user_reg.getEmail());
                             updateUI(user_reg);
+                            startActivity(new Intent(SignUpView.this, Main2Activity.class));
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.

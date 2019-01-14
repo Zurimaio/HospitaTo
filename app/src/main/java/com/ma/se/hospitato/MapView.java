@@ -86,7 +86,7 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         Log.d("Map", "Ready");
-        //addMarkerForHospitals();
+        addMarkerForHospitals();
 
         //mMap.addMarker(new MarkerOptions().position(dest).title("Destination"));
         //mMap.addPolyline(new PolylineOptions().addAll(route).color(Color.BLUE).width(10));

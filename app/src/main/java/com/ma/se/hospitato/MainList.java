@@ -2,6 +2,7 @@ package com.ma.se.hospitato;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -13,15 +14,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.gms.maps.MapView;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,11 +54,13 @@ public class MainList extends Fragment {
     private DatabaseReference DBR;
     private Button toMap;
     public String travelTime;
+    private String hospitalName;
     private HashMap<String, Object> res;
     private BottomNavigationView bnv;
     private static MainList fragment;
+    private LatLng loc;
     ProgressBar progressBar;
-    MapView mapView;
+
     public MainList() {
         // Required empty public constructor
     }
@@ -57,8 +71,8 @@ public class MainList extends Fragment {
         FDB = FirebaseDatabase.getInstance();
         listData = new ArrayList<>();
         adapter = new MyAdapter(listData);
-        mapView = new MapView();
         GetDataFirebase();
+        getBestHospitalName("Mauriziano");
         Log.d("onCreate", "Mainlist");
     }
 
@@ -79,10 +93,9 @@ public class MainList extends Fragment {
     }
 
 
-
     public static MainList newInstance() {
 
-        if(fragment == null) {
+        if (fragment == null) {
             Log.d("Fragment", "New Instance");
             fragment = new MainList();
         }
@@ -128,6 +141,8 @@ public class MainList extends Fragment {
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         List<Hospital> listarray;  //listdata
+
+
         public MyAdapter(List<Hospital> list) {
             this.listarray = list;
         }
@@ -146,20 +161,32 @@ public class MainList extends Fragment {
             final Hospital data = listarray.get(position);
             holder.EDname.setText((data.getName()));
             holder.EDaddress.setText((data.getAddress()));
-            //holder.travTime.setText(getTravelTimeAsync());
+            if(position == 0) {
+                Log.d("Frist item", data.getName());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                holder.item_layout.setLayoutParams(params);
+                holder.item_layout.requestLayout();
+                //holder.travTime.setText(getTravelTimeAsync());
+            }
+
+
 
             if (position != 0) {
+
                 holder.EDaddress.setVisibility(View.GONE);
                 // holder.map_log.setVisibility(View.GONE);
                 holder.E_TT.setVisibility(View.GONE);
                 //holder.W_waitingTime.setVisibility(View.GONE);
                 //holder.G_waitingTime.setVisibility(View.GONE);
                 holder.travTime.setVisibility(View.GONE);
+                holder.mapView.setVisibility(View.GONE);
+
+
             }
             holder.setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int position, boolean isLongClick) {
-                    if(isLongClick){
+                    if (isLongClick) {
                         Fragment displayED = DisplayED.newInstance(data);
                         FragmentTransaction tr = getFragmentManager().beginTransaction();
                         tr.add(R.id.fragment_container, displayED);
@@ -178,24 +205,24 @@ public class MainList extends Fragment {
         }
 
 
-        public String getTravelTimeAsync(){
+        public String getTravelTimeAsync() {
 
-            Thread service = new Thread(){
+            Thread service = new Thread() {
                 @Override
                 public void run() {
                     super.run();
                     try {
                         res = new AsyncGetDirectionTask(adapter, listData).execute(getActivity().getApplicationContext(), getActivity()).get();
-                        while(res == null){
+                        while (res == null) {
                             System.out.println("Waiting travel time");
                             Thread.sleep(1000);
                         }
                         travelTime = (String) res.get("travelTime");
                         Log.d("Adapter Async Task", travelTime);
 
-                    }catch (InterruptedException ie){
+                    } catch (InterruptedException ie) {
                         ie.printStackTrace();
-                    }catch (ExecutionException ee){
+                    } catch (ExecutionException ee) {
                         ee.printStackTrace();
                     }
                 }
@@ -205,7 +232,7 @@ public class MainList extends Fragment {
         }
 
 
-        public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
+        public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, OnMapReadyCallback {
             TextView EDname;
             TextView EDaddress;
             TextView G_waitingTime;
@@ -213,6 +240,9 @@ public class MainList extends Fragment {
             TextView travTime;
             TextView E_TT;
             MapView mapView;
+            GoogleMap map;
+            LinearLayout item_layout;
+
             //ImageView map_log;
             private ItemClickListener itemClickListener;
 
@@ -225,27 +255,60 @@ public class MainList extends Fragment {
                 //W_waitingTime = (TextView) itemView.findViewById(R.id.W_waitingTime);
                 travTime = (TextView) itemView.findViewById(R.id.travel_time);
                 E_TT = (TextView) itemView.findViewById(R.id.travel_time_txt);
-                mapView = new MapView();
-                // map_log = (ImageView) itemView.findViewById(R.id.map_log);
+                //map_log = (ImageView) itemView.findViewById(R.id.map_log);
+                mapView = itemView.findViewById(R.id.lite_map);
+                item_layout = itemView.findViewById(R.id.item_layout);
+
+                if (mapView != null) {
+                    mapView.onCreate(null);
+                    mapView.getMapAsync(this);
+                }
+
+
                 itemView.setOnClickListener(this);
                 itemView.setOnLongClickListener(this);
             }
 
-            public void setItemClickListener(ItemClickListener itemClickListener){
-                this.itemClickListener=itemClickListener;
+            public void setItemClickListener(ItemClickListener itemClickListener) {
+                this.itemClickListener = itemClickListener;
             }
 
             @Override
             public void onClick(View v) {
-                itemClickListener.onClick(v,getAdapterPosition(),true);
+                itemClickListener.onClick(v, getAdapterPosition(), true);
             }
 
             @Override
             public boolean onLongClick(View v) {
-                itemClickListener.onClick(v,getAdapterPosition(),true);
+                itemClickListener.onClick(v, getAdapterPosition(), true);
                 return true;
             }
+
+
+            /**
+             * MAP SECTION
+             */
+
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                MapsInitializer.initialize(getContext());
+                map = googleMap;
+                setMapLocation();
+            }
+
+            public void setMapLocation(){
+                if(map==null) return;
+                //LatLng l = new LatLng(45.0504965,7.6636196);
+
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(getLoc(), 15f));
+                map.addMarker(new MarkerOptions().position(getLoc()).title(hospitalName)).showInfoWindow();
+                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            }
+
+
         }
+
+
     }
 
 
@@ -255,5 +318,39 @@ public class MainList extends Fragment {
 
     public void setMyRecyclerview(RecyclerView myRecyclerview) {
         this.myRecyclerview = myRecyclerview;
+    }
+
+
+    public void getBestHospitalName(final String hospitalName) {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Hospitals/");
+        Log.d("Ref", ref.getRef().toString());
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot d: dataSnapshot.getChildren()) {
+                        Hospital h = d.getValue(Hospital.class);
+                        if(h.getName().equals(hospitalName)) {
+                            Double lat = Double.parseDouble(h.getCoordinate().get("Latitude"));
+                            Double lng = Double.parseDouble(h.getCoordinate().get("Longitude"));
+                            setLoc(new LatLng(lat, lng));
+                            break;
+                        }
+                    }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                return;
+            }
+        });
+    }
+
+    public LatLng getLoc() {
+        return loc;
+    }
+
+    public void setLoc(LatLng loc) {
+        this.loc = loc;
     }
 }

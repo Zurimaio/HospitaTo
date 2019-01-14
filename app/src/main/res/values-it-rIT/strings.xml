@@ -5,7 +5,7 @@
     <string name="mapButton">Mappa</string>
     <string name="profileButton">Profilo</string>
     <string name="filterButton">Filtra</string>
-    <string name="title_activity_login_view">Sign In</string>
+    <string name="title_activity_login_view">Accedi</string>
     <string name="green_waiting_time">Tempo di Attesa Verde</string>
     <string name="white_waiting_time">Tempo di Attesa Bianco</string>
     <string name="estimated_travel_time">Tempo di percorrenza stimato</string>
@@ -15,11 +15,12 @@
     <string name="yellow_tag">CODICE GIALLO</string>
     <string name="green_tag">CODICE VERDE</string>
     <string name="white_tag">CODICE BIANCO</string>
-    <string name="signIn">Log In</string>
+    <string name="signIn">Accedi</string>
     <string name="signUp">Registrati</string>
     <string name="skitIt">"Salta "</string>
-    <string name="tab_text_1">La scelta Migliore</string>
+    <string name="tab_text_1">La Scelta Migliore</string>
     <string name="tab_text_2">Filtra</string>
-    <string name="estimated_time">Tempo Stimato*: </string>
+    <string name="estimated_time">Tempo Stimato: </string>
     <string name="starIndication">*Include il tempo di attesa e di arrivo</string>
+    <string name="logout" translatable="false">Disconnetti</string>
 </resources>

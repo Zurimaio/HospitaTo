@@ -68,7 +68,7 @@ public class LogInView extends AppCompatActivity {
             // FirebaseUser.getIdToken() instead.
             //String uid = user.getUid();
 
-            Intent intent = new Intent(this,Main2Activity.class);
+            Intent intent = new Intent(this, Main2Activity.class);
             intent.putExtra("email",email);
             intent.putExtra("UID",UID);
             startActivity(intent);

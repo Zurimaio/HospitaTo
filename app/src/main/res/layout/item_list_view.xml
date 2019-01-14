@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/corner"
     android:orientation="vertical"
     android:weightSum="1"
-    android:gravity="center"
-    >
+    android:gravity="center">
 
     <TextView
         android:id="@+id/ED_name"
@@ -30,12 +30,12 @@
         android:paddingBottom="5dp"
         android:text="Address"
         android:textAlignment="center"
-        android:textSize="18dp" />
+        android:textSize="20dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="0dp"
         android:gravity="center"
         android:orientation="horizontal">
         <!--
@@ -96,7 +96,14 @@
 
     </LinearLayout>
 
-
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/lite_map"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        map:liteMode="true"
+        map:mapType="none"
+        android:layout_margin="10dp"
+        />
 
     <!--
     <TextView

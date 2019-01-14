@@ -291,7 +291,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                 System.out.println("Waiting");
                 setPosition();
                 getHospitals();
-                Thread.sleep(1000);
+                Thread.sleep(3000);
             } catch (Exception e) {
                 Log.e("Thread", "Error");
                 break;

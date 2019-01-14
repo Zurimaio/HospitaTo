@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     android:background="@color/White">
 
     <LinearLayout
@@ -166,18 +166,17 @@
             android:paddingHorizontal="5dp"
             android:text="@string/white_tag" />
 
-        <FrameLayout
-            android:id="@+id/mapSection"
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/lite_map"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_margin="20dp">
+            android:layout_height="260dp"
+            map:liteMode="true"
+            map:mapType="none"
+            android:layout_margin="10dp"
+            />
 
-            <include layout="@layout/activity_map_view"/>
-
-
-        </FrameLayout>
-
-    </LinearLayout>
+        </LinearLayout>
 
 
 </ScrollView>
