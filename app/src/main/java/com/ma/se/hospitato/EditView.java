@@ -121,17 +121,17 @@ public class EditView extends AppCompatActivity {
 
     public void update(View view){
         try {
-            u.setBlood("Blood Group: " + mBlood.getText().toString());
+            u.setBlood(mBlood.getText().toString());
         } catch (NullPointerException n) {
             n.printStackTrace();
         }
         try {
-            u.setHeight("Height: " + mHeight.getText().toString());
+            u.setHeight(mHeight.getText().toString());
         } catch (NullPointerException n) {
             n.printStackTrace();
         }
         try {
-            u.setWeight("Weight: " + mWeight.getText().toString());
+            u.setWeight(mWeight.getText().toString());
         } catch (NullPointerException n){
             n.printStackTrace();
         }

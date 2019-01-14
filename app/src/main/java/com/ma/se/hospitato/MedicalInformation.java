@@ -65,7 +65,7 @@ public class MedicalInformation extends Fragment {
         if(user!=null) {
             displayProfile();
         }
-        return inflater.inflate(R.layout.fragment_medical_information, container, false);
+        return view;
     }
 
     public void displayProfile(){
