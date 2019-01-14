@@ -14,9 +14,12 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import com.google.android.gms.maps.MapView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -72,15 +75,10 @@ public class FilterChoice extends Fragment {
         recyclerView = view.findViewById(R.id.myrecycler);
         //Avoid unnecessary layout passes by setting setHasFixedSize to true
         //recyclerView.setHasFixedSize(true);
-
         filter = getArguments().getString("Department");
         Log.d("Filtered Result",databaseReference.getRef().toString());
-
         filtering();
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
         return view;
     }
 
@@ -89,13 +87,10 @@ public class FilterChoice extends Fragment {
                 .getInstance()
                 .getReference("Hospitals");
 
-
         FirebaseRecyclerOptions<Hospital> options =
                 new FirebaseRecyclerOptions.Builder<Hospital>()
                         .setQuery(query, Hospital.class)
                         .build();
-
-
         adapter = new FirebaseRecyclerAdapter<Hospital, RequestViewHolder>(options) {
             @Override
             protected void onBindViewHolder(RequestViewHolder viewHolder, int position, Hospital model) {
@@ -137,12 +132,20 @@ public class FilterChoice extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-    public static class RequestViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
+    public class RequestViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener,OnMapReadyCallback {
         public View mView;
+        MapView mapView;
+        GoogleMap map;
         private ItemClickListener itemClickListener;
+
         public RequestViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
+            mapView = itemView.findViewById(R.id.lite_map);
+            if (mapView != null) {
+                mapView.onCreate(null);
+                mapView.getMapAsync(this);
+            }
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
@@ -150,15 +153,15 @@ public class FilterChoice extends Fragment {
         public void setDetails(String Nameh, String Addressh ) {
             TextView name = (TextView) mView.findViewById(R.id.ED_name);
             TextView address = (TextView) mView.findViewById(R.id.ED_address);
+            mapView.setVisibility(View.GONE);
             name.setText(Nameh);
             address.setText(Addressh);
         }
 
         public void noDetails() {
-
             itemView.setVisibility(View.GONE);
+            mapView.setVisibility(View.GONE);
             itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-
         }
 
         public void setItemClickListener(ItemClickListener itemClickListener){
@@ -174,6 +177,11 @@ public class FilterChoice extends Fragment {
         public boolean onLongClick(View v) {
             itemClickListener.onClick(v,getAdapterPosition(),true);
             return true;
+        }
+
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            MapsInitializer.initialize(getContext());
         }
     }
 

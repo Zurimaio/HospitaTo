@@ -23,4 +23,13 @@
     <string name="estimated_time">Tempo Stimato: </string>
     <string name="starIndication">*Include il tempo di attesa e di arrivo</string>
     <string name="logout" translatable="false">Disconnetti</string>
+    <string name="bloodLabel">Gruppo Sanguigno</string>
+    <string name="heightLabel">Altezza</string>
+    <string name="birthdayLabel">gg/mm/aaaa</string>
+    <string name="surnameLabel">Cognome</string>
+    <string name="nameLabel">Nome</string>
+    <string name="sendButton">Invia</string>
+    <string name="emailLabel">Email</string>
+    <string name="weightLabel">Peso</string>
+    <string name="yourPosition">La tua posizione</string>
 </resources>

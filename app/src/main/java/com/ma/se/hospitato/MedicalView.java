@@ -19,12 +19,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MedicalView extends AppCompatActivity {
 
-    Personal_information personal_info;
-    medical_information med_info;
+    PersonalInformation personal_info;
+    MedicalInformation med_info;
     FloatingActionButton fab;
     Profile value;
     Toolbar toolbar;
@@ -106,11 +105,11 @@ public class MedicalView extends AppCompatActivity {
 
             switch (position){
                 case 0:
-                    personal_info = new Personal_information();
+                    personal_info = new PersonalInformation();
                     //fab.setVisibility(View.VISIBLE);
                     return personal_info;
                 case 1:
-                    med_info = new medical_information();
+                    med_info = new MedicalInformation();
                     //fab.setVisibility(View.INVISIBLE);
                     return  med_info;
 

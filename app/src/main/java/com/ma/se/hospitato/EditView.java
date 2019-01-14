@@ -108,9 +108,7 @@ public class EditView extends AppCompatActivity {
                 } catch (NullPointerException n){
                     n.printStackTrace();
                 }
-
             }
-
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
@@ -140,7 +138,6 @@ public class EditView extends AppCompatActivity {
         u.setNascita(mNascita.getText().toString());
         u.setName(mName.getText().toString());
         u.setSurname(mSurname.getText().toString());
-
         myRef.setValue(u);
         finish();
     }
