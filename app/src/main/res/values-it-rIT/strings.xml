@@ -18,8 +18,7 @@
     <string name="signIn">Accedi</string>
     <string name="signUp">Registrati</string>
     <string name="skitIt">"Salta "</string>
-    <string name="tab_text_1">La Scelta Migliore</string>
-    <string name="tab_text_2">Filtra</string>
+    <string name="tab_text_2">Filtra per ambulatorio</string>
     <string name="estimated_time">Tempo Stimato: </string>
     <string name="starIndication">*Include il tempo di attesa e di arrivo</string>
     <string name="logout" translatable="false">Disconnetti</string>
@@ -32,4 +31,5 @@
     <string name="emailLabel">Email</string>
     <string name="weightLabel">Peso</string>
     <string name="yourPosition">La tua posizione</string>
+    <string name="tab_text_1">Il miglior Ospedale</string>
 </resources>

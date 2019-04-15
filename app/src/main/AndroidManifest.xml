@@ -38,7 +38,6 @@
         <activity
             android:name=".MapView"
             android:label="@string/title_activity_map_view" />
-
         <activity android:name=".ProfileView" />
         <activity android:name=".LogInView" />
         <activity android:name=".SignUpView" />
@@ -47,17 +46,23 @@
 
         <!-- <activity android:name=".filterView" /> -->
         <activity android:name=".FirstView">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
 
         </activity>
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".StartActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            >
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
