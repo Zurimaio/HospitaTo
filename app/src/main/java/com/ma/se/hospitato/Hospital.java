@@ -13,7 +13,7 @@ public class Hospital implements Parcelable {
     private String PhoneNumber;
     private HashMap<String, Boolean> Departments;
     private HashMap<String, String> Coordinate;
-
+    private HashMap <String, Integer> patients;
 
     public Hospital(){}
 
@@ -86,5 +86,13 @@ public class Hospital implements Parcelable {
         dest.writeString(Address);
         dest.writeString(PhoneNumber);
 
+    }
+
+    public HashMap<String, Integer> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(HashMap<String, Integer> patients) {
+        this.patients = patients;
     }
 }

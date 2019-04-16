@@ -93,6 +93,10 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
             directions = Utility.loadJSONFromRes(mapView);
             createLocationRequest(mapView);
             getDrawPathValues();
+            if(isCancelled()){
+                Log.d("Canceled", "Exiting");
+                return null;
+            }
         }else if(this.act == 1){
             Log.d("Action", "Get Travel Time");
             activity = (Activity) objects[1];
@@ -130,6 +134,8 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
             Log.e("ERROR", "Not able to find the field");
             e.printStackTrace();
         }
+
+
         return res;
     }
 
@@ -157,11 +163,11 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                 } else {
                     Log.d("Location Result", "found");
                     setCurrentPos(locationResult.getLocations().get(0));
-                    //origin = Utility.fromDoubleToStringCoord(getCurrentPos().getLatitude(), getCurrentPos().getLongitude());
+                    origin = Utility.fromDoubleToStringCoord(getCurrentPos().getLatitude(), getCurrentPos().getLongitude());
                     /**
                      * TODO simulated position to eliminate
                      */
-                    origin = "45.072899" + "," + "7.670697";
+                    //origin = "45.072899" + "," + "7.670697";
                     found = true;
                 }
             }
@@ -236,7 +242,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                  */
                 setDestinations(destinations);
                 dest = getDestinations().get(0);
-                //Log.d("Dest", dest);
+                Log.d("Dest", dest);
 
             }
 
@@ -286,14 +292,15 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
 
 
     public void getDrawPathValues(){
+        setPosition();
+        getHospitals();
         while (origin.equals("") || dest.equals("")) {
             try {
                 System.out.println("Waiting");
-                setPosition();
-                getHospitals();
                 Thread.sleep(3000);
             } catch (Exception e) {
                 Log.e("Thread", "Error");
+                e.printStackTrace();
                 break;
             }
         }
@@ -309,6 +316,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
         res.put("dest", dest);
 
     }
+
 
 
     /**

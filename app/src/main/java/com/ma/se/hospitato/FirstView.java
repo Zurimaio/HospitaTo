@@ -32,20 +32,20 @@ public class FirstView extends AppCompatActivity {
     public void signIn(View view){
         intent = new Intent(this, LogInView.class);
         startActivity(intent);
-        //finish();
+        finish();
     }
 
     public void signUp(View view){
         intent = new Intent(this, SignUpView.class);
         startActivity(intent);
-        //finish();
+        finish();
     }
 
     public void skipIt(View view){
         intent = new Intent(this, Main2Activity.class);
         intent.putExtra("firstAction", "skipped");
         startActivity(intent);
-        //finish();
+
     }
 
 

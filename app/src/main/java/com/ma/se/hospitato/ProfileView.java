@@ -101,7 +101,6 @@ public class ProfileView extends FragmentActivity {
     public void displayProfile(){
         myRef = database.getReference("Users/"+user.getUid());
         Log.d("Reference", myRef.toString());
-
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
 public class MapView extends FragmentActivity implements OnMapReadyCallback {
@@ -60,6 +61,8 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
     private LatLng origin;
     private LatLng dest;
     private List<LatLng> route;
+    AsyncGetDirectionTask task;
+    Thread th;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,12 +96,13 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
     }
 
     public void startAsyncTask(int act){
-        Thread th = new Thread(){
+        th = new Thread(){
             @Override
             public void run() {
                 super.run();
                 try {
-                    result = new AsyncGetDirectionTask(MapView.this, 0).execute(getApplicationContext(), MapView.this).get();
+                    task = new AsyncGetDirectionTask(MapView.this, 0);
+                    result = task.execute(getApplicationContext(), MapView.this).get();
                     origin = (LatLng) result.get("origin");
                     dest =  (LatLng) result.get("dest");
                     hospitals = (HashMap<String, Object>) result.get("Hospitals");
@@ -107,6 +111,8 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
                     e.printStackTrace();
                 }catch (InterruptedException e){
                     e.printStackTrace();
+                }catch (CancellationException ce){
+                    ce.printStackTrace();
                 }
             }
         };
@@ -119,7 +125,7 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
 
 
     public void addMarkerForHospitals() {
-        mMap.addMarker(new MarkerOptions().position(origin).title("Your Position"));
+        mMap.addMarker(new MarkerOptions().position(origin).title(getString(R.string.yourPosition))).showInfoWindow();
         Iterator h = hospitals.entrySet().iterator();
         while (h.hasNext()) {
             Map.Entry pair = (Map.Entry) h.next();
@@ -135,4 +141,18 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        task.cancel(true);
+        th.interrupt();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        task.cancel(true);
+        th.interrupt();
+    }
 }

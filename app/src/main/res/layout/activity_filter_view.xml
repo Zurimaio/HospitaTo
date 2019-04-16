@@ -29,12 +29,11 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             app:cardElevation="8dp"
-            app:cardCornerRadius="8dp"
-            >
+            app:cardCornerRadius="8dp">
 
             <LinearLayout
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_margin="16dp"
                 android:orientation="vertical"
                 android:layout_height="wrap_content"
@@ -43,7 +42,6 @@
                 <ImageView
                     android:id="@+id/dep1"
                     android:src="@mipmap/ic_launcher_round"
-                    android:contextClickable="true"
                     android:layout_gravity="center_horizontal"
                     android:background="@color/colorPrimaryDark"
                     android:layout_width="wrap_content"
