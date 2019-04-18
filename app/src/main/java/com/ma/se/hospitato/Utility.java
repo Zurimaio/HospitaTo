@@ -32,16 +32,17 @@ public class Utility {
     public static final String MAURIZIANO = "Mauriziano";
     public static final String MOLINETTE = "Molinette";
     public static final String MARIA_VITTORIA = "Maria Vittoria";
-    public static final String SAN_GIOVANNI_BOSCO= "San Giovanni Bosco";
+    public static final String SAN_GIOVANNI_BOSCO = "San Giovanni Bosco";
     public static final String CTO = "CTO";
     public static final String SANT_ANNA = "Sant'Anna";
     public static final String REGINA_MARGHERITA = "Regina Margherita";
     public static final String MARTINI = "Martini";
     public static JSONDirections res;
+    public static HashMap<String, HashMap> peopleInPS = new HashMap<>();
     public static final JSONObject json = new JSONObject();
 
 
-    static public void requestDirection(String origin, String destination, Context context){
+    static public void requestDirection(String origin, String destination, Context context) {
         RequestQueue queue = Volley.newRequestQueue(context);
         JSONDirections data;
 
@@ -56,8 +57,7 @@ public class Utility {
                 + format + "?"
                 + "origin=" + origin + "&"
                 + "destination=" + destination + "&"
-                + "key=" +  DIRECTION_API_KEY;
-
+                + "key=" + DIRECTION_API_KEY;
 
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -68,7 +68,7 @@ public class Utility {
                         try {
                             res = new JSONDirections(response);
 
-                        }catch (JSONException jx){
+                        } catch (JSONException jx) {
                             jx.printStackTrace();
                         }
                     }
@@ -84,20 +84,18 @@ public class Utility {
 
     }
 
-    static  public String fromDoubleToStringCoord(Double lat, Double log){
-        String pos = Double.toString(lat) + ","+Double.toString(log);
+    static public String fromDoubleToStringCoord(Double lat, Double log) {
+        String pos = Double.toString(lat) + "," + Double.toString(log);
         return pos;
     }
 
-    static public HashMap<String, Double> fromStringToCoord(String coords){
+    static public HashMap<String, Double> fromStringToCoord(String coords) {
         HashMap<String, Double> c = new HashMap<>();
         c.put("lat", Double.parseDouble(coords.split(",")[0]));
         c.put("lng", Double.parseDouble(coords.split(",")[1]));
         return c;
 
     }
-
-
 
 
     static public JSONArray loadJSONFromRes(Activity activity) {
@@ -115,7 +113,7 @@ public class Utility {
         } catch (IOException ex) {
             ex.printStackTrace();
             return null;
-        }catch (JSONException jx){
+        } catch (JSONException jx) {
             jx.printStackTrace();
             return null;
         }
@@ -133,8 +131,8 @@ public class Utility {
     }
 
 
-    public static void requestTestData(Context context){
-        HashMap<String,String> links = new HashMap<>();
+    public static void requestTestData(Context context, String hospitalName) {
+        HashMap<String, String> links = new HashMap<>();
         String Molinette = "01090101";
         String CTO = "01090201";
         String SantAnna = "01090301";
@@ -142,14 +140,13 @@ public class Utility {
         final String link = "http://listeps.cittadellasalute.to.it/gtotal.php?id=";
 
 
-        links.put("Molinette",link+Molinette);
-        links.put("CTO", link+CTO);
-        links.put("SantAnna", link+SantAnna);
-        links.put("Margherita", link+Margherita);
+        links.put("Molinette", link + Molinette);
+        links.put("CTO", link + CTO);
+        links.put("SantAnna", link + SantAnna);
+        links.put("Margherita", link + Margherita);
         RequestQueue queue = Volley.newRequestQueue(context);
 
-
-        for(Map.Entry<String,String> entry: links.entrySet()) {
+        for (Map.Entry<String, String> entry : links.entrySet()) {
             final HashMap<String, JSONArray> res = new HashMap<>();
             final String hospital = entry.getKey();
             String url = entry.getValue();
@@ -166,45 +163,45 @@ public class Utility {
                                 JSONArray array = response.getJSONArray("colors");
                                 JSONObject obj = new JSONObject();
 
-                                for(int i = 0; i < array.length(); i++){
+                                for (int i = 0; i < array.length(); i++) {
                                     json = array.getJSONObject(i);
-                                    if(json.get("colore").equals(null)){
+                                    if (json.get("colore").equals(null)) {
                                         array.remove(i);
                                         break;
                                     }
-                                    if(json.get("colore").equals("bianco")){
+                                    if (json.get("colore").equals("bianco")) {
                                         bianco = true;
                                     }
-                                    if(json.get("colore").equals("verde")){
+                                    if (json.get("colore").equals("verde")) {
                                         verde = true;
                                     }
-                                    if(json.get("colore").equals("giallo")){
+                                    if (json.get("colore").equals("giallo")) {
                                         giallo = true;
                                     }
-                                    if(json.get("colore").equals("rosso")){
+                                    if (json.get("colore").equals("rosso")) {
                                         rosso = true;
                                     }
                                 }
-                                if(!bianco){
+                                if (!bianco) {
                                     obj.put("colore", "bianco");
                                     obj.put("attesa", "0");
                                     obj.put("visita", "0");
                                     array.put(obj);
                                 }
 
-                                if(!giallo){
+                                if (!giallo) {
                                     obj.put("colore", "giallo");
                                     obj.put("attesa", "0");
                                     obj.put("visita", "0");
                                     array.put(obj);
                                 }
-                                if(!verde){
+                                if (!verde) {
                                     obj.put("colore", "verde");
                                     obj.put("attesa", "0");
                                     obj.put("visita", "0");
                                     array.put(obj);
                                 }
-                                if(!rosso){
+                                if (!rosso) {
                                     obj.put("colore", "rosso");
                                     obj.put("attesa", "0");
                                     obj.put("visita", "0");
@@ -233,5 +230,141 @@ public class Utility {
         }
 
 
+    }
+
+    public static void peopleInPS(Context context, String hospitalName) {
+        final HashMap<String, String> waiting = new HashMap<>();
+        final HashMap<String, String> treatment = new HashMap<>();
+        final HashMap<String, HashMap> result = new HashMap();
+        String Molinette = "01090101";
+        String CTO = "01090201";
+        String SantAnna = "01090301";
+        String Margherita = "01090302";
+        final String link = "http://listeps.cittadellasalute.to.it/gtotal.php?id=";
+        String url = "No";
+        if (hospitalName.contains("Molinette"))
+            url = link + Molinette;
+        else if (hospitalName.contains("CTO"))
+            url = link + CTO;
+        else if (hospitalName.contains("Sant"))
+            url = link + SantAnna;
+        else if (hospitalName.contains("Margherita"))
+            url = link + Margherita;
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                    JSONArray array = Utility.formatJSONArrayResponse(response);
+                    JSONObject obj;
+                    for(int i=0; i< array.length(); i++){
+                        try {
+                            obj = array.getJSONObject(i);
+                            waiting.put(obj.getString("colore"), obj.getString("attesa"));
+                            treatment.put(obj.getString("colore"), obj.getString("visita"));
+                        }catch (JSONException je){
+                            je.printStackTrace();
+                        }
+                    }
+                    result.put("waiting", waiting);
+                    result.put("treatment", treatment);
+                    setPeopleInPS(result);
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle
+                        Log.d("Request Error", error.toString());
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
+
+    }
+
+    public static JSONArray formatJSONArrayResponse(JSONObject response){
+        JSONArray array = new JSONArray();
+        try {
+
+            array = response.getJSONArray("colors");
+            boolean bianco = false;
+            boolean verde = false;
+            boolean giallo = false;
+            boolean rosso = false;
+            JSONObject json;
+            System.out.println("Before");
+            System.out.println(array);
+
+
+            for (int i = 0; i < array.length(); i++) {
+                json = array.getJSONObject(i);
+                if (json.get("colore").equals("bianco")) {
+                    bianco = true;
+                }
+                if (json.get("colore").equals("verde")) {
+                    verde = true;
+                }
+                if (json.get("colore").equals("giallo")) {
+                    giallo = true;
+                }
+                if (json.get("colore").equals("rosso")) {
+                    rosso = true;
+                }
+                if (json.get("colore").equals(null)) {
+                    array.remove(i);
+                }
+            }
+
+
+            if (!bianco) {
+                JSONObject obj = new JSONObject();
+                obj.put("colore", "bianco");
+                obj.put("attesa", "0");
+                obj.put("visita", "0");
+                array.put(obj);
+            }
+
+            if (!giallo) {
+                JSONObject obj = new JSONObject();
+                obj.put("colore", "giallo");
+                obj.put("attesa", "0");
+                obj.put("visita", "0");
+                array.put(obj);
+            }
+            if (!verde) {
+                JSONObject obj = new JSONObject();
+                obj.put("colore", "verde");
+                obj.put("attesa", "0");
+                obj.put("visita", "0");
+                array.put(obj);
+            }
+            if (!rosso) {
+                JSONObject obj = new JSONObject();
+                obj.put("colore", "rosso");
+                obj.put("attesa", "0");
+                obj.put("visita", "0");
+                array.put(obj);
+            }
+            System.out.println("After");
+            System.out.println(array);
+
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Return");
+        System.out.println(array);
+        return array;
+    }
+
+    public static HashMap<String, HashMap> getPeopleInPS() {
+        return peopleInPS;
+    }
+
+    public static void setPeopleInPS(HashMap<String, HashMap> peopleInPS) {
+        Utility.peopleInPS = peopleInPS;
     }
 }

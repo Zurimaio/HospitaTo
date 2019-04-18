@@ -10,11 +10,8 @@
     <string name="white_waiting_time">Tempo di Attesa Bianco</string>
     <string name="estimated_travel_time">Tempo di percorrenza stimato</string>
     <string name="filter_results">FILTRA I RISULTATI</string>
-    <string name="number_of_waiting_people">NUMERO DI PERSONE IN ATTESA</string>
-    <string name="red_tag">CODICE ROSSO</string>
-    <string name="yellow_tag">CODICE GIALLO</string>
-    <string name="green_tag">CODICE VERDE</string>
-    <string name="white_tag">CODICE BIANCO</string>
+    <string name="number_of_waiting_people">PERSONE IN ATTESA</string>
+    <string name="number_of_people_treatment">PERSONE IN VISITA</string>
     <string name="signIn">Accedi</string>
     <string name="signUp">Registrati</string>
     <string name="skitIt">"Salta "</string>
@@ -32,4 +29,5 @@
     <string name="weightLabel">Peso</string>
     <string name="yourPosition">La tua posizione</string>
     <string name="tab_text_1">Il miglior Ospedale</string>
+    <string name="action_settings">Impostazioni</string>
 </resources>
