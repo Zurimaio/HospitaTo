@@ -41,7 +41,7 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
     private TextView yellowTreat;
     private TextView greenTreat;
     private TextView whiteTreat;
-    HashMap<String, HashMap> result = new HashMap<>();
+
     HashMap<String, String> waiting = new HashMap<>();
     HashMap<String, String> treatment= new HashMap<>();
     Utility utility;
@@ -147,11 +147,15 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
 
         new Thread() {
             public void run() {
-                    utility.peopleInPS(getContext(), Hospitals.getName());
+                    Utility.peopleInPS(getContext(), Hospitals.getName());
+                    HashMap<String, HashMap> result = new HashMap<>();
 
                     try {
-                        Thread.sleep(300);
-                        result = utility.getPeopleInPS();
+                        while(result.isEmpty()){
+                            Thread.sleep(300);
+                            result = Utility.getPeopleInPS();
+                            Log.d("PeopleInED","Waiting");
+                        }
                         waiting = result.get("waiting");
                         treatment = result.get("treatment");
                         System.out.println(waiting);
@@ -167,8 +171,6 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
                                 yellowTreat.setText(treatment.get("giallo"));
                                 greenTreat.setText(treatment.get("verde"));
                                 whiteTreat.setText(treatment.get("bianco"));
-
-
                             }
                         });
 

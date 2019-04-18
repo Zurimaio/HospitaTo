@@ -296,10 +296,6 @@ public class Utility {
             boolean giallo = false;
             boolean rosso = false;
             JSONObject json;
-            System.out.println("Before");
-            System.out.println(array);
-
-
             for (int i = 0; i < array.length(); i++) {
                 json = array.getJSONObject(i);
                 if (json.get("colore").equals("bianco")) {
@@ -349,14 +345,10 @@ public class Utility {
                 obj.put("visita", "0");
                 array.put(obj);
             }
-            System.out.println("After");
-            System.out.println(array);
 
         }catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println("Return");
-        System.out.println(array);
         return array;
     }
 
