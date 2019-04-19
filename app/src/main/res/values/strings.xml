@@ -8,6 +8,8 @@
     <string name="direction_server_key" translatable="false">AIzaSyANzbEFTwOhnhHftnLx69rt2IlZeL-O5xs</string>
     <string name="textview" translatable="false">TextView</string>
     <string name="title_activity_login_view">Sign_in</string>
+    <string name="facebook_app_id" translatable="false">317849505568538</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb317849505568538</string>
     <!-- Strings related to login -->
     <string name="prompt_email" translatable="false">Email</string>
     <string name="prompt_password" translatable="false">Password</string>
@@ -50,4 +52,5 @@
     <string name="weightLabel">Weight</string>
     <string name="sendButton">Submit</string>
     <string name="yourPosition">Your Position</string>
+
 </resources>
