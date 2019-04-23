@@ -15,10 +15,10 @@
         android:title="@string/homeButton"
         />
     <item
-        android:id="@+id/profileButton"
+        android:id="@+id/filterButton"
         android:enabled="true"
-        android:icon="@drawable/ic_main_profile_icon"
-        android:title="@string/profileButton"
+        android:icon="@drawable/ic_main_filter_icon"
+        android:title="@string/filterButton"
         />
 
 </menu>

@@ -12,22 +12,14 @@
 
 
     <FrameLayout
-        android:id="@+id/fragment_container"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="59dp"
-        >
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/myrecycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-
-    </FrameLayout>
+        />
 
 
-        <android.support.design.widget.BottomNavigationView
+    <android.support.design.widget.BottomNavigationView
             android:id="@+id/bottomNavigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,6 +32,13 @@
 
 
 
+    <FrameLayout
+        android:id="@+id/mapSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </FrameLayout>
 
 
 

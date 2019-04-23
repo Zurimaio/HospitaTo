@@ -1,13 +1,21 @@
 package com.ma.se.hospitato;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -21,6 +29,7 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -39,6 +48,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
 public class MapView extends FragmentActivity implements OnMapReadyCallback {
@@ -51,11 +61,15 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
     private LatLng origin;
     private LatLng dest;
     private List<LatLng> route;
+    AsyncGetDirectionTask task;
+    Thread th;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_view);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
 
         Bundle b = getIntent().getExtras();
         if(b!= null){
@@ -66,28 +80,29 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
         }
 
 
+
     }
+
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        Log.d("Map", "Ready");
         addMarkerForHospitals();
 
         //mMap.addMarker(new MarkerOptions().position(dest).title("Destination"));
         //mMap.addPolyline(new PolylineOptions().addAll(route).color(Color.BLUE).width(10));
-
-
-
-
     }
 
     public void startAsyncTask(int act){
-        Thread th = new Thread(){
+        th = new Thread(){
             @Override
             public void run() {
                 super.run();
                 try {
-                    result = new AsyncGetDirectionTask(MapView.this, 0).execute(getApplicationContext(), MapView.this).get();
+                    task = new AsyncGetDirectionTask(MapView.this, 0);
+                    result = task.execute(getApplicationContext(), MapView.this).get();
                     origin = (LatLng) result.get("origin");
                     dest =  (LatLng) result.get("dest");
                     hospitals = (HashMap<String, Object>) result.get("Hospitals");
@@ -96,6 +111,8 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
                     e.printStackTrace();
                 }catch (InterruptedException e){
                     e.printStackTrace();
+                }catch (CancellationException ce){
+                    ce.printStackTrace();
                 }
             }
         };
@@ -104,8 +121,11 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
 
 
 
+
+
+
     public void addMarkerForHospitals() {
-        mMap.addMarker(new MarkerOptions().position(origin).title("Your Position"));
+        mMap.addMarker(new MarkerOptions().position(origin).title(getString(R.string.yourPosition))).showInfoWindow();
         Iterator h = hospitals.entrySet().iterator();
         while (h.hasNext()) {
             Map.Entry pair = (Map.Entry) h.next();
@@ -119,5 +139,20 @@ public class MapView extends FragmentActivity implements OnMapReadyCallback {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 1));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        task.cancel(true);
+        th.interrupt();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        task.cancel(true);
+        th.interrupt();
     }
 }

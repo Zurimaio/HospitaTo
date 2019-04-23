@@ -44,7 +44,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
     private List<String> destinations = new ArrayList<>();
     public Location currentPos;
     private MapView mapView;
-    private MainActivity mainActivity;
+    private Activity activity;
     public Context context;
     public String origin = "";
     public String dest = "";
@@ -54,7 +54,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
     private HashMap<String, Object> res= new HashMap<>();;
     private HashMap<String, String> hospitalDestination;
     private HashMap<String, JSONDirections> jsonDestination = new HashMap<>();
-    private MainActivity.MyAdapter myAdapter;
+    private MainList.MyAdapter myAdapter;
     private List<Hospital> listHospital;
     private int act; //0 - Map View, 1 - MainActivity, 2 - Map View for displaying hospital
     JSONArray directions;
@@ -69,7 +69,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
         this.act = act; // 0 - MAPView for drawing, 2 - MapView for displaying hospital
     }
 
-    public AsyncGetDirectionTask(MainActivity.MyAdapter myAdapter, List<Hospital> listHospital){
+    public AsyncGetDirectionTask(MainList.MyAdapter myAdapter, List<Hospital> listHospital){
         this.myAdapter= myAdapter;
         this.listHospital = listHospital;
         this.act = 1; //MainActivity
@@ -93,12 +93,16 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
             directions = Utility.loadJSONFromRes(mapView);
             createLocationRequest(mapView);
             getDrawPathValues();
+            if(isCancelled()){
+                Log.d("Canceled", "Exiting");
+                return null;
+            }
         }else if(this.act == 1){
             Log.d("Action", "Get Travel Time");
-            mainActivity = (MainActivity) objects[1];
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mainActivity);
-            directions = Utility.loadJSONFromRes(mainActivity);
-            createLocationRequest(mainActivity);
+            activity = (Activity) objects[1];
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
+            directions = Utility.loadJSONFromRes(activity);
+            createLocationRequest(activity);
             getOnlyTravelTime();
         }
 
@@ -130,6 +134,8 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
             Log.e("ERROR", "Not able to find the field");
             e.printStackTrace();
         }
+
+
         return res;
     }
 
@@ -166,23 +172,6 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                 }
             }
         };
-    }
-
-    public List<String> getDestinations() {
-        return destinations;
-    }
-
-    public void setDestinations(List<String> destinations) {
-        this.destinations = destinations;
-    }
-
-
-    public void setCurrentPos(Location currentPos) {
-        this.currentPos = currentPos;
-    }
-
-    public Location getCurrentPos() {
-        return currentPos;
     }
 
     protected void createLocationRequest(final Activity activity) {
@@ -246,13 +235,14 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                     String dest = h.getCoordinate().get("Latitude") + "," + h.getCoordinate().get("Longitude");
                     destinations.add(dest);
                     hospitalDestination.put(h.getName(), dest);
+
                 }
                 /**
                  * TODO understand how choose the right destination
                  */
                 setDestinations(destinations);
                 dest = getDestinations().get(0);
-                //Log.d("Dest", dest);
+                Log.d("Dest", dest);
 
             }
 
@@ -302,14 +292,15 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
 
 
     public void getDrawPathValues(){
+        setPosition();
+        getHospitals();
         while (origin.equals("") || dest.equals("")) {
             try {
                 System.out.println("Waiting");
-                setPosition();
-                getHospitals();
-                Thread.sleep(1000);
+                Thread.sleep(3000);
             } catch (Exception e) {
                 Log.e("Thread", "Error");
+                e.printStackTrace();
                 break;
             }
         }
@@ -327,6 +318,12 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
     }
 
 
+
+    /**
+     * Getter and Setter
+     * @return
+     */
+
     public Double getLat() {
         return lat;
     }
@@ -342,5 +339,24 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
     public void setLng(Double lng) {
         this.lng = lng;
     }
+
+
+    public List<String> getDestinations() {
+        return destinations;
+    }
+
+    public void setDestinations(List<String> destinations) {
+        this.destinations = destinations;
+    }
+
+
+    public void setCurrentPos(Location currentPos) {
+        this.currentPos = currentPos;
+    }
+
+    public Location getCurrentPos() {
+        return currentPos;
+    }
+
 }
 
