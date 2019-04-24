@@ -16,9 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,6 +28,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+
 
     </LinearLayout>
     <android.support.v7.widget.CardView
@@ -67,8 +67,8 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="320dp"
-        android:layout_height="209dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -77,13 +77,16 @@
         app:cardCornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2">
-
+        app:layout_constraintTop_toBottomOf="@+id/cardView2"
+        app:layout_constraintVertical_bias="0.502">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
             android:orientation="vertical"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="120dp">
@@ -124,6 +127,41 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button4" />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:id="@+id/login_button"
+                    android:layout_width="48dp"
+                    android:layout_height="44dp"
+                    android:layout_marginRight="32dp"
+                    android:paddingLeft="6dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="6dp"
+                    android:elevation="4dp"
+                    android:paddingBottom="2dp"
+                    android:clickable="true"
+                    app:srcCompat="@drawable/com_facebook_button_icon_blue" />
+
+
+                <ImageView
+                    android:id="@+id/googleBTN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:baselineAlignBottom="true"
+                    android:clickable="true"
+                    android:cropToPadding="true"
+                    app:srcCompat="@drawable/common_google_signin_btn_icon_light"
+                    tools:srcCompat="@drawable/common_google_signin_btn_icon_light" />
+
+            </LinearLayout>
+
+
             <Button
                 android:id="@+id/button5"
                 style="@style/Widget.AppCompat.Button.Borderless"
@@ -141,8 +179,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button6" />
-        </LinearLayout>
 
+
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
