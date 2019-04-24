@@ -18,6 +18,7 @@ import android.view.View;
 
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MedicalView extends AppCompatActivity {
@@ -76,6 +77,7 @@ public class MedicalView extends AppCompatActivity {
     }
 
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -86,9 +88,9 @@ public class MedicalView extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.logoutButton){
-            startActivity(new Intent(this, Main2Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            );
+            startActivity(new Intent(this, Main2Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             FirebaseAuth.getInstance().signOut();
+            LoginManager.getInstance().logOut();
             finish();
         }
         return true;
