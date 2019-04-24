@@ -30,4 +30,5 @@
     <string name="yourPosition">La tua posizione</string>
     <string name="tab_text_1">Il miglior Ospedale</string>
     <string name="action_settings">Impostazioni</string>
+    <string name="data_not_avaialable">Dati non disponibili</string>
 </resources>

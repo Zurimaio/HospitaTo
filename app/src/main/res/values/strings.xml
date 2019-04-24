@@ -50,4 +50,5 @@
     <string name="weightLabel">Weight</string>
     <string name="sendButton">Submit</string>
     <string name="yourPosition">Your Position</string>
+    <string name="data_not_avaialable">Data not available</string>
 </resources>

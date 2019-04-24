@@ -31,8 +31,6 @@ public class DirectionsFake {
         //this.toMauriziano = toJSONObject(directions.get("Mauriziano")); //test
     }
 
-
-
     public JSONObject toJSONObject(String json){
         try {
             JSONObject hospital = new JSONObject(json);
@@ -46,15 +44,11 @@ public class DirectionsFake {
 
 
 
-
-
     public HashMap<String, String> Directions(){
 
         //String mauriziano = loadJSONFromRes();
         directions = new HashMap<>();
         //directions.put("Mauriziano", mauriziano);
-
-
         return directions;
     }
 

@@ -65,13 +65,15 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
     public AsyncGetDirectionTask(FragmentActivity activity, int act){
         mapFragment = (SupportMapFragment) activity.getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-             hospitalDestination = new HashMap<>();
+        hospitalDestination = new HashMap<>();
         this.act = act; // 0 - MAPView for drawing, 2 - MapView for displaying hospital
     }
 
     public AsyncGetDirectionTask(MainList.MyAdapter myAdapter, List<Hospital> listHospital){
         this.myAdapter= myAdapter;
         this.listHospital = listHospital;
+        //hospitalDestination = new HashMap<>();
+        //getHospitals();
         this.act = 1; //MainActivity
     }
 
@@ -100,6 +102,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
         }else if(this.act == 1){
             Log.d("Action", "Get Travel Time");
             activity = (Activity) objects[1];
+            //context = (Context) objects[0];
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
             directions = Utility.loadJSONFromRes(activity);
             createLocationRequest(activity);
@@ -115,18 +118,24 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
              */
 
             /**
-             * TODO the following for will be iterated in order to perform several "request Direction"
+             * TODO the following loop will be iterated in order to perform several "request Direction"
              * obtaining an array of request
+             * --> JSONDirections data = new JSONDirections(directions.getJSONObject(i));
              */
-            int i;
-            for (i =0; i<directions.length(); i++){
-                JSONDirections data = new JSONDirections(directions.getJSONObject(i));
-                jsonDestination.put(Utility.MAURIZIANO, data);
-                jsonDestination.put(Utility.MOLINETTE, data);
+
+            //int i;
+            //for (i =0; i<directions.length(); i++){
+            JSONDirections mauriziano = new JSONDirections(directions.getJSONObject(0));
+            JSONDirections molinette = new JSONDirections(directions.getJSONObject(1));
+            Log.d("Mauriziano", mauriziano.getDurationString());
+            jsonDestination.put(Utility.MAURIZIANO, mauriziano);
+            jsonDestination.put(Utility.MOLINETTE, molinette);
                 //res.put(data.get)
-            }
+            //}
+
             res.put("Directions", jsonDestination);
-            res.put("travelTime",jsonDestination.get(Utility.MAURIZIANO).getDurationString() );
+            /*For instance the request is for Mauriziano*/
+            //res.put("travelTime",jsonDestination.get(Utility.MAURIZIANO).getDurationString());
             res.put("Hospitals", hospitalDestination);
             //res.put("Route", data.getPolyPath());
 
@@ -153,6 +162,9 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
         }
     }
 
+    /**
+     * SET ORIGIN COORDINATE
+     */
     public void setPosition() {
         mLocationCallback = new LocationCallback() {
             @Override
@@ -164,6 +176,9 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                     Log.d("Location Result", "found");
                     setCurrentPos(locationResult.getLocations().get(0));
                     origin = Utility.fromDoubleToStringCoord(getCurrentPos().getLatitude(), getCurrentPos().getLongitude());
+
+
+
                     /**
                      * TODO simulated position to eliminate
                      */
@@ -223,7 +238,9 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
         });
     }
 
-
+    /**
+     * SET HOSPITAL AS DESTINATION
+     */
     public void getHospitals() {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Hospitals");
@@ -235,7 +252,6 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                     String dest = h.getCoordinate().get("Latitude") + "," + h.getCoordinate().get("Longitude");
                     destinations.add(dest);
                     hospitalDestination.put(h.getName(), dest);
-
                 }
                 /**
                  * TODO understand how choose the right destination
@@ -270,7 +286,19 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
             String hospitalName = (String) pair.getKey();
             String dest = (String) pair.getValue();
             Utility.requestDirection(origin,dest,context);
-            jsonDestination.put(hospitalName, Utility.getRes());
+            if(Utility.getRes() == null) {
+                while(Utility.getRes() == null) {
+                    try {
+                        jsonDestination.put(hospitalName, Utility.getRes());
+                        Log.d("Request", "Waiting the response");
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ie) {
+                        ie.printStackTrace();
+                    }
+                }
+            }else{
+                jsonDestination.put(hospitalName, Utility.getRes());
+            }
         }
 
 
@@ -288,6 +316,11 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                 ie.printStackTrace();
             }
         }
+
+        /**
+         * CALL getResponseFromRequest(origin, hospitalDestination,context);
+         */
+
     }
 
 

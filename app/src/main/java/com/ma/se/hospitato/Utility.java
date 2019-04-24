@@ -3,6 +3,7 @@ package com.ma.se.hospitato;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -66,6 +67,7 @@ public class Utility {
                     public void onResponse(JSONObject response) {
                         Log.d("Request", response.toString());
                         try {
+
                             res = new JSONDirections(response);
 
                         } catch (JSONException jx) {
@@ -98,6 +100,7 @@ public class Utility {
     }
 
 
+    @Nullable
     static public JSONArray loadJSONFromRes(Activity activity) {
         String json = null;
         JSONArray jsonArray = null;
@@ -232,58 +235,64 @@ public class Utility {
 
     }
 
-    public static void peopleInPS(Context context, String hospitalName) {
+    public static boolean peopleInPS(Context context, String hospitalName) {
         final HashMap<String, String> waiting = new HashMap<>();
         final HashMap<String, String> treatment = new HashMap<>();
         final HashMap<String, HashMap> result = new HashMap();
-        String Molinette = "01090101";
-        String CTO = "01090201";
-        String SantAnna = "01090301";
-        String Margherita = "01090302";
-        final String link = "http://listeps.cittadellasalute.to.it/gtotal.php?id=";
-        String url = "No";
-        if (hospitalName.contains("Molinette"))
-            url = link + Molinette;
-        else if (hospitalName.contains("CTO"))
-            url = link + CTO;
-        else if (hospitalName.contains("Sant"))
-            url = link + SantAnna;
-        else if (hospitalName.contains("Margherita"))
-            url = link + Margherita;
+        if(hospitalName.equals(Utility.MAURIZIANO) || hospitalName.equals(Utility.MARIA_VITTORIA) || hospitalName.equals(Utility.MARTINI) || hospitalName.equals(Utility.SAN_GIOVANNI_BOSCO)){
+           return false;
+        }
+        else {
+            String Molinette = "01090101";
+            String CTO = "01090201";
+            String SantAnna = "01090301";
+            String Margherita = "01090302";
+            final String link = "http://listeps.cittadellasalute.to.it/gtotal.php?id=";
+            String url = "No";
+            if (hospitalName.contains("Molinette"))
+                url = link + Molinette;
+            else if (hospitalName.contains("CTO"))
+                url = link + CTO;
+            else if (hospitalName.contains("Sant"))
+                url = link + SantAnna;
+            else if (hospitalName.contains("Margherita"))
+                url = link + Margherita;
 
-        RequestQueue queue = Volley.newRequestQueue(context);
+            RequestQueue queue = Volley.newRequestQueue(context);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                    JSONArray array = Utility.formatJSONArrayResponse(response);
-                    JSONObject obj;
-                    for(int i=0; i< array.length(); i++){
-                        try {
-                            obj = array.getJSONObject(i);
-                            waiting.put(obj.getString("colore"), obj.getString("attesa"));
-                            treatment.put(obj.getString("colore"), obj.getString("visita"));
-                        }catch (JSONException je){
-                            je.printStackTrace();
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            JSONArray array = Utility.formatJSONArrayResponse(response);
+                            JSONObject obj;
+                            for (int i = 0; i < array.length(); i++) {
+                                try {
+                                    obj = array.getJSONObject(i);
+                                    waiting.put(obj.getString("colore"), obj.getString("attesa"));
+                                    treatment.put(obj.getString("colore"), obj.getString("visita"));
+                                } catch (JSONException je) {
+                                    je.printStackTrace();
+                                }
+                            }
+                            result.put("waiting", waiting);
+                            result.put("treatment", treatment);
+                            setPeopleInPS(result);
+
+
                         }
-                    }
-                    result.put("waiting", waiting);
-                    result.put("treatment", treatment);
-                    setPeopleInPS(result);
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO: Handle
+                            Log.d("Request Error", error.toString());
+                        }
+                    });
 
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle
-                        Log.d("Request Error", error.toString());
-                    }
-                });
-
-        // Add the request to the RequestQueue.
-        queue.add(jsonObjectRequest);
-
+            // Add the request to the RequestQueue.
+            queue.add(jsonObjectRequest);
+        }
+        return true;
     }
 
     public static JSONArray formatJSONArrayResponse(JSONObject response){

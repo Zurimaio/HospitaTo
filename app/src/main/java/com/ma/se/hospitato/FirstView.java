@@ -28,7 +28,6 @@ public class FirstView extends AppCompatActivity {
     }
 
 
-
     public void signIn(View view){
         intent = new Intent(this, LogInView.class);
         startActivity(intent);

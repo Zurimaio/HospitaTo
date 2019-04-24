@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-
+import java.util.logging.StreamHandler;
 
 
 public class DisplayED extends Fragment implements OnMapReadyCallback {
@@ -29,6 +29,10 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
     private TextView Name;
     private TextView Address;
     private TextView PhoneNumber;
+    private TextView TravelTime;
+    private TextView WaitNotAvailable ;
+    private TextView TreatNotAvailable ;
+
     private HashMap<String, Boolean> Departments;
     private HashMap<String, String> Coordinate;
     private static DisplayED fragment;
@@ -47,6 +51,7 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
     Utility utility;
 
     String hospitalName;
+    String travTime;
     MapView mapView;
     LatLng loc;
     GoogleMap map;
@@ -67,8 +72,10 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Hospitals = getArguments().getParcelable("Hospitals");
+        Hospitals = getArguments().getParcelable("Hospital");
+        travTime = getArguments().getString("TravelTime");
         Log.d("Created", "DisplayED");
+
     }
 
     @Nullable
@@ -78,6 +85,9 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
         Name=view.findViewById(R.id.ED_name_f);
         Address=view.findViewById(R.id.ED_address_f);
         PhoneNumber=view.findViewById(R.id.PhoneNumber);
+        TravelTime=view.findViewById(R.id.travel_time);
+        WaitNotAvailable = view.findViewById(R.id.data_not_available_wait);
+        TreatNotAvailable = view.findViewById(R.id.data_not_available_treat);
 
         redWaiting = view.findViewById(R.id.RedTag);
         yellowWaiting = view.findViewById(R.id.YellowTag);
@@ -92,13 +102,7 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
         Name.setText(Hospitals.getName());
         Address.setText(Hospitals.getAddress());
         PhoneNumber.setText(Hospitals.getPhoneNumber());
-
-
         setPeopleInPS();
-
-
-
-
         setLoc(new LatLng(
                 Double.parseDouble(Hospitals.getCoordinate().get("Latitude")),
                 Double.parseDouble(Hospitals.getCoordinate().get("Longitude"))
@@ -111,6 +115,10 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
             mapView.onCreate(null);
             mapView.getMapAsync(this);
         }
+
+        //Retrieve TravelTime
+
+        TravelTime.setText(travTime);
 
         return view;
     }
@@ -132,7 +140,6 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
-
     public LatLng getLoc() {
         return loc;
     }
@@ -142,43 +149,67 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
     }
 
 
-
     private void setPeopleInPS() {
 
         new Thread() {
             public void run() {
-                    Utility.peopleInPS(getContext(), Hospitals.getName());
+                    boolean suc = Utility.peopleInPS(getContext(), Hospitals.getName());
                     HashMap<String, HashMap> result = new HashMap<>();
+                    if(suc) {
+                        try {
+                            while (result.isEmpty()) {
+                                Thread.sleep(300);
+                                result = Utility.getPeopleInPS();
+                                Log.d("PeopleInED", "Waiting");
+                            }
+                            waiting = result.get("waiting");
+                            treatment = result.get("treatment");
+                            System.out.println(waiting);
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    redWaiting.setText(waiting.get("rosso"));
+                                    yellowWaiting.setText(waiting.get("giallo"));
+                                    greenWaiting.setText(waiting.get("verde"));
+                                    whiteWaiting.setText(waiting.get("bianco"));
 
-                    try {
-                        while(result.isEmpty()){
-                            Thread.sleep(300);
-                            result = Utility.getPeopleInPS();
-                            Log.d("PeopleInED","Waiting");
+                                    redTreat.setText(treatment.get("rosso"));
+                                    yellowTreat.setText(treatment.get("giallo"));
+                                    greenTreat.setText(treatment.get("verde"));
+                                    whiteTreat.setText(treatment.get("bianco"));
+                                }
+                            });
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                        waiting = result.get("waiting");
-                        treatment = result.get("treatment");
-                        System.out.println(waiting);
+                    }else{
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                redWaiting.setText(waiting.get("rosso"));
-                                yellowWaiting.setText(waiting.get("giallo"));
-                                greenWaiting.setText(waiting.get("verde"));
-                                whiteWaiting.setText(waiting.get("bianco"));
 
-                                redTreat.setText(treatment.get("rosso"));
-                                yellowTreat.setText(treatment.get("giallo"));
-                                greenTreat.setText(treatment.get("verde"));
-                                whiteTreat.setText(treatment.get("bianco"));
+                                redWaiting.setVisibility(View.GONE);
+                                yellowWaiting.setVisibility(View.GONE);
+                                greenWaiting.setVisibility(View.GONE);
+                                whiteWaiting.setVisibility(View.GONE);
+
+                                redTreat.setVisibility(View.GONE);
+                                yellowTreat.setVisibility(View.GONE);
+                                greenTreat.setVisibility(View.GONE);
+                                whiteTreat.setVisibility(View.GONE);
+
+                                TreatNotAvailable.setVisibility(View.VISIBLE);
+                                WaitNotAvailable.setVisibility(View.VISIBLE);
                             }
                         });
 
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Log.e("PEOPLEINPS", "BAD NAME");
+                        return;
                     }
                 }
 
         }.start();
+
     }
+
 }
