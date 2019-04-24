@@ -109,11 +109,11 @@ public class Main2Activity extends AppCompatActivity {
             startActivity(toProfile);
         }
         if(i==R.id.registerButton){
-            Intent toSignUp = new Intent(Main2Activity.this, SignUpView.class);
+            Intent toSignUp = new Intent(Main2Activity.this, FirstView.class);
             startActivity(toSignUp);
         }
         if(i==R.id.loginButton){
-            startActivity(new Intent(Main2Activity.this, LogInView.class));
+            startActivity(new Intent(Main2Activity.this, FirstView.class));
         }
         return super.onOptionsItemSelected(item);
     }
