@@ -25,6 +25,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,10 +37,14 @@ import com.google.firebase.database.Query;
 public class FilterChoice extends Fragment {
 
     DatabaseReference databaseReference;
+    private HashMap<String, Object> res;
     RecyclerView recyclerView;
-    GridLayout gridLayout;
-    RelativeLayout relativeLayout;
+    private HashMap<String,String> infoToFragment = new HashMap<>();
     String filter;
+    public String travelTime;
+
+    TextView name;
+    List<String> hospitalName = new ArrayList<>();
     private FirebaseRecyclerAdapter<Hospital, RequestViewHolder> adapter;
     public FilterChoice() {
         // Required empty public constructor
@@ -44,6 +53,7 @@ public class FilterChoice extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Log.d("Created", "FilterChoice");
     }
 
@@ -93,13 +103,18 @@ public class FilterChoice extends Fragment {
                         .build();
         adapter = new FirebaseRecyclerAdapter<Hospital, RequestViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(RequestViewHolder viewHolder, int position, Hospital model) {
+            protected void onBindViewHolder(final RequestViewHolder viewHolder, int position, Hospital model) {
                 final boolean t= model.getDepartments().get(filter);
-                final Fragment displayED = DisplayED.newInstance(model);
-                final FragmentTransaction tr = getFragmentManager().beginTransaction();
-
+                final Bundle info =  new Bundle();
+                //retrieve information of travel time of a given hospital
                 if(t) {
                     viewHolder.setDetails(model.getName(), model.getAddress());
+                    getTravelTimeAsync(viewHolder,model.getName());
+                    info.putParcelable("Hospital", model);
+                    hospitalName.add(model.getName());
+                    //Log.d("Position " + model.getName(),Integer.toString(position));
+
+
                 }
                 else{
                     viewHolder.noDetails();
@@ -109,7 +124,12 @@ public class FilterChoice extends Fragment {
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
+
                         if(isLongClick){
+                            FragmentTransaction tr = getFragmentManager().beginTransaction();
+                            Fragment displayED = new DisplayED();
+                            info.putString("TravelTime",infoToFragment.get(hospitalName.get(position)));
+                            displayED.setArguments(info);
                             //recyclerView.setVisibility(View.GONE);
                             tr.replace(R.id.fragment_filter_choice, displayED);
                             tr.addToBackStack(null);
@@ -151,11 +171,17 @@ public class FilterChoice extends Fragment {
         }
 
         public void setDetails(String Nameh, String Addressh ) {
-            TextView name = (TextView) mView.findViewById(R.id.ED_name);
+            name = (TextView) mView.findViewById(R.id.ED_name);
             TextView address = (TextView) mView.findViewById(R.id.ED_address);
             mapView.setVisibility(View.GONE);
             name.setText(Nameh);
             address.setText(Addressh);
+        }
+
+
+        public void setTravelTime(String travelTime){
+            TextView travTime = mView.findViewById(R.id.travel_time);
+            travTime.setText(travelTime);
         }
 
         public void noDetails() {
@@ -185,4 +211,47 @@ public class FilterChoice extends Fragment {
         }
     }
 
+
+    public void getTravelTimeAsync(final RequestViewHolder holder, final String hospitalName) {
+        Thread service = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    res = new AsyncGetDirectionTask().execute(getActivity().getApplicationContext(), getActivity()).get();
+                    while (res.isEmpty()) {
+                        System.out.println("Waiting travel time");
+                        Thread.sleep(1000);
+                    }
+                    /**
+                     * Todo the following "if" is taking into account only those hospitals of which we have data duration
+                     * because of Google API restrictions
+                     */
+                    if (hospitalName.equals(Utility.MAURIZIANO) || hospitalName.equals(Utility.MOLINETTE)) {
+                        travelTime = ((JSONDirections) ((HashMap) res.get("Directions")).get(hospitalName)).getDurationString();
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                infoToFragment.put(hospitalName, travelTime);
+                                Log.d("Filter Info To fragment", infoToFragment.toString());
+                                holder.setTravelTime(travelTime);
+                            }
+                        });
+                    }else{
+                        travelTime = getString(R.string.data_not_avaialable);
+                        infoToFragment.put(hospitalName, travelTime);
+                    }
+
+                } catch(InterruptedException ie){
+                    ie.printStackTrace();
+                } catch(ExecutionException ee){
+                    ee.printStackTrace();
+                }
+
+            }
+        };
+        service.start();
+        //return travelTime;
+    }
 }
+

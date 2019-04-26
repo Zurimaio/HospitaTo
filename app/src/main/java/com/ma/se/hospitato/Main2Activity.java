@@ -176,10 +176,14 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
        System.out.println("Stack: " + getSupportFragmentManager().getBackStackEntryCount());
-       if(getSupportFragmentManager().getBackStackEntryCount() > 0 && (!mainList.isAdded() || !filterView.isAdded()))
-           getSupportFragmentManager().popBackStackImmediate();
-       else
-           super.onBackPressed();
+       try {
+           if (getSupportFragmentManager().getBackStackEntryCount() > 0 && (!mainList.isAdded() || !filterView.isAdded()))
+               getSupportFragmentManager().popBackStackImmediate();
+           else
+               super.onBackPressed();
+       }catch (NullPointerException e){
+           e.printStackTrace();
+       }
     }
 
 
