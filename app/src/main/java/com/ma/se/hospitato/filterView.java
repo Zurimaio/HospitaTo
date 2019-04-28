@@ -88,11 +88,12 @@ public class filterView extends Fragment implements View.OnClickListener{
     private void loadFragment(Fragment fragment) {
         // load fragment
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.filtered_container, fragment);
+        transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
 
     }
+
 
 
 
