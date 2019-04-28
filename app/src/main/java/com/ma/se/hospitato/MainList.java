@@ -178,16 +178,10 @@ public class MainList extends Fragment {
 
 
             if (position != 0) {
-
                 holder.EDaddress.setVisibility(View.GONE);
-                // holder.map_log.setVisibility(View.GONE);
                 holder.E_TT.setVisibility(View.GONE);
-                //holder.W_waitingTime.setVisibility(View.GONE);
-                //holder.G_waitingTime.setVisibility(View.GONE);
                 holder.travTime.setVisibility(View.GONE);
                 holder.mapView.setVisibility(View.GONE);
-
-
             }
             holder.setItemClickListener(new ItemClickListener() {
                 @Override
@@ -333,6 +327,10 @@ public class MainList extends Fragment {
                                 infoToFragment.put(hospitalName, travelTime);
                             }
                         });
+                    }else{
+                        holder.travTime.setText(getText(R.string.data_not_avaialable).toString());
+                        travelTime = getText(R.string.data_not_avaialable).toString();
+                        infoToFragment.put(hospitalName, travelTime);
                     }
 
                     } catch(InterruptedException ie){
