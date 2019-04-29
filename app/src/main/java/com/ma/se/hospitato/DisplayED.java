@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.common.util.ArrayUtils;
@@ -41,6 +42,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.logging.StreamHandler;
 
 
@@ -67,15 +69,22 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
     private TextView greenTreat;
     private TextView whiteTreat;
 
+    private Button greenWaitingTime;
+    private Button whiteWaitingTime;
+
     HashMap<String, String> waiting = new HashMap<>();
     HashMap<String, String> treatment= new HashMap<>();
     Utility utility;
+    HashMap<String, HashMap> resultPrev;
+    float waitingWhite = -1;
+    float waitingGreen = -1;
 
     String hospitalName;
     String travTime;
     MapView mapView;
     LatLng loc;
     GoogleMap map;
+    int millSleep = 250;
 
     public void setED(Hospital Hospitals) {this.Hospitals=Hospitals;}
     public Hospital getED(){return this.Hospitals;}
@@ -95,10 +104,12 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         Hospitals = getArguments().getParcelable("Hospital");
         travTime = getArguments().getString("TravelTime");
-
-        Log.d("FILTER TRAVEL TIME", travTime);
-        //ML();
-
+        /*
+        waitingWhite = getArguments().getString("WhiteTime");
+        waitingGreen = getArguments().getString("GreenTime");
+        waiting = (HashMap) getArguments().getSerializable("WaitingPeople");
+        treatment = (HashMap) getArguments().getSerializable("TreatmentPeople");
+        */
     }
 
     @Nullable
@@ -122,10 +133,13 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
         greenTreat = view.findViewById(R.id.GreenTreat);
         whiteTreat = view.findViewById(R.id.WhiteTreat);
 
+        greenWaitingTime = view.findViewById(R.id.G_waitingTime_f);
+        whiteWaitingTime = view.findViewById(R.id.W_waitingTime_f);
         Name.setText(Hospitals.getName());
         Address.setText(Hospitals.getAddress());
         PhoneNumber.setText(Hospitals.getPhoneNumber());
-        setPeopleInPS();
+        setPeopleInPS(Hospitals.getName());
+
         setLoc(new LatLng(
                 Double.parseDouble(Hospitals.getCoordinate().get("Latitude")),
                 Double.parseDouble(Hospitals.getCoordinate().get("Longitude"))
@@ -139,8 +153,7 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
             mapView.getMapAsync(this);
         }
 
-        //Retrieve TravelTime
-
+        //Retrieve info from bundle
         TravelTime.setText(travTime);
 
         return view;
@@ -170,25 +183,26 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
         this.loc = loc;
     }
 
-    private void setPeopleInPS() {
-
+    private void setPeopleInPS(final String hospitalName) {
         new Thread() {
             public void run() {
-                    boolean suc = Utility.peopleInPS(getContext(), Hospitals.getName());
+                    boolean suc = Utility.peopleInPS(getContext(), hospitalName);
                     HashMap<String, HashMap> result = new HashMap<>();
-                    if(suc) {
+
+                if(suc) {
                         try {
                             while (result.isEmpty()) {
-                                Thread.sleep(300);
+                                Thread.sleep(millSleep);
                                 result = Utility.getPeopleInPS();
                                 Log.d("PeopleInED", "Waiting");
                             }
-                            waiting = result.get("waiting");
-                            treatment = result.get("treatment");
+
+                            waiting = result.get("waitingPeople");
+                            treatment = result.get("treatmentPeople");
                             System.out.println("Waiting " + waiting.toString());
                             System.out.println("Treatment " + treatment.toString());
 
-                            ML();
+                            requestToModel(Hospitals.getName());
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -211,7 +225,6 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
                                 redWaiting.setVisibility(View.GONE);
                                 yellowWaiting.setVisibility(View.GONE);
                                 greenWaiting.setVisibility(View.GONE);
@@ -224,6 +237,9 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
 
                                 TreatNotAvailable.setVisibility(View.VISIBLE);
                                 WaitNotAvailable.setVisibility(View.VISIBLE);
+                                whiteWaitingTime.setText(R.string.data_not_avaialable);
+                                greenWaitingTime.setText(R.string.data_not_avaialable);
+
                             }
                         });
 
@@ -239,65 +255,109 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
 
 
 
+    public HashMap<String, String> chooseModel(String hospitalName){
+        HashMap<String, String> model = new HashMap<>();
 
-    public void ML(){
-        FirebaseLocalModel localSource =
-                new FirebaseLocalModel.Builder("molinette")  // Assign a name to this model
-                        .setAssetFilePath("molinette.tflite")
-                        .build();
-        FirebaseModelManager.getInstance().registerLocalModel(localSource);
+        String waitingWhite = "";
+        String waitingGreen = "";
 
-        FirebaseModelOptions options = new FirebaseModelOptions.Builder()
-                .setLocalModelName("molinette")
-                .build();
-        try {
-            FirebaseModelInterpreter firebaseInterpreter =
-                    FirebaseModelInterpreter.getInstance(options);
-
-            FirebaseModelInputOutputOptions inputOutputOptions =
-                    new FirebaseModelInputOutputOptions.Builder()
-                            .setInputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 9})
-                            .setOutputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 1})
-                            .build();
-
-
-
-        float[][] input = toIntegerArrayFromHashMap(waiting, treatment);
-
-
-        //query to the model
-        FirebaseModelInputs inputs = new FirebaseModelInputs.Builder()
-                .add(input)  // add() as many input arrays as your model requires
-                .build();
-        firebaseInterpreter.run(inputs, inputOutputOptions)
-                .addOnSuccessListener(
-                        new OnSuccessListener<FirebaseModelOutputs>() {
-                            @Override
-                            public void onSuccess(FirebaseModelOutputs result) {
-
-                               float[][] output = result.getOutput(0);
-                               System.out.println("Output");
-                               float out = output[0][0];
-                               System.out.println(out);
-                            }
-                        })
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Task failed with an exception
-                                // ...
-                                System.out.println("SCAAAAAAAAAAAASSSSOOO");
-                                e.printStackTrace();
-                                e.getCause();
-                            }
-                        });
-
-        }catch (FirebaseMLException e){
-            Log.e("ERROR", "InputOutput");
-            e.printStackTrace();
-
+        if(hospitalName.contains(Utility.MOLINETTE)){
+            waitingWhite = "molinette";
+            waitingGreen = "molinette_verde";
         }
+        if(hospitalName.contains(Utility.REGINA_MARGHERITA)){
+            waitingWhite = "margherita";
+            waitingGreen = "margherita_verde";
+        }
+        if(hospitalName.contains(Utility.CTO)){
+            waitingWhite = "CTO";
+            waitingGreen = "CTO_verde";
+        }
+        if(hospitalName.contains(Utility.MARIA_VITTORIA)){
+            waitingWhite = "vittoria";
+            waitingGreen = "vittoria_verde";
+        }
+        if(hospitalName.contains(Utility.MARTINI)){
+            waitingWhite = "martini";
+            waitingGreen = "martini_verde";
+        }
+        if(hospitalName.contains(Utility.MAURIZIANO)){
+            waitingWhite = "mauriziano";
+            waitingGreen = "maurziano_verde";
+        }
+        if(hospitalName.contains(Utility.SAN_GIOVANNI_BOSCO)){
+            waitingWhite = "bosco";
+            waitingGreen = "bosco_verde";
+        }
+        if(hospitalName.contains(Utility.SANT_ANNA)){
+            waitingWhite = "anna";
+            waitingGreen = "anna_verde";
+        }
+        model.put("White", waitingWhite);
+        model.put("Green", waitingGreen);
+
+        return model;
+    }
+
+    public void requestToModel(final String localModel){
+        final HashMap<String, String> model = chooseModel(localModel);
+        Log.d("MODEL", model.toString());
+        //CHOOSE THE MODEL TO QUERY
+
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                String whiteModel = model.get("White");
+                model(whiteModel, "White");
+                try{
+                    while(waitingWhite == -1){
+                        Thread.sleep(millSleep-50);
+                        Log.d("White waitingPeople time", "sleeping");
+                    }
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            whiteWaitingTime.setText(
+                                    String.format(Locale.getDefault(),
+                                            "%d min",
+                                            Math.round(waitingWhite)));
+                        }
+                    });
+                }catch (Exception e){
+                    Log.e("ERROR", "Waiting White");
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
+
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                String greenModel = model.get("Green");
+                model(greenModel, "Green");
+                try{
+                    while(waitingGreen == -1){
+                        Thread.sleep(millSleep-50);
+                        Log.d("Green waitingPeople time", "sleeping");
+                    }
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            greenWaitingTime.setText(
+                                    String.format(Locale.getDefault(),
+                                            "%d min",
+                                            Math.round(waitingGreen)));
+                        }
+                    });
+                }catch (Exception e){
+                    Log.e("ERROR", "Waiting Green");
+                    e.printStackTrace();
+                }
+            }
+        }.start();
 
 
     }
@@ -330,10 +390,67 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
         day = day - 2;
         array[0][8] = day;
         return array;
+    }
+
+    public void model(String localModel, final String color){
+        String localModelPath = localModel + ".tflite";
+
+        FirebaseLocalModel localSource =
+                new FirebaseLocalModel.Builder(localModel)  // Assign a name to this model
+                        .setAssetFilePath(localModelPath)
+                        .build();
+
+        FirebaseModelManager.getInstance().registerLocalModel(localSource);
+        FirebaseModelOptions options = new FirebaseModelOptions.Builder().setLocalModelName(localModel).build();
+        try {
+            FirebaseModelInterpreter firebaseInterpreter = FirebaseModelInterpreter.getInstance(options);
+            FirebaseModelInputOutputOptions inputOutputOptions =
+                    new FirebaseModelInputOutputOptions.Builder()
+                            .setInputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 9})
+                            .setOutputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 1})
+                            .build();
+
+            float[][] input = toIntegerArrayFromHashMap(waiting, treatment);
+
+            //query to the model
+            FirebaseModelInputs inputs = new FirebaseModelInputs.Builder()
+                    .add(input)  // add() as many input arrays as your model requires
+                    .build();
+            firebaseInterpreter.run(inputs, inputOutputOptions)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<FirebaseModelOutputs>() {
+                                @Override
+                                public void onSuccess(FirebaseModelOutputs result) {
+
+                                    float[][] output = result.getOutput(0);
+                                    System.out.println("Output");
+                                    float out = output[0][0];
+                                    if(color.equals("White"))
+                                        waitingWhite = out;
+                                    else if(color.equals("Green"))
+                                        waitingGreen = out;
+
+                                }
+                            })
+                    .addOnFailureListener(
+                            new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Task failed with an exception
+                                    // ...
+                                    System.out.println("SCAAAAAAAAAAAASSSSOOO");
+                                    e.printStackTrace();
+                                    e.getCause();
+                                }
+                            });
+
+        }catch (FirebaseMLException e){
+            Log.e("ERROR", "InputOutput");
+            e.printStackTrace();
+        }
 
 
     }
-
 
 
 }

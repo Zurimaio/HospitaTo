@@ -275,8 +275,8 @@ public class Utility {
                                     je.printStackTrace();
                                 }
                             }
-                            result.put("waiting", waiting);
-                            result.put("treatment", treatment);
+                            result.put("waitingPeople", waiting);
+                            result.put("treatmentPeople", treatment);
                             setPeopleInPS(result);
 
 

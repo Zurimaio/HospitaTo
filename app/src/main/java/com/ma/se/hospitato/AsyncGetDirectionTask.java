@@ -176,9 +176,6 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
                     Log.d("Location Result", "found");
                     setCurrentPos(locationResult.getLocations().get(0));
                     origin = Utility.fromDoubleToStringCoord(getCurrentPos().getLatitude(), getCurrentPos().getLongitude());
-
-
-
                     /**
                      * TODO simulated position to eliminate
                      */

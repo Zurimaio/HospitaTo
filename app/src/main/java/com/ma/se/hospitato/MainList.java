@@ -14,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,6 +25,8 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,11 +34,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.android.gms.maps.MapView;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.ml.common.FirebaseMLException;
+import com.google.firebase.ml.common.modeldownload.FirebaseLocalModel;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
+import com.google.firebase.ml.custom.FirebaseModelDataType;
+import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions;
+import com.google.firebase.ml.custom.FirebaseModelInputs;
+import com.google.firebase.ml.custom.FirebaseModelInterpreter;
+import com.google.firebase.ml.custom.FirebaseModelOptions;
+import com.google.firebase.ml.custom.FirebaseModelOutputs;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 
@@ -60,12 +70,24 @@ public class MainList extends Fragment {
     private static MainList fragment;
     private LatLng loc;
     ProgressBar progressBar;
-    private HashMap<String,String> infoToFragment = new HashMap<>();
+    float waitingWhiteTime = -1;
+    float waitingGreenTime = -1;
+    private HashMap<String, String> waitingPeople = new HashMap<>();
+    private HashMap<String, String> treatmentPeople = new HashMap<>();
+
+    private HashMap<String, HashMap<String, String>> queueWait = new HashMap<>();
+    private HashMap<String, HashMap<String, String>> queueTreat = new HashMap<>();
+
+    private HashMap<String, String> whiteTimeMap = new HashMap<>();
+    private HashMap<String, String> greenTimeMap = new HashMap<>();
+    private HashMap<String,String> travTimeMap = new HashMap<>();
+
 
 
     public MainList() {
         // Required empty public constructor
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,6 +117,12 @@ public class MainList extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
+
+    }
 
     public static MainList newInstance() {
 
@@ -169,13 +197,10 @@ public class MainList extends Fragment {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 holder.item_layout.setLayoutParams(params);
                 holder.item_layout.requestLayout();
-                //holder.travTime.setText(getTravelTimeAsync());
-                //getTravelTimeAsync(holder,data.getName());
             }
 
             getTravelTimeAsync(holder,data.getName());
-
-
+            //setPeopleInPS(data.getName());
 
             if (position != 0) {
                 holder.EDaddress.setVisibility(View.GONE);
@@ -183,14 +208,22 @@ public class MainList extends Fragment {
                 holder.travTime.setVisibility(View.GONE);
                 holder.mapView.setVisibility(View.GONE);
             }
+
             holder.setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int position, boolean isLongClick) {
                     if (isLongClick) {
                         Bundle info =  new Bundle();
+
                         //retrieve information of travel time of a given hospital
-                        info.putString("TravelTime",infoToFragment.get(data.getName()));
+                        info.putString("TravelTime", travTimeMap.get(data.getName()));
+                        //info.putString("WhiteTime", whiteTimeMap.get(data.getName()));
+                        //info.putString("GreenTime", greenTimeMap.get(data.getName()));
+                        //info.putSerializable("WaitingPeople", queueWait.get(data.getName()));
+                        //info.putSerializable("TreatmentPeople", queueTreat.get(data.getName()));
                         info.putParcelable("Hospital", data);
+
+
                         Fragment displayED = new DisplayED();
                         displayED.setArguments(info);
                         FragmentTransaction tr = getFragmentManager().beginTransaction();
@@ -220,7 +253,7 @@ public class MainList extends Fragment {
             MapView mapView;
             GoogleMap map;
             LinearLayout item_layout;
-
+            
             //ImageView map_log;
             private ItemClickListener itemClickListener;
 
@@ -263,6 +296,7 @@ public class MainList extends Fragment {
             }
 
 
+
             /**
              * MAP SECTION
              */
@@ -299,8 +333,6 @@ public class MainList extends Fragment {
     }
 
 
-
-
     public void getTravelTimeAsync(final MyAdapter.MyViewHolder holder, final String hospitalName) {
         Thread service = new Thread() {
             @Override
@@ -310,7 +342,7 @@ public class MainList extends Fragment {
                     res = new AsyncGetDirectionTask().execute(getActivity().getApplicationContext(), getActivity()).get();
                     while (res.isEmpty()) {
                         System.out.println("Waiting travel time");
-                        Thread.sleep(1000);
+                        Thread.sleep(100);
                     }
                     //travelTime = (String) res.get("travelTime");
                     /**
@@ -324,13 +356,13 @@ public class MainList extends Fragment {
                             public void run() {
                                 Log.d("Adapter Async Task", travelTime);
                                 holder.travTime.setText(travelTime);
-                                infoToFragment.put(hospitalName, travelTime);
+                                travTimeMap.put(hospitalName, travelTime);
                             }
                         });
                     }else{
                         holder.travTime.setText(getText(R.string.data_not_avaialable).toString());
                         travelTime = getText(R.string.data_not_avaialable).toString();
-                        infoToFragment.put(hospitalName, travelTime);
+                        travTimeMap.put(hospitalName, travelTime);
                     }
 
                     } catch(InterruptedException ie){
@@ -344,8 +376,6 @@ public class MainList extends Fragment {
         service.start();
         //return travelTime;
     }
-
-
 
 
     public void getBestHospitalName(final String hospitalName) {
@@ -380,4 +410,254 @@ public class MainList extends Fragment {
     public void setLoc(LatLng loc) {
         this.loc = loc;
     }
+
+    public HashMap<String, String> chooseModel(String hospitalName){
+        HashMap<String, String> model = new HashMap<>();
+
+        String waitingWhite = "";
+        String waitingGreen = "";
+
+        if(hospitalName.contains(Utility.MOLINETTE)){
+            waitingWhite = "molinette";
+            waitingGreen = "molinette_verde";
+        }
+        if(hospitalName.contains(Utility.REGINA_MARGHERITA)){
+            waitingWhite = "margherita";
+            waitingGreen = "margherita_verde";
+        }
+        if(hospitalName.contains(Utility.CTO)){
+            waitingWhite = "CTO";
+            waitingGreen = "CTO_verde";
+        }
+        if(hospitalName.contains(Utility.MARIA_VITTORIA)){
+            waitingWhite = "vittoria";
+            waitingGreen = "vittoria_verde";
+        }
+        if(hospitalName.contains(Utility.MARTINI)){
+            waitingWhite = "martini";
+            waitingGreen = "martini_verde";
+        }
+        if(hospitalName.contains(Utility.MAURIZIANO)){
+            waitingWhite = "mauriziano";
+            waitingGreen = "maurziano_verde";
+        }
+        if(hospitalName.contains(Utility.SAN_GIOVANNI_BOSCO)){
+            waitingWhite = "bosco";
+            waitingGreen = "bosco_verde";
+        }
+        if(hospitalName.contains(Utility.SANT_ANNA)){
+            waitingWhite = "anna";
+            waitingGreen = "anna_verde";
+        }
+        model.put("White", waitingWhite);
+        model.put("Green", waitingGreen);
+
+        return model;
+    }
+
+    public void requestToModel(final String localModel){
+        final HashMap<String, String> model = chooseModel(localModel);
+        Log.d("MODEL", model.toString());
+
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+
+                try{
+                    if(localModel.equals(Utility.MAURIZIANO)
+                            || localModel.equals(Utility.SAN_GIOVANNI_BOSCO)
+                            || localModel.equals(Utility.MARIA_VITTORIA)
+                            || localModel.equals(Utility.MARTINI)
+                    ){
+                        //no model available
+                        whiteTimeMap.put(localModel, getText(R.string.data_not_avaialable).toString());
+                    }else {
+                        String whiteModel = model.get("White");
+                        model(whiteModel, "White");
+
+                        while (waitingWhiteTime == -1) {
+                            Thread.sleep(100);
+                            Log.d("White waitingPeople time", "sleeping");
+                        }
+                        whiteTimeMap.put(localModel,
+                                String.format(Locale.getDefault(),
+                                        "%d min",
+                                        Math.round(waitingWhiteTime)));
+
+                    }
+
+                }catch (Exception e){
+                    Log.e("ERROR", "Waiting White");
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
+
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try{
+                    if(localModel.equals(Utility.MAURIZIANO)
+                            || localModel.equals(Utility.SAN_GIOVANNI_BOSCO)
+                            || localModel.equals(Utility.MARIA_VITTORIA)
+                            || localModel.equals(Utility.MARTINI)
+                    ){
+                       greenTimeMap.put(localModel, getText(R.string.data_not_avaialable).toString());
+                    }else {
+                        String greenModel = model.get("Green");
+                        model(greenModel, "Green");
+
+                        while (waitingGreenTime == -1) {
+                            Thread.sleep(100);
+                            Log.d("Green waitingPeople time", "sleeping");
+                        }
+                        greenTimeMap.put(localModel,
+                                String.format(Locale.getDefault(),
+                                        "%d min",
+                                        Math.round(waitingGreenTime)));
+                    }
+                }catch (Exception e){
+                    Log.e("ERROR", "Waiting Green");
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
+
+    }
+
+    public void model(String localModel, final String color){
+        String localModelPath = localModel + ".tflite";
+
+        FirebaseLocalModel localSource =
+                new FirebaseLocalModel.Builder(localModel)  // Assign a name to this model
+                        .setAssetFilePath(localModelPath)
+                        .build();
+
+        FirebaseModelManager.getInstance().registerLocalModel(localSource);
+        FirebaseModelOptions options = new FirebaseModelOptions.Builder().setLocalModelName(localModel).build();
+        try {
+            FirebaseModelInterpreter firebaseInterpreter = FirebaseModelInterpreter.getInstance(options);
+            FirebaseModelInputOutputOptions inputOutputOptions =
+                    new FirebaseModelInputOutputOptions.Builder()
+                            .setInputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 9})
+                            .setOutputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 1})
+                            .build();
+
+            float[][] input = toIntegerArrayFromHashMap(waitingPeople, treatmentPeople);
+
+            //query to the model
+            FirebaseModelInputs inputs = new FirebaseModelInputs.Builder()
+                    .add(input)  // add() as many input arrays as your model requires
+                    .build();
+            firebaseInterpreter.run(inputs, inputOutputOptions)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<FirebaseModelOutputs>() {
+                                @Override
+                                public void onSuccess(FirebaseModelOutputs result) {
+                                    float[][] output = result.getOutput(0);
+                                    System.out.println("Output");
+                                    float out = output[0][0];
+                                    if(color.equals("White"))
+                                        waitingWhiteTime = out;
+                                    else if(color.equals("Green"))
+                                        waitingGreenTime = out;
+
+                                }
+                            })
+                    .addOnFailureListener(
+                            new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Task failed with an exception
+                                    // ...
+                                    System.out.println("SCAAAAAAAAAAAASSSSOOO");
+                                    e.printStackTrace();
+                                    e.getCause();
+                                }
+                            });
+
+        }catch (FirebaseMLException e){
+            Log.e("ERROR", "InputOutput");
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public float[][] toIntegerArrayFromHashMap(HashMap<String, String> waiting, HashMap<String, String> treatment){
+        String[] wait = waiting.values().toArray(new String[4]);
+        String[] treat = treatment.values().toArray(new String[4]);
+        float[][] array =new float[1][wait.length+treat.length+1];
+
+        for(int i = 0; i < array.length; i++) {
+            for (String str : wait)
+                array[0][i++] = Float.parseFloat(str);
+
+            for (String str : treat)
+                array[0][i++] = Float.parseFloat(str);
+        }
+         /*
+        Python          Java
+        Lunedì      0 - 2
+        Martedì     1 - 3
+        Mercoledì   2 - 4
+        Giovedì     3 - 5
+        Venerdì     4 - 6
+        Sabato      5 - 7
+        Domenica    6 - 1
+         */
+
+        float day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        //transforming day of week from java to python
+        day = day - 2;
+        array[0][8] = day;
+        return array;
+    }
+
+
+
+    private void setPeopleInPS(final String hospital) {
+        new Thread() {
+            public void run() {
+                boolean suc = Utility.peopleInPS(getContext(), hospital);
+                HashMap<String, HashMap> result = new HashMap<>();
+                if(suc) {
+                    try {
+                        while (result.isEmpty()) {
+                            Thread.sleep(300);
+                            result = Utility.getPeopleInPS();
+                            Log.d("PeopleInED", "Waiting");
+                        }
+                        waitingPeople = result.get("waitingPeople");
+                        treatmentPeople = result.get("treatmentPeople");
+                        //get the waiting time from people in waiting and treatment
+                        //queueWait.put(hospital, waitingPeople);
+                        //queueTreat.put(hospital, treatmentPeople);
+                        //requestToModel(hospital);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    String noAvailable = getText(R.string.data_not_avaialable).toString();
+                    waitingPeople.put(noAvailable, noAvailable);
+                    treatmentPeople.put(noAvailable, noAvailable);
+
+                    //queueTreat.put(hospital,waitingPeople);
+                    //queueWait.put(hospital, treatmentPeople);
+
+                    Log.e("PEOPLEINPS", "BAD NAME");
+                    return;
+                }
+            }
+
+        }.start();
+
+    }
+
 }
+
+
