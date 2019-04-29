@@ -60,6 +60,8 @@ public class MainList extends Fragment {
     private static MainList fragment;
     private LatLng loc;
     ProgressBar progressBar;
+    private HashMap<String,String> infoToFragment = new HashMap<>();
+
 
     public MainList() {
         // Required empty public constructor
@@ -72,6 +74,7 @@ public class MainList extends Fragment {
         listData = new ArrayList<>();
         adapter = new MyAdapter(listData);
         GetDataFirebase();
+        // Retrieve coordinate of the best hospital, when the best list will be implemented
         getBestHospitalName("Mauriziano");
         Log.d("onCreate", "Mainlist");
     }
@@ -156,7 +159,7 @@ public class MainList extends Fragment {
 
 
         @Override
-        public void onBindViewHolder(MyAdapter.MyViewHolder holder, int position) {
+        public void onBindViewHolder(final MyAdapter.MyViewHolder holder, int position) {
             progressBar.setVisibility(View.GONE);
             final Hospital data = listarray.get(position);
             holder.EDname.setText((data.getName()));
@@ -167,27 +170,29 @@ public class MainList extends Fragment {
                 holder.item_layout.setLayoutParams(params);
                 holder.item_layout.requestLayout();
                 //holder.travTime.setText(getTravelTimeAsync());
+                //getTravelTimeAsync(holder,data.getName());
             }
+
+            getTravelTimeAsync(holder,data.getName());
 
 
 
             if (position != 0) {
-
                 holder.EDaddress.setVisibility(View.GONE);
-                // holder.map_log.setVisibility(View.GONE);
                 holder.E_TT.setVisibility(View.GONE);
-                //holder.W_waitingTime.setVisibility(View.GONE);
-                //holder.G_waitingTime.setVisibility(View.GONE);
                 holder.travTime.setVisibility(View.GONE);
                 holder.mapView.setVisibility(View.GONE);
-
-
             }
             holder.setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int position, boolean isLongClick) {
                     if (isLongClick) {
-                        Fragment displayED = DisplayED.newInstance(data);
+                        Bundle info =  new Bundle();
+                        //retrieve information of travel time of a given hospital
+                        info.putString("TravelTime",infoToFragment.get(data.getName()));
+                        info.putParcelable("Hospital", data);
+                        Fragment displayED = new DisplayED();
+                        displayED.setArguments(info);
                         FragmentTransaction tr = getFragmentManager().beginTransaction();
                         tr.add(R.id.fragment_container, displayED);
                         tr.addToBackStack(null);
@@ -197,40 +202,13 @@ public class MainList extends Fragment {
                 }
             });
 
+
         }
 
         @Override
         public int getItemCount() {
             return listarray.size();
         }
-
-
-        public String getTravelTimeAsync() {
-
-            Thread service = new Thread() {
-                @Override
-                public void run() {
-                    super.run();
-                    try {
-                        res = new AsyncGetDirectionTask(adapter, listData).execute(getActivity().getApplicationContext(), getActivity()).get();
-                        while (res == null) {
-                            System.out.println("Waiting travel time");
-                            Thread.sleep(1000);
-                        }
-                        travelTime = (String) res.get("travelTime");
-                        Log.d("Adapter Async Task", travelTime);
-
-                    } catch (InterruptedException ie) {
-                        ie.printStackTrace();
-                    } catch (ExecutionException ee) {
-                        ee.printStackTrace();
-                    }
-                }
-            };
-            service.start();
-            return travelTime;
-        }
-
 
         public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, OnMapReadyCallback {
             TextView EDname;
@@ -319,6 +297,55 @@ public class MainList extends Fragment {
     public void setMyRecyclerview(RecyclerView myRecyclerview) {
         this.myRecyclerview = myRecyclerview;
     }
+
+
+
+
+    public void getTravelTimeAsync(final MyAdapter.MyViewHolder holder, final String hospitalName) {
+        Thread service = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    res = new AsyncGetDirectionTask().execute(getActivity().getApplicationContext(), getActivity()).get();
+                    while (res.isEmpty()) {
+                        System.out.println("Waiting travel time");
+                        Thread.sleep(1000);
+                    }
+                    //travelTime = (String) res.get("travelTime");
+                    /**
+                     * Todo the following "if" is taking into account only those hospitals of which we have data duration
+                     * because of Google API restrictions
+                     */
+                    if (hospitalName.equals(Utility.MAURIZIANO) || hospitalName.equals(Utility.MOLINETTE)) {
+                        travelTime = ((JSONDirections) ((HashMap) res.get("Directions")).get(hospitalName)).getDurationString();
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d("Adapter Async Task", travelTime);
+                                holder.travTime.setText(travelTime);
+                                infoToFragment.put(hospitalName, travelTime);
+                            }
+                        });
+                    }else{
+                        holder.travTime.setText(getText(R.string.data_not_avaialable).toString());
+                        travelTime = getText(R.string.data_not_avaialable).toString();
+                        infoToFragment.put(hospitalName, travelTime);
+                    }
+
+                    } catch(InterruptedException ie){
+                        ie.printStackTrace();
+                    } catch(ExecutionException ee){
+                        ee.printStackTrace();
+                    }
+
+            }
+        };
+        service.start();
+        //return travelTime;
+    }
+
+
 
 
     public void getBestHospitalName(final String hospitalName) {

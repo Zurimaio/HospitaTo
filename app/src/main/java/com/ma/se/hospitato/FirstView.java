@@ -43,8 +43,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -182,15 +185,38 @@ public class FirstView extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            DatabaseReference ref = mDatabase.getReference("Users/" + user.getUid());
-                            Profile ru = new Profile();
-                            setProfile(user,ru);
-                            ref.setValue(ru);
-                            Intent i = new Intent(getApplicationContext(),Main2Activity.class);
-                            startActivity(i);
-                            finish();
-                            Toast.makeText(getApplicationContext(),"User logged successfully",Toast.LENGTH_SHORT).show();
+                            final FirebaseUser user = mAuth.getCurrentUser();
+                            final DatabaseReference ref = mDatabase.getReference("Users/" + user.getUid());
+                            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                            rootRef.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.hasChild(user.getUid())) {
+                                        // user already exists in db
+                                        updateUI(user);
+                                        Intent i = new Intent(getApplicationContext(),Main2Activity.class);
+                                        startActivity(i);
+                                        finish();
+                                        Toast.makeText(getApplicationContext(),"User logged successfully",Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        Profile ru = new Profile();
+                                        setProfile(user,ru);
+                                        ref.setValue(ru);
+                                        updateUI(user);
+                                        Intent i = new Intent(getApplicationContext(),Main2Activity.class);
+                                        startActivity(i);
+                                        finish();
+                                        Toast.makeText(getApplicationContext(),"User logged successfully",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(getApplicationContext(),"You're already logged",Toast.LENGTH_SHORT).show();
@@ -213,12 +239,30 @@ public class FirstView extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            DatabaseReference ref = mDatabase.getReference("Users/" + user.getUid());
-                            Profile ru = new Profile();
-                            setProfile(user,ru);
-                            ref.setValue(ru);
-                            updateUI(user);
+                            final FirebaseUser user = mAuth.getCurrentUser();
+                            final DatabaseReference ref = mDatabase.getReference("Users/" + user.getUid());
+                            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                            rootRef.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.hasChild(user.getUid())) {
+                                        // user already exists in db
+                                        updateUI(user);
+                                    }
+                                    else{
+                                        Profile ru = new Profile();
+                                        setProfile(user,ru);
+                                        ref.setValue(ru);
+                                        updateUI(user);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -231,7 +275,6 @@ public class FirstView extends AppCompatActivity {
                     }
                 });
     }
-
 
     public void signIn(View view){
         intent = new Intent(this, LogInView.class);
