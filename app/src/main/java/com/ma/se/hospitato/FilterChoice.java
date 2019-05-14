@@ -112,7 +112,7 @@ public class FilterChoice extends Fragment {
                     getTravelTimeAsync(viewHolder,model.getName());
                     info.putParcelable("Hospital", model);
                     hospitalName.add(model.getName());
-                    //Log.d("Position " + model.getName(),Integer.toString(position));
+                    //Log.d("Position " + Model.getName(),Integer.toString(position));
 
 
                 }

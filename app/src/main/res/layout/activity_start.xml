@@ -4,14 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".StartActivity"
+    android:orientation="vertical"
     android:background="@color/ic_launcher_background"
     >
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:src="@mipmap/ic_launcher_round"
-        android:padding="50dp"
+
+        android:paddingTop="100dp"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        android:paddingBottom="0dp"
+        android:layout_marginBottom="-100dp"
+        android:layout_weight="2"
         android:foregroundGravity="center_horizontal"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="HospitaTo"
+        android:layout_weight="2.5"
+        android:textSize="20dp"
+        android:textAlignment="center"
+
+        android:textColor="@color/White"/>
 </LinearLayout>

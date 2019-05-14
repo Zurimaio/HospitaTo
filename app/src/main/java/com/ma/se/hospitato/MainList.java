@@ -82,7 +82,7 @@ public class MainList extends Fragment {
     private HashMap<String, String> greenTimeMap = new HashMap<>();
     private HashMap<String,String> travTimeMap = new HashMap<>();
 
-
+    MapView mapView;
 
     public MainList() {
         // Required empty public constructor
@@ -253,7 +253,7 @@ public class MainList extends Fragment {
             MapView mapView;
             GoogleMap map;
             LinearLayout item_layout;
-            
+
             //ImageView map_log;
             private ItemClickListener itemClickListener;
 
@@ -470,7 +470,7 @@ public class MainList extends Fragment {
                             || localModel.equals(Utility.MARIA_VITTORIA)
                             || localModel.equals(Utility.MARTINI)
                     ){
-                        //no model available
+                        //no Model available
                         whiteTimeMap.put(localModel, getText(R.string.data_not_avaialable).toString());
                     }else {
                         String whiteModel = model.get("White");
@@ -533,7 +533,7 @@ public class MainList extends Fragment {
         String localModelPath = localModel + ".tflite";
 
         FirebaseLocalModel localSource =
-                new FirebaseLocalModel.Builder(localModel)  // Assign a name to this model
+                new FirebaseLocalModel.Builder(localModel)  // Assign a name to this Model
                         .setAssetFilePath(localModelPath)
                         .build();
 
@@ -549,9 +549,9 @@ public class MainList extends Fragment {
 
             float[][] input = toIntegerArrayFromHashMap(waitingPeople, treatmentPeople);
 
-            //query to the model
+            //query to the Model
             FirebaseModelInputs inputs = new FirebaseModelInputs.Builder()
-                    .add(input)  // add() as many input arrays as your model requires
+                    .add(input)  // add() as many input arrays as your Model requires
                     .build();
             firebaseInterpreter.run(inputs, inputOutputOptions)
                     .addOnSuccessListener(
