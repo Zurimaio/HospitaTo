@@ -115,6 +115,9 @@ public class Main2Activity extends AppCompatActivity {
         if(i==R.id.loginButton){
             startActivity(new Intent(Main2Activity.this, FirstView.class));
         }
+        if(i==R.id.feedButton){
+            startActivity(new Intent(Main2Activity.this, PopUp.class));
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -194,6 +197,7 @@ public class Main2Activity extends AppCompatActivity {
         MenuItem register = menu.findItem(R.id.registerButton);
         MenuItem profile = menu.findItem(R.id.profileButton);
         MenuItem login = menu.findItem(R.id.loginButton);
+        MenuItem feedback=menu.findItem(R.id.feedButton);
         if(skipped || user == null) {
             //not registered or logged
             register.setVisible(true);

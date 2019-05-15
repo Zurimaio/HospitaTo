@@ -25,4 +25,10 @@
         android:visible="false"
         >
     </item>
+    <item
+        android:id="@+id/feedButton"
+        android:title="Leave a feedback"
+        android:visible="true"
+        >
+    </item>
 </menu>

@@ -11,7 +11,6 @@
     <color name="GreenTag">#4CC417</color>
     <color name="WhiteTag">#039BE5</color>
     <color name="White">#FFFFFF</color>
-    <color name="List_background">#EBF4FA</color>
-
-
+    <color name="List_background">#ebf4fa</color>
+    <color name="trasp">#00000000 </color>
 </resources>

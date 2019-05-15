@@ -53,4 +53,16 @@
     <string name="sendButton">Submit</string>
     <string name="yourPosition">Your Position</string>
     <string name="data_not_avaialable">Data not available</string>
+    <string name="title_activity_maps">Map</string>
+    <array name="hospital">
+        <item>Molinette</item>
+        <item>Regina Margherita</item>
+        <item>Sant Anna</item>
+        <item>CTO</item>
+    </array>
+    <array name="estimation">
+        <item>good</item>
+        <item>sovrastimated</item>
+        <item>underestimated</item>
+    </array>
 </resources>
