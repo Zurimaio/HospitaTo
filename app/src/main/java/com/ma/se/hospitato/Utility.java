@@ -10,6 +10,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.database.DataSnapshot;
@@ -134,105 +135,67 @@ public class Utility {
     }
 
 
-    public static void requestTestData(Context context, String hospitalName) {
-        HashMap<String, String> links = new HashMap<>();
-        String Molinette = "01090101";
-        String CTO = "01090201";
-        String SantAnna = "01090301";
-        String Margherita = "01090302";
-        final String link = "http://listeps.cittadellasalute.to.it/gtotal.php?id=";
+    public static boolean requestTestData(Context context, String hospitalName) {
+        if(hospitalName.equals(Utility.MAURIZIANO) || hospitalName.equals(Utility.MARIA_VITTORIA) || hospitalName.equals(Utility.MARTINI) || hospitalName.equals(Utility.SAN_GIOVANNI_BOSCO)){
+            return false;
+        }else {
 
+            HashMap<String, String> links = new HashMap<>();
+            final HashMap<String, String> waiting = new HashMap<>();
+            final HashMap<String, String> treatment = new HashMap<>();
+            final HashMap<String, HashMap> tmp = new HashMap<>();
+            final List<HashMap> result = new ArrayList<>();
 
-        links.put("Molinette", link + Molinette);
-        links.put("CTO", link + CTO);
-        links.put("SantAnna", link + SantAnna);
-        links.put("Margherita", link + Margherita);
-        RequestQueue queue = Volley.newRequestQueue(context);
+            String Molinette = "01090101";
+            String CTO = "01090201";
+            String SantAnna = "01090301";
+            String Margherita = "01090302";
+            final String link = "http://listeps.cittadellasalute.to.it/gtotal.php?id=";
+            links.put("Molinette", link + Molinette);
+            links.put("CTO", link + CTO);
+            links.put("SantAnna", link + SantAnna);
+            links.put("Margherita", link + Margherita);
+            RequestQueue queue = Volley.newRequestQueue(context);
 
-        for (Map.Entry<String, String> entry : links.entrySet()) {
-            final HashMap<String, JSONArray> res = new HashMap<>();
-            final String hospital = entry.getKey();
-            String url = entry.getValue();
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                boolean bianco = false;
-                                boolean verde = false;
-                                boolean giallo = false;
-                                boolean rosso = false;
-                                JSONObject json;
-                                JSONArray array = response.getJSONArray("colors");
-                                JSONObject obj = new JSONObject();
-
+            for (Map.Entry<String, String> entry : links.entrySet()) {
+                final HashMap<String, JSONArray> res = new HashMap<>();
+                final String hospital = entry.getKey();
+                String url = entry.getValue();
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                JSONArray array = Utility.formatJSONArrayResponse(response);
+                                JSONObject obj;
                                 for (int i = 0; i < array.length(); i++) {
-                                    json = array.getJSONObject(i);
-                                    if (json.get("colore").equals(null)) {
-                                        array.remove(i);
-                                        break;
-                                    }
-                                    if (json.get("colore").equals("bianco")) {
-                                        bianco = true;
-                                    }
-                                    if (json.get("colore").equals("verde")) {
-                                        verde = true;
-                                    }
-                                    if (json.get("colore").equals("giallo")) {
-                                        giallo = true;
-                                    }
-                                    if (json.get("colore").equals("rosso")) {
-                                        rosso = true;
+                                    try {
+                                        obj = array.getJSONObject(i);
+                                        waiting.put(obj.getString("colore"), obj.getString("attesa"));
+                                        treatment.put(obj.getString("colore"), obj.getString("visita"));
+                                    } catch (JSONException je) {
+                                        je.printStackTrace();
                                     }
                                 }
-                                if (!bianco) {
-                                    obj.put("colore", "bianco");
-                                    obj.put("attesa", "0");
-                                    obj.put("visita", "0");
-                                    array.put(obj);
-                                }
-
-                                if (!giallo) {
-                                    obj.put("colore", "giallo");
-                                    obj.put("attesa", "0");
-                                    obj.put("visita", "0");
-                                    array.put(obj);
-                                }
-                                if (!verde) {
-                                    obj.put("colore", "verde");
-                                    obj.put("attesa", "0");
-                                    obj.put("visita", "0");
-                                    array.put(obj);
-                                }
-                                if (!rosso) {
-                                    obj.put("colore", "rosso");
-                                    obj.put("attesa", "0");
-                                    obj.put("visita", "0");
-                                    array.put(obj);
-                                }
-
-
-                                res.put(hospital, array);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                tmp.put("waiting", waiting);
+                                tmp.put("treatment", treatment);
+                                result.add(tmp);
                             }
-                            System.out.println(res);
-                        }
-                    }, new Response.ErrorListener() {
+                        }, new Response.ErrorListener() {
 
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // TODO: Handle
-                            Log.d("Request Error", error.toString());
-                        }
-                    });
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO: Handle
+                                Log.d("Request Error", error.toString());
+                            }
+                        });
 
-            // Add the request to the RequestQueue.
-            queue.add(jsonObjectRequest);
+                // Add the request to the RequestQueue.
+                queue.add(jsonObjectRequest);
+            }
+            //setPeopleInPS(result);
+            Log.d("Utility", "PeopleInPS");
         }
-
-
+        return true;
     }
 
     public static boolean peopleInPS(Context context, String hospitalName) {
@@ -259,7 +222,6 @@ public class Utility {
                 url = link + Margherita;
 
             RequestQueue queue = Volley.newRequestQueue(context);
-
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                     (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                         @Override
@@ -278,8 +240,6 @@ public class Utility {
                             result.put("waitingPeople", waiting);
                             result.put("treatmentPeople", treatment);
                             setPeopleInPS(result);
-
-
                         }
                     }, new Response.ErrorListener() {
                         @Override
