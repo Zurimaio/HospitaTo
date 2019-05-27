@@ -72,7 +72,7 @@
       -->
 
         <TextView
-            android:id="@+id/travel_time_txt"
+            android:id="@+id/estimated_time_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
@@ -84,7 +84,7 @@
 
 
         <TextView
-            android:id="@+id/travel_time"
+            android:id="@+id/estimated_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"

@@ -135,7 +135,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
 
             res.put("Directions", jsonDestination);
             /*For instance the request is for Mauriziano*/
-            //res.put("travelTime",jsonDestination.get(Utility.MAURIZIANO).getDurationString());
+            //res.put("estimatedTime",jsonDestination.get(Utility.MAURIZIANO).getDurationString());
             res.put("Hospitals", hospitalDestination);
             //res.put("Route", data.getPolyPath());
 
@@ -156,7 +156,7 @@ public class AsyncGetDirectionTask extends AsyncTask<Object, Void, HashMap<Strin
             mapFragment.getMapAsync(mapView);
         else if(this.act == 1) {
             //update List View
-            //myAdapter.travelTime = jsonDestination.get(Utility.MAURIZIANO).getDurationString();
+            //myAdapter.estimatedTime = jsonDestination.get(Utility.MAURIZIANO).getDurationString();
             System.out.println("Done");
 
         }

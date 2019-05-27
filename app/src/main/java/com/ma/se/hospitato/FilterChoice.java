@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.google.android.gms.maps.MapView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -20,7 +18,6 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -180,7 +177,7 @@ public class FilterChoice extends Fragment {
 
 
         public void setTravelTime(String travelTime){
-            TextView travTime = mView.findViewById(R.id.travel_time);
+            TextView travTime = mView.findViewById(R.id.estimated_time);
             travTime.setText(travelTime);
         }
 
@@ -251,7 +248,7 @@ public class FilterChoice extends Fragment {
             }
         };
         service.start();
-        //return travelTime;
+        //return estimatedTime;
     }
 }
 

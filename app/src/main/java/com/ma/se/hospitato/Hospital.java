@@ -3,6 +3,7 @@ package com.ma.se.hospitato;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class Hospital implements Parcelable {
@@ -11,6 +12,7 @@ public class Hospital implements Parcelable {
     private String Name;
     private String Address;
     private String PhoneNumber;
+    private Integer estimatedTime;
     private HashMap<String, Boolean> Departments;
     private HashMap<String, String> Coordinate;
     private HashMap <String, Integer> patients;
@@ -22,6 +24,7 @@ public class Hospital implements Parcelable {
         Name = in.readString();
         Address = in.readString();
         PhoneNumber = in.readString();
+        estimatedTime = in.readInt();
     }
 
     public static final Creator<Hospital> CREATOR = new Creator<Hospital>() {
@@ -75,6 +78,14 @@ public class Hospital implements Parcelable {
         Coordinate = coordinate;
     }
 
+    public Integer getEstimatedTime() {
+        return estimatedTime;
+    }
+
+    public void setEstimatedTime(Integer estimatedTime) {
+        this.estimatedTime = estimatedTime;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -85,7 +96,7 @@ public class Hospital implements Parcelable {
         dest.writeString(Name);
         dest.writeString(Address);
         dest.writeString(PhoneNumber);
-
+        dest.writeInt(estimatedTime);
     }
 
     public HashMap<String, Integer> getPatients() {
@@ -95,4 +106,11 @@ public class Hospital implements Parcelable {
     public void setPatients(HashMap<String, Integer> patients) {
         this.patients = patients;
     }
+
+    public static final Comparator<Hospital> BY_TIME=new Comparator<Hospital>() {
+        @Override
+        public int compare(Hospital hospital, Hospital t1) {
+            return hospital.estimatedTime.compareTo(t1.estimatedTime);
+        }
+    };
 }

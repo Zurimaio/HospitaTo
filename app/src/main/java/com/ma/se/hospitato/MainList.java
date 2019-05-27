@@ -45,10 +45,13 @@ import com.google.firebase.ml.custom.FirebaseModelOptions;
 import com.google.firebase.ml.custom.FirebaseModelOutputs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 
@@ -59,30 +62,27 @@ public class MainList extends Fragment {
 
     private RecyclerView myRecyclerview;
     private MyAdapter adapter;
-    private List<Hospital> listData;
+    private List<Hospital> listData = new ArrayList<>();
     private FirebaseDatabase FDB;
     private DatabaseReference DBR;
     private Button toMap;
-    public String travelTime;
+    public String estimatedTime;
     private String hospitalName;
     private HashMap<String, Object> res;
     private BottomNavigationView bnv;
     private static MainList fragment;
     private LatLng loc;
     ProgressBar progressBar;
-    float waitingWhiteTime = -1;
-    float waitingGreenTime = -1;
-    private HashMap<String, String> waitingPeople = new HashMap<>();
-    private HashMap<String, String> treatmentPeople = new HashMap<>();
-
-    private HashMap<String, HashMap<String, String>> queueWait = new HashMap<>();
-    private HashMap<String, HashMap<String, String>> queueTreat = new HashMap<>();
-
-    private HashMap<String, String> whiteTimeMap = new HashMap<>();
-    private HashMap<String, String> greenTimeMap = new HashMap<>();
-    private HashMap<String,String> travTimeMap = new HashMap<>();
-
+    float wWhite = -1;
+    float wGreen = -1;
+    private Hospital Hospitals;
+    HashMap<String, String> waiting = new HashMap<>();
+    HashMap<String, String> treatment = new HashMap<>();
+    private HashMap<String, String> travTimeMap = new HashMap<>();
+    int millSleep = 300;
+    HashMap<String,Integer> EstimatedTime = new HashMap<>();
     MapView mapView;
+    int estimated = 0;
 
     public MainList() {
         // Required empty public constructor
@@ -93,11 +93,7 @@ public class MainList extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FDB = FirebaseDatabase.getInstance();
-        listData = new ArrayList<>();
-        adapter = new MyAdapter(listData);
         GetDataFirebase();
-        // Retrieve coordinate of the best hospital, when the best list will be implemented
-        getBestHospitalName("Mauriziano");
         Log.d("onCreate", "Mainlist");
     }
 
@@ -120,7 +116,13 @@ public class MainList extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("OnStart wGreen", String.format(Locale.getDefault(), "%d size",
+                EstimatedTime.size()));
 
     }
 
@@ -140,11 +142,41 @@ public class MainList extends Fragment {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Hospital data = dataSnapshot.getValue(Hospital.class);
+                Hospital h = dataSnapshot.getValue(Hospital.class);
                 //ADD DATA TO ARRAY LIST
-                listData.add(data);
+                /**
+                 * put here the summation the prediction time and travel time
+                 */
+                if(h.getName().equals(Utility.MOLINETTE)){
+                    h.setEstimatedTime(127+11);
+                }
+                if(h.getName().equals(Utility.SANT_ANNA)){
+                    h.setEstimatedTime(10+12);
+                }
+                if(h.getName().equals(Utility.CTO)){
+                    h.setEstimatedTime(11+14);
+                }if( h.getName().contains(Utility.REGINA_MARGHERITA)) {
+                    h.setEstimatedTime(50+13);
+                }
+
+                if(!h.getName().equals(Utility.MOLINETTE)
+                        && !h.getName().equals(Utility.SANT_ANNA)
+                        && !h.getName().equals(Utility.CTO)
+                        && !h.getName().contains(Utility.REGINA_MARGHERITA)) {
+                h.setEstimatedTime(400);
+                }
+                listData.add(h);
+                //setPeopleInPS(data.getName());
                 //ADD DATA INTO ADAPTER/RECYCLER VIEW
-                myRecyclerview.setAdapter(adapter);
+                if (listData.size() == 8) {
+                    //List<Hospital> hospitals = getEstimationTime(listData);
+                    Collections.sort(listData, Hospital.BY_TIME);
+                    // Retrieve coordinate of the best hospital, when the best list will be implemented
+                    getBestHospitalName(listData.get(0).getName());
+                    adapter = new MyAdapter(listData);
+                    myRecyclerview.setAdapter(adapter);
+                }
+
             }
 
             @Override
@@ -192,20 +224,21 @@ public class MainList extends Fragment {
             final Hospital data = listarray.get(position);
             holder.EDname.setText((data.getName()));
             holder.EDaddress.setText((data.getAddress()));
-            if(position == 0) {
+            holder.estimatedTime.setText(data.getEstimatedTime().toString() + " min");
+            if (position == 0) {
                 Log.d("Frist item", data.getName());
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 holder.item_layout.setLayoutParams(params);
                 holder.item_layout.requestLayout();
             }
 
-            getTravelTimeAsync(holder,data.getName());
+            //getTravelTimeAsync(holder,data.getName());
             //setPeopleInPS(data.getName());
 
             if (position != 0) {
                 holder.EDaddress.setVisibility(View.GONE);
                 holder.E_TT.setVisibility(View.GONE);
-                holder.travTime.setVisibility(View.GONE);
+                holder.estimatedTime.setVisibility(View.GONE);
                 holder.mapView.setVisibility(View.GONE);
             }
 
@@ -213,7 +246,7 @@ public class MainList extends Fragment {
                 @Override
                 public void onClick(View view, int position, boolean isLongClick) {
                     if (isLongClick) {
-                        Bundle info =  new Bundle();
+                        Bundle info = new Bundle();
 
                         //retrieve information of travel time of a given hospital
                         info.putString("TravelTime", travTimeMap.get(data.getName()));
@@ -248,7 +281,7 @@ public class MainList extends Fragment {
             TextView EDaddress;
             TextView G_waitingTime;
             TextView W_waitingTime;
-            TextView travTime;
+            TextView estimatedTime;
             TextView E_TT;
             MapView mapView;
             GoogleMap map;
@@ -264,8 +297,8 @@ public class MainList extends Fragment {
                 EDaddress = (TextView) itemView.findViewById(R.id.ED_address);
                 //G_waitingTime = (TextView) itemView.findViewById(R.id.G_waitingTime);
                 //W_waitingTime = (TextView) itemView.findViewById(R.id.W_waitingTime);
-                travTime = (TextView) itemView.findViewById(R.id.travel_time);
-                E_TT = (TextView) itemView.findViewById(R.id.travel_time_txt);
+                estimatedTime = (TextView) itemView.findViewById(R.id.estimated_time);
+                E_TT = (TextView) itemView.findViewById(R.id.estimated_time_txt);
                 //map_log = (ImageView) itemView.findViewById(R.id.map_log);
                 mapView = itemView.findViewById(R.id.lite_map);
                 item_layout = itemView.findViewById(R.id.item_layout);
@@ -296,7 +329,6 @@ public class MainList extends Fragment {
             }
 
 
-
             /**
              * MAP SECTION
              */
@@ -308,8 +340,8 @@ public class MainList extends Fragment {
                 setMapLocation();
             }
 
-            public void setMapLocation(){
-                if(map==null) return;
+            public void setMapLocation() {
+                if (map == null) return;
                 //LatLng l = new LatLng(45.0504965,7.6636196);
 
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(getLoc(), 15f));
@@ -344,37 +376,37 @@ public class MainList extends Fragment {
                         System.out.println("Waiting travel time");
                         Thread.sleep(100);
                     }
-                    //travelTime = (String) res.get("travelTime");
+                    //estimatedTime = (String) res.get("estimatedTime");
                     /**
                      * Todo the following "if" is taking into account only those hospitals of which we have data duration
                      * because of Google API restrictions
                      */
                     if (hospitalName.equals(Utility.MAURIZIANO) || hospitalName.equals(Utility.MOLINETTE)) {
-                        travelTime = ((JSONDirections) ((HashMap) res.get("Directions")).get(hospitalName)).getDurationString();
+                        estimatedTime = ((JSONDirections) ((HashMap) res.get("Directions")).get(hospitalName)).getDurationString();
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.d("Adapter Async Task", travelTime);
-                                holder.travTime.setText(travelTime);
-                                travTimeMap.put(hospitalName, travelTime);
+                                Log.d("Adapter Async Task", estimatedTime);
+                                holder.estimatedTime.setText(estimatedTime);
+                                travTimeMap.put(hospitalName, estimatedTime);
                             }
                         });
-                    }else{
-                        holder.travTime.setText(getText(R.string.data_not_avaialable).toString());
-                        travelTime = getText(R.string.data_not_avaialable).toString();
-                        travTimeMap.put(hospitalName, travelTime);
+                    } else {
+                        holder.estimatedTime.setText(getText(R.string.data_not_avaialable).toString());
+                        estimatedTime = getText(R.string.data_not_avaialable).toString();
+                        travTimeMap.put(hospitalName, estimatedTime);
                     }
 
-                    } catch(InterruptedException ie){
-                        ie.printStackTrace();
-                    } catch(ExecutionException ee){
-                        ee.printStackTrace();
-                    }
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                } catch (ExecutionException ee) {
+                    ee.printStackTrace();
+                }
 
             }
         };
         service.start();
-        //return travelTime;
+        //return estimatedTime;
     }
 
 
@@ -385,15 +417,15 @@ public class MainList extends Fragment {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for(DataSnapshot d: dataSnapshot.getChildren()) {
-                        Hospital h = d.getValue(Hospital.class);
-                        if(h.getName().equals(hospitalName)) {
-                            Double lat = Double.parseDouble(h.getCoordinate().get("Latitude"));
-                            Double lng = Double.parseDouble(h.getCoordinate().get("Longitude"));
-                            setLoc(new LatLng(lat, lng));
-                            break;
-                        }
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    Hospital h = d.getValue(Hospital.class);
+                    if (h.getName().equals(hospitalName)) {
+                        Double lat = Double.parseDouble(h.getCoordinate().get("Latitude"));
+                        Double lng = Double.parseDouble(h.getCoordinate().get("Longitude"));
+                        setLoc(new LatLng(lat, lng));
+                        break;
                     }
+                }
             }
 
             @Override
@@ -411,43 +443,116 @@ public class MainList extends Fragment {
         this.loc = loc;
     }
 
+
+    public List<Hospital> getEstimationTime(final List<Hospital> hospitals) {
+        final Random random = new Random();
+        final List<Hospital> hospi = new ArrayList<>();
+        final int travelTime = random.nextInt(40) + 1;
+        for(Hospital h: hospitals){
+            if(h.getName().equals(Utility.MOLINETTE)
+                    || h.getName().equals(Utility.SANT_ANNA)
+                    || h.getName().equals(Utility.CTO)
+                    || h.getName().equals(Utility.REGINA_MARGHERITA)) {
+                //setPeopleInPS(h.getName());
+                h.setEstimatedTime(travelTime);
+                hospi.add(h);
+            }else{
+                estimated = 400;
+                h.setEstimatedTime(estimated);
+                hospi.add(h);
+            }
+
+        }
+        //Log.d("Estimated time", EstimatedTime.toString());
+        Collections.sort(hospi, Hospital.BY_TIME);
+        return hospi;
+
+}
+    /**
+     * Neural newtwork requests
+     * @param localModel
+     */
+    public void requestToModel(final String localModel){
+        final HashMap<String, String> model = chooseModel(localModel);
+        Log.d("MODEL", model.toString());
+        //CHOOSE THE MODEL TO QUERY
+        String greenModel = model.get("Green");
+        Model(greenModel, localModel, "Green");
+
+    }
+    public String formatModelSelection(String hospitalName){
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        //transforming day of week from java to python
+        if(day == Calendar.SUNDAY)
+            day = 6;
+        else
+            day = day - 2;
+
+        String WorkingDays = "";
+        String timeSlot = "";
+        if(day == 5 || day == 6){
+            WorkingDays = "NW";
+        }else{
+            WorkingDays = "W";
+        }
+        /*
+
+        T1: 8-14
+        T2: 15-20
+        T3: 21-7
+         */
+        if(hour >= 8 && hour <= 14){
+            timeSlot = "T1";
+        }else if(hour>= 15 && hour<=20) {
+            timeSlot = "T2";
+        }else{
+            timeSlot = "T3";
+        }
+
+        return hospitalName+"_Model_"+timeSlot+"_"+WorkingDays;
+
+
+    }
+
     public HashMap<String, String> chooseModel(String hospitalName){
         HashMap<String, String> model = new HashMap<>();
+
 
         String waitingWhite = "";
         String waitingGreen = "";
 
         if(hospitalName.contains(Utility.MOLINETTE)){
-            waitingWhite = "molinette";
-            waitingGreen = "molinette_verde";
+            waitingWhite = formatModelSelection("Molinette")+"_White";
+            waitingGreen = formatModelSelection("Molinette")+"_Green";
         }
         if(hospitalName.contains(Utility.REGINA_MARGHERITA)){
-            waitingWhite = "margherita";
-            waitingGreen = "margherita_verde";
+            waitingWhite = formatModelSelection("Margherita")+"_White";
+            waitingGreen = formatModelSelection("Margherita")+"_Green";
         }
         if(hospitalName.contains(Utility.CTO)){
-            waitingWhite = "CTO";
-            waitingGreen = "CTO_verde";
+            waitingWhite = formatModelSelection("CTO")+"_White";
+            waitingGreen = formatModelSelection("CTO")+"_Green";
         }
         if(hospitalName.contains(Utility.MARIA_VITTORIA)){
-            waitingWhite = "vittoria";
-            waitingGreen = "vittoria_verde";
+            waitingWhite = formatModelSelection("Vittoria")+"_White";
+            waitingGreen = formatModelSelection("Vittoria")+"_Green";
         }
         if(hospitalName.contains(Utility.MARTINI)){
-            waitingWhite = "martini";
-            waitingGreen = "martini_verde";
+            waitingWhite = formatModelSelection("Martini")+"_White";
+            waitingGreen = formatModelSelection("Martini")+"_Green";
         }
         if(hospitalName.contains(Utility.MAURIZIANO)){
-            waitingWhite = "mauriziano";
-            waitingGreen = "maurziano_verde";
+            waitingWhite = formatModelSelection("Mauriziano")+"_White";
+            waitingGreen = formatModelSelection("Mauriziano")+"_Green";
         }
         if(hospitalName.contains(Utility.SAN_GIOVANNI_BOSCO)){
-            waitingWhite = "bosco";
-            waitingGreen = "bosco_verde";
+            waitingWhite = formatModelSelection("Bosco")+"_White";
+            waitingGreen = formatModelSelection("Bosco")+"_Green";
         }
         if(hospitalName.contains(Utility.SANT_ANNA)){
-            waitingWhite = "anna";
-            waitingGreen = "anna_verde";
+            waitingWhite = formatModelSelection("SantAnna")+"_White";
+            waitingGreen = formatModelSelection("SantAnna")+"_Green";
         }
         model.put("White", waitingWhite);
         model.put("Green", waitingGreen);
@@ -455,201 +560,183 @@ public class MainList extends Fragment {
         return model;
     }
 
-    public void requestToModel(final String localModel){
-        final HashMap<String, String> model = chooseModel(localModel);
-        Log.d("MODEL", model.toString());
+    public float[][] toIntegerArrayFromHashMap(HashMap<String, String> waiting, HashMap<String, String> treatment, String color){
+        String[] wait = waiting.values().toArray(new String[4]);
+        String[] treat = treatment.values().toArray(new String[4]);
 
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
+        float[][] arrayW = new float[1][wait.length+treat.length];
+        float[][] arrayG = new float[1][wait.length+treat.length-1];
 
-                try{
-                    if(localModel.equals(Utility.MAURIZIANO)
-                            || localModel.equals(Utility.SAN_GIOVANNI_BOSCO)
-                            || localModel.equals(Utility.MARIA_VITTORIA)
-                            || localModel.equals(Utility.MARTINI)
-                    ){
-                        //no Model available
-                        whiteTimeMap.put(localModel, getText(R.string.data_not_avaialable).toString());
-                    }else {
-                        String whiteModel = model.get("White");
-                        model(whiteModel, "White");
-
-                        while (waitingWhiteTime == -1) {
-                            Thread.sleep(100);
-                            Log.d("White waitingPeople time", "sleeping");
-                        }
-                        whiteTimeMap.put(localModel,
-                                String.format(Locale.getDefault(),
-                                        "%d min",
-                                        Math.round(waitingWhiteTime)));
-
-                    }
-
-                }catch (Exception e){
-                    Log.e("ERROR", "Waiting White");
-                    e.printStackTrace();
-                }
-            }
-        }.start();
-
-
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                try{
-                    if(localModel.equals(Utility.MAURIZIANO)
-                            || localModel.equals(Utility.SAN_GIOVANNI_BOSCO)
-                            || localModel.equals(Utility.MARIA_VITTORIA)
-                            || localModel.equals(Utility.MARTINI)
-                    ){
-                       greenTimeMap.put(localModel, getText(R.string.data_not_avaialable).toString());
-                    }else {
-                        String greenModel = model.get("Green");
-                        model(greenModel, "Green");
-
-                        while (waitingGreenTime == -1) {
-                            Thread.sleep(100);
-                            Log.d("Green waitingPeople time", "sleeping");
-                        }
-                        greenTimeMap.put(localModel,
-                                String.format(Locale.getDefault(),
-                                        "%d min",
-                                        Math.round(waitingGreenTime)));
-                    }
-                }catch (Exception e){
-                    Log.e("ERROR", "Waiting Green");
-                    e.printStackTrace();
-                }
-            }
-        }.start();
-
+        if(color.equals("White")) {
+            arrayW[0][0] = Float.parseFloat(waiting.get("bianco"));
+            arrayW[0][1] = Float.parseFloat(waiting.get("verde"));
+            arrayW[0][2] = Float.parseFloat(waiting.get("giallo"));
+            arrayW[0][3] = Float.parseFloat(waiting.get("rosso"));
+            arrayW[0][4] = Float.parseFloat(treatment.get("bianco"));
+            arrayW[0][5] = Float.parseFloat(treatment.get("verde"));
+            arrayW[0][6] = Float.parseFloat(treatment.get("giallo"));
+            arrayW[0][7] = Float.parseFloat(treatment.get("rosso"));
+            //arrayW[0][8] = wGreen;
+            return arrayW;
+        }
+        else {
+            arrayG[0][0] = Float.parseFloat(waiting.get("verde"));
+            arrayG[0][1] = Float.parseFloat(waiting.get("giallo"));
+            arrayG[0][2] = Float.parseFloat(waiting.get("rosso"));
+            arrayG[0][3] = Float.parseFloat(treatment.get("bianco"));
+            arrayG[0][4] = Float.parseFloat(treatment.get("verde"));
+            arrayG[0][5] = Float.parseFloat(treatment.get("giallo"));
+            arrayG[0][6] = Float.parseFloat(treatment.get("rosso"));
+            System.out.println("ArrayG: " + Arrays.toString(arrayG[0]));
+            return arrayG;
+        }
 
     }
 
-    public void model(String localModel, final String color){
+    public void Model(String localModel, final String hospitalName, final String color){
         String localModelPath = localModel + ".tflite";
+        try {
+            if(color.equals("White")) {
+                Log.d("White Model", localModelPath);
+                FirebaseLocalModel localSource =
+                        new FirebaseLocalModel.Builder(localModel)  // Assign a name to this Model
+                                .setAssetFilePath(localModelPath)
+                                .build();
 
-        FirebaseLocalModel localSource =
-                new FirebaseLocalModel.Builder(localModel)  // Assign a name to this Model
-                        .setAssetFilePath(localModelPath)
+                FirebaseModelManager.getInstance().registerLocalModel(localSource);
+                FirebaseModelOptions options = new FirebaseModelOptions.Builder().setLocalModelName(localModel).build();
+                FirebaseModelInterpreter firebaseInterpreter = FirebaseModelInterpreter.getInstance(options);
+
+                float[][] input = toIntegerArrayFromHashMap(waiting, treatment, color);
+
+
+                FirebaseModelInputOutputOptions inputOutputOptions =
+                        new FirebaseModelInputOutputOptions.Builder()
+                                .setInputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 8})
+                                .setOutputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 1})
+                                .build();
+
+                System.out.println("ArrayW: " + Arrays.toString(input[0]));
+                FirebaseModelInputs inputs = new FirebaseModelInputs.Builder()
+                        .add(input)  // add() as many input arrays as your Model requires
+                        .build();
+                firebaseInterpreter.run(inputs, inputOutputOptions)
+                        .addOnSuccessListener(
+                                new OnSuccessListener<FirebaseModelOutputs>() {
+                                    @Override
+                                    public void onSuccess(FirebaseModelOutputs result) {
+                                        float[][] output = result.getOutput(0);
+                                        float out = output[0][0];
+                                        wGreen = -1;
+                                        if(color.equals("White")) {
+                                            wWhite = out;
+                                        }
+                                        else if(color.equals("Green")) {
+                                            wGreen = out;
+                                        }
+                                    }
+                                })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Task failed with an exception
+                                        // ...
+                                        System.out.println("SCAAAAAAAAAAAASSSSOOO");
+                                        e.printStackTrace();
+                                        e.getCause();
+                                        e.getMessage();
+                                    }
+                                });
+
+            }
+            else if(color.equals("Green")) {
+                Log.d("Green Model", localModelPath);
+                FirebaseModelInputOutputOptions inputOutputOptions =
+                        new FirebaseModelInputOutputOptions.Builder()
+                                .setInputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 7})
+                                .setOutputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 1})
+                                .build();
+
+                float [][] input = toIntegerArrayFromHashMap(waiting, treatment, color);
+                FirebaseModelInputs inputs = new FirebaseModelInputs.Builder()
+                        .add(input)  // add() as many input arrays as your Model requires
                         .build();
 
-        FirebaseModelManager.getInstance().registerLocalModel(localSource);
-        FirebaseModelOptions options = new FirebaseModelOptions.Builder().setLocalModelName(localModel).build();
-        try {
-            FirebaseModelInterpreter firebaseInterpreter = FirebaseModelInterpreter.getInstance(options);
-            FirebaseModelInputOutputOptions inputOutputOptions =
-                    new FirebaseModelInputOutputOptions.Builder()
-                            .setInputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 9})
-                            .setOutputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 1})
-                            .build();
+                FirebaseLocalModel localSource =
+                        new FirebaseLocalModel.Builder(localModel)  // Assign a name to this Model
+                                .setAssetFilePath(localModelPath)
+                                .build();
+                FirebaseModelManager.getInstance().registerLocalModel(localSource);
+                FirebaseModelOptions options = new FirebaseModelOptions.Builder().setLocalModelName(localModel).build();
+                FirebaseModelInterpreter firebaseInterpreter = FirebaseModelInterpreter.getInstance(options);
+                firebaseInterpreter.run(inputs, inputOutputOptions)
+                        .addOnSuccessListener(
+                                new OnSuccessListener<FirebaseModelOutputs>() {
+                                    @Override
+                                    public void onSuccess(FirebaseModelOutputs result) {
+                                        float[][] output = result.getOutput(0);
+                                        float out = output[0][0];
+                                        if(color.equals("White")) {
+                                            wWhite = out;
+                                        }
+                                        else if(color.equals("Green")) {
+                                            wGreen = out;
+                                            estimated = Math.round(wGreen);
+                                            Log.d("Estimated time for "+ hospitalName, Integer.toString(estimated));
 
-            float[][] input = toIntegerArrayFromHashMap(waitingPeople, treatmentPeople);
-
+                                        }
+                                    }
+                                })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Task failed with an exception
+                                        // ...
+                                        System.out.println("SCAAAAAAAAAAAASSSSOOO");
+                                        e.printStackTrace();
+                                        e.getCause();
+                                        e.getMessage();
+                                    }
+                                });
+            }
             //query to the Model
-            FirebaseModelInputs inputs = new FirebaseModelInputs.Builder()
-                    .add(input)  // add() as many input arrays as your Model requires
-                    .build();
-            firebaseInterpreter.run(inputs, inputOutputOptions)
-                    .addOnSuccessListener(
-                            new OnSuccessListener<FirebaseModelOutputs>() {
-                                @Override
-                                public void onSuccess(FirebaseModelOutputs result) {
-                                    float[][] output = result.getOutput(0);
-                                    System.out.println("Output");
-                                    float out = output[0][0];
-                                    if(color.equals("White"))
-                                        waitingWhiteTime = out;
-                                    else if(color.equals("Green"))
-                                        waitingGreenTime = out;
 
-                                }
-                            })
-                    .addOnFailureListener(
-                            new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // Task failed with an exception
-                                    // ...
-                                    System.out.println("SCAAAAAAAAAAAASSSSOOO");
-                                    e.printStackTrace();
-                                    e.getCause();
-                                }
-                            });
 
         }catch (FirebaseMLException e){
             Log.e("ERROR", "InputOutput");
             e.printStackTrace();
+        }catch (ExceptionInInitializerError ex){
+            ex.printStackTrace();
         }
-
 
     }
 
-    public float[][] toIntegerArrayFromHashMap(HashMap<String, String> waiting, HashMap<String, String> treatment){
-        String[] wait = waiting.values().toArray(new String[4]);
-        String[] treat = treatment.values().toArray(new String[4]);
-        float[][] array =new float[1][wait.length+treat.length+1];
-
-        for(int i = 0; i < array.length; i++) {
-            for (String str : wait)
-                array[0][i++] = Float.parseFloat(str);
-
-            for (String str : treat)
-                array[0][i++] = Float.parseFloat(str);
-        }
-         /*
-        Python          Java
-        Lunedì      0 - 2
-        Martedì     1 - 3
-        Mercoledì   2 - 4
-        Giovedì     3 - 5
-        Venerdì     4 - 6
-        Sabato      5 - 7
-        Domenica    6 - 1
-         */
-
-        float day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        //transforming day of week from java to python
-        day = day - 2;
-        array[0][8] = day;
-        return array;
-    }
-
-
-
-    private void setPeopleInPS(final String hospital) {
+    private void setPeopleInPS(final String hospitalName) {
         new Thread() {
             public void run() {
-                boolean suc = Utility.peopleInPS(getContext(), hospital);
+                boolean suc = Utility.peopleInPS(getContext(), hospitalName);
                 HashMap<String, HashMap> result = new HashMap<>();
                 if(suc) {
                     try {
                         while (result.isEmpty()) {
-                            Thread.sleep(300);
+                            Thread.sleep(millSleep);
                             result = Utility.getPeopleInPS();
-                            Log.d("PeopleInED", "Waiting");
+                            Log.d("PeopleInED", hospitalName + " Waiting");
                         }
-                        waitingPeople = result.get("waitingPeople");
-                        treatmentPeople = result.get("treatmentPeople");
-                        //get the waiting time from people in waiting and treatment
-                        //queueWait.put(hospital, waitingPeople);
-                        //queueTreat.put(hospital, treatmentPeople);
-                        //requestToModel(hospital);
+                        waiting = result.get("waitingPeople");
+                        treatment = result.get("treatmentPeople");
+                        Log.d("PeopleInED","Waiting " + waiting.toString());
+                        Log.d("PeopleInED","Treatment " + treatment.toString());
+                        requestToModel(hospitalName);
+                        result.clear();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }else{
-                    String noAvailable = getText(R.string.data_not_avaialable).toString();
-                    waitingPeople.put(noAvailable, noAvailable);
-                    treatmentPeople.put(noAvailable, noAvailable);
+                    Log.e("PEOPLEINPS", hospitalName + "BAD NAME");
 
-                    //queueTreat.put(hospital,waitingPeople);
-                    //queueWait.put(hospital, treatmentPeople);
-
-                    Log.e("PEOPLEINPS", "BAD NAME");
                     return;
                 }
             }

@@ -1,7 +1,6 @@
 package com.ma.se.hospitato;
 
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,7 +30,6 @@ import com.google.firebase.ml.custom.FirebaseModelInterpreter;
 import com.google.firebase.ml.custom.FirebaseModelOptions;
 import com.google.firebase.ml.custom.FirebaseModelOutputs;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -111,7 +109,7 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
         Name=view.findViewById(R.id.ED_name_f);
         Address=view.findViewById(R.id.ED_address_f);
         PhoneNumber=view.findViewById(R.id.PhoneNumber);
-        TravelTime=view.findViewById(R.id.travel_time);
+        TravelTime=view.findViewById(R.id.estimated_time);
         WaitNotAvailable = view.findViewById(R.id.data_not_available_wait);
         TreatNotAvailable = view.findViewById(R.id.data_not_available_treat);
 
@@ -281,7 +279,6 @@ public class DisplayED extends Fragment implements OnMapReadyCallback {
 
 
     }
-
 
 
     public HashMap<String, String> chooseModel(String hospitalName){
