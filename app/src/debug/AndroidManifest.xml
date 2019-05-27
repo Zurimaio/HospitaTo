@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ma.se.hospitato">
+
+    <application>
+        <activity android:name="com.ma.se.hospitato.filteredEvent"></activity>
+    </application>
+</manifest>

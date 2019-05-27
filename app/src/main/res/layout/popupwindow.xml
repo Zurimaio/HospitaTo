@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/popbackground"
+    android:id="@+id/cazzo"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@+id/close"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/cerclebackground"
+        android:gravity="center"
+        android:text="X"
+        android:textColor="@color/White"
+        android:clickable="true"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:orientation="vertical">
+
+        <RatingBar
+            android:id="@+id/rateApp"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_below="@id/textView6"
+            android:layout_centerHorizontal="true"
+            />
+
+        <Button
+            android:id="@+id/add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/rateApp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/buttons"
+            android:backgroundTint="@color/White"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="SUBMIT" />
+
+        <Spinner
+            android:id="@+id/hop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView4"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="35dp"
+            android:background="@drawable/spinner"
+            android:entries="@array/hospital"
+            android:textAlignment="center" />
+
+        <Spinner
+            android:id="@+id/stimated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView5"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/spinner"
+            android:entries="@array/estimation"
+            android:paddingLeft="10dp"
+            android:paddingRight="35dp"
+            android:textAlignment="center"
+
+            />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="40dp"
+            android:text="Leave a feedback on your experience!"
+            android:textAlignment="center"
+            android:textColor="@color/White"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:textStyle="bold"
+            android:text="In which hospital have you been?"
+            android:textColor="@color/List_background" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/hop"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:text="The waiting time prediction was:"
+            android:textColor="@color/List_background" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/stimated"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:text="Rate the application:"
+            android:textColor="@color/List_background" />
+    </RelativeLayout>
+</RelativeLayout>
